@@ -18,19 +18,10 @@ function RegisterationPage(props) {
 		confirmPassword: "",
 	};
 
-	const validate = (values) => {
-		const errors = {};
-
-		if (!values.fullname) {
-			errors.fullname = "required";
-		} else if (/^[a-zA-Z]+$/.test(values.fullname)) {
-			errors.fullname = "Please enter a proper full name";
-		}
-
-		return errors;
-	};
-
 	const validationSchema = Yup.object({
+		fullname: Yup.string()
+			.required("Required")
+			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 		email: Yup.string().email("Invalid email format").required("Required"),
 		password: Yup.string().required("Required"),
 		confirmPassword: Yup.string()
@@ -56,7 +47,6 @@ function RegisterationPage(props) {
 					initialValues={initialValues}
 					validationSchema={validationSchema}
 					onSubmit={onSubmit}
-					validate={validate}
 				>
 					{(formik) => {
 						return (

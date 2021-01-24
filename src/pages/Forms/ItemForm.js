@@ -5,8 +5,8 @@ import "./Form.scss";
 import FormikControl from "./Fields/FormikControl";
 import Header from "../../components/Header/Header";
 function ItemForm(props) {
+	const [imgTouched, setImgTouched] = useState(false);
 	const [mainImg, setMainImg] = useState(null);
-
 	useEffect(() => {
 		document.title = "Place Ad";
 	}, []);
@@ -17,7 +17,7 @@ function ItemForm(props) {
 		itemName: "",
 		city: "",
 		description: "",
-		itemPicture: "",
+		itemPicture: null,
 	};
 
 	const FILE_SIZE = 5 * 1024 * 1024;
@@ -34,7 +34,14 @@ function ItemForm(props) {
 		description: Yup.string(),
 		ownerName: Yup.string()
 			.required("Required")
-			.matches(/^[a-zA-Z]+$/, "Please enter a proper fullname"),
+			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
+		// itemPicture: Yup.object()
+		// 	.nullable()
+		// 	.required("Required")
+		// 	.test("fileSize", "File is too large", (value) => value.size <= FILE_SIZE)
+		// 	.test("fileType", "Format is not supported", (value) =>
+		// 		SUPPORTED_FORMATS.includes(value.type)
+		// 	),
 	});
 
 	const onSubmit = async (values, { setFieldError }) => {
@@ -43,10 +50,9 @@ function ItemForm(props) {
 
 	const validate = (values) => {
 		const errors = {};
-		if (values.itemPicture !== "") {
-			if (!values.itemPicture) {
-				errors.itemPicture = "A picture is required";
-			} else if (values.itemPicture.size > FILE_SIZE)
+		if (imgTouched) {
+			if (!values.itemPicture) errors.itemPicture = "Required";
+			else if (values.itemPicture.size > FILE_SIZE)
 				errors.itemPicture = "This File is too large";
 			else if (SUPPORTED_FORMATS.includes(values.itemPicture.type) === false)
 				errors.itemPicture = "This format is not supported";
@@ -60,6 +66,7 @@ function ItemForm(props) {
 				};
 			}
 		}
+
 		return errors;
 	};
 
@@ -72,7 +79,7 @@ function ItemForm(props) {
 					validationSchema={validationSchema}
 					onSubmit={onSubmit}
 					validate={validate}
-					// validateOnChange={false}
+					validateOnChange={false}
 				>
 					{({
 						dirty,
@@ -125,12 +132,17 @@ function ItemForm(props) {
 									</div>
 									{/* Pictures Side */}
 									<div className="image-upload">
-										<h2>{mainImg ? "Change" : "Add"} item picture</h2>
+										<h2>
+											There is no Ad without a picture <br /> please add one
+										</h2>
 										<label>
 											<input
 												type="file"
 												accept="image/*"
 												name="itemPicture"
+												onClick={() => {
+													setImgTouched(true);
+												}}
 												onChange={(e) => {
 													setFieldValue(
 														"itemPicture",
