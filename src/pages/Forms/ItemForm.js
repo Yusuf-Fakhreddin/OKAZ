@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import "./Form.scss";
-import FormikControl from "./Fields/FormikControl";
 import Header from "../../components/Header/Header";
+import FormInput from "./Fields/FormInput";
 function ItemForm(props) {
-	const [imgTouched, setImgTouched] = useState(false);
+	// const [imgTouched, setImgTouched] = useState(false);
 	const [mainImg, setMainImg] = useState(null);
 	useEffect(() => {
 		document.title = "Place Ad";
 	}, []);
-
-	const initialValues = {
-		ownerName: "",
-		ownerNumber: "",
-		itemName: "",
-		city: "",
-		description: "",
-		itemPicture: null,
-	};
 
 	const FILE_SIZE = 5 * 1024 * 1024;
 	const SUPPORTED_FORMATS = [
@@ -35,141 +27,107 @@ function ItemForm(props) {
 		ownerName: Yup.string()
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
-		// itemPicture: Yup.object()
-		// 	.nullable()
-		// 	.required("Required")
-		// 	.test("fileSize", "File is too large", (value) => value.size <= FILE_SIZE)
-		// 	.test("fileType", "Format is not supported", (value) =>
-		// 		SUPPORTED_FORMATS.includes(value.type)
-		// 	),
+		itemPicture: Yup.mixed()
+			.required("Required")
+			.test(
+				"fileSize",
+				"File is too large",
+				(value) => value && value[0].size <= FILE_SIZE
+			)
+			.test(
+				"fileType",
+				"Format is not supported",
+				(value) => value && SUPPORTED_FORMATS.includes(value[0].type)
+			),
 	});
-
-	const onSubmit = async (values, { setFieldError }) => {
-		console.log(values);
-	};
-
-	const validate = (values) => {
-		const errors = {};
-		if (imgTouched) {
-			if (!values.itemPicture) errors.itemPicture = "Required";
-			else if (values.itemPicture.size > FILE_SIZE)
-				errors.itemPicture = "This File is too large";
-			else if (SUPPORTED_FORMATS.includes(values.itemPicture.type) === false)
-				errors.itemPicture = "This format is not supported";
-
-			if (!errors.itemPicture) {
-				var reader = new FileReader();
-				reader.readAsDataURL(values.itemPicture);
-
-				reader.onloadend = (e) => {
-					setMainImg(reader.result);
-				};
-			}
-		}
-
-		return errors;
+	const { register, handleSubmit, errors } = useForm({
+		mode: "onBlur",
+		resolver: yupResolver(validationSchema),
+	});
+	const onSubmit = (data) => {
+		console.log(data);
 	};
 
 	return (
 		<>
 			<Header />
 			<div className="form">
-				<Formik
-					initialValues={initialValues}
-					validationSchema={validationSchema}
-					onSubmit={onSubmit}
-					validate={validate}
-					validateOnChange={false}
-				>
-					{({
-						dirty,
-						isValid,
-						values,
-						errors,
-						touched,
-						handleChange,
-						handleBlur,
-						setFieldValue,
-						setFieldError,
-					}) => {
-						return (
-							<Form autoComplete="off">
-								<div className="formContainer">
-									<div>
-										<FormikControl
-											control="input"
-											type="text"
-											label="Owner Name"
-											name="ownerName"
-										/>
-										<FormikControl
-											control="input"
-											type="number"
-											onWheel={(e) => e.currentTarget.blur()}
-											label="Owner Number"
-											name="ownerNumber"
-										/>
-										<FormikControl
-											control="input"
-											type="text"
-											label="Item Name"
-											name="itemName"
-										/>
-										<FormikControl
-											control="input"
-											type="text"
-											label="City"
-											name="city"
-										/>
-										<FormikControl
-											control="textarea"
-											label="Description"
-											name="description"
-										/>
-										<button type="submit" disabled={!dirty || !isValid}>
-											Place Ad
-										</button>
-									</div>
-									{/* Pictures Side */}
-									<div className="image-upload">
-										<h2>
-											There is no Ad without a picture <br /> please add one
-										</h2>
-										<label>
-											<input
-												type="file"
-												accept="image/*"
-												name="itemPicture"
-												onClick={() => {
-													setImgTouched(true);
-												}}
-												onChange={(e) => {
-													setFieldValue(
-														"itemPicture",
-														e.currentTarget.files[0]
-													);
-												}}
-											/>
-											<span>+</span>
-										</label>
-										{errors.itemPicture && (
-											<div className="error">*{errors.itemPicture}</div>
-										)}
-										{mainImg && (
-											<div className="main-img">
-												<img
-													src={mainImg}
-													style={{ width: "60%", height: "60%" }}
-													alt=""
-												/>
-											</div>
-										)}
-									</div>
-								</div>
-							</Form>
-						);
-					}}
-				</Formik>
+				<div className="formContainer">
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<FormInput
+							register={register}
+							type="text"
+							name="ownerName"
+							label="Owner Name"
+							id="ownerName"
+							error={errors.ownerName}
+						/>
+						<FormInput
+							register={register}
+							type="number"
+							name="ownerNumber"
+							label="Owner Number"
+							onWheel={(e) => e.currentTarget.blur()}
+							id="ownerNumber"
+							error={errors.fullname}
+						/>
+						<FormInput
+							register={register}
+							type="text"
+							name="itemName"
+							label="Item Name"
+							id="itemName"
+							error={errors.itemName}
+						/>
+						<FormInput
+							register={register}
+							type="text"
+							name="city"
+							label="City"
+							id="city"
+							error={errors.city}
+						/>
+						<FormInput
+							register={register}
+							type="textarea"
+							name="description"
+							label="Description"
+							id="description"
+							error={errors.description}
+						/>
+
+						<button type="submit">Place Ad</button>
+					</form>
+					{/* Pictures Side */}
+					<div className="image-upload">
+						<h2>
+							There is no Ad without a picture <br /> please add one
+						</h2>
+						<label>
+							<input
+								type="file"
+								accept="image/*"
+								name="itemPicture"
+								onChange={(e) => {
+									setMainImg(URL.createObjectURL(e.target.files[0]));
+								}}
+							/>
+							<span>+</span>
+						</label>
+						{errors.itemPicture && (
+							<div className="error">*{errors.itemPicture.message}</div>
+						)}
+						{mainImg && (
+							<div className="main-img">
+								<img
+									src={mainImg}
+									style={{ width: "60%", height: "60%" }}
+									alt=""
+								/>
+							</div>
+						)}
+					</div>
+				</div>
 			</div>
 		</>
 	);

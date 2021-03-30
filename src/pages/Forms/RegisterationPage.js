@@ -1,22 +1,16 @@
 import React, { useEffect } from "react";
-import { Formik, Form } from "formik";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
-import FormikControl from "./Fields/FormikControl";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Header from "../../components/Header/Header";
 import "./Form.scss";
+import FormInput from "./Fields/FormInput";
 
 function RegisterationPage(props) {
 	useEffect(() => {
 		document.title = "Register";
 	}, []);
-
-	const initialValues = {
-		fullname: "",
-		email: "",
-		password: "",
-		confirmPassword: "",
-	};
 
 	const validationSchema = Yup.object({
 		fullname: Yup.string()
@@ -29,8 +23,13 @@ function RegisterationPage(props) {
 			.required("Required"),
 	});
 
-	const onSubmit = async (values, { errors, setFieldError }) => {
-		console.log(values);
+	const { register, handleSubmit, errors } = useForm({
+		mode: "onBlur",
+		resolver: yupResolver(validationSchema),
+	});
+
+	const onSubmit = ({ email, password }) => {
+		console.log(email, password);
 	};
 
 	return (
@@ -43,48 +42,42 @@ function RegisterationPage(props) {
 						<button type="submit">Login</button>
 					</NavLink>
 				</div>
-				<Formik
-					initialValues={initialValues}
-					validationSchema={validationSchema}
-					onSubmit={onSubmit}
-				>
-					{(formik) => {
-						return (
-							<Form autoComplete="off">
-								<FormikControl
-									control="input"
-									type="text"
-									label="Full Name"
-									name="fullname"
-								/>
-								<FormikControl
-									control="input"
-									type="email"
-									label="Email"
-									name="email"
-								/>
-								<FormikControl
-									control="input"
-									type="password"
-									label="Password"
-									name="password"
-								/>
-								<FormikControl
-									control="input"
-									type="password"
-									label="Confirm Password"
-									name="confirmPassword"
-								/>
-								<button
-									type="submit"
-									disabled={!formik.dirty || !formik.isValid}
-								>
-									Sign Up
-								</button>
-							</Form>
-						);
-					}}
-				</Formik>
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<FormInput
+						register={register}
+						type="text"
+						name="fullname"
+						label="Full Name"
+						id="fullname"
+						error={errors.fullname}
+					/>
+
+					<FormInput
+						register={register}
+						type="email"
+						name="email"
+						label="Email"
+						id="email"
+						error={errors.email}
+					/>
+
+					<FormInput
+						register={register}
+						type="password"
+						name="password"
+						label="Password"
+						id="password"
+						error={errors.password}
+					/>
+					<FormInput
+						register={register}
+						type="password"
+						name="confirmPassword"
+						label="Confirm Password"
+						id="confirmPassword"
+						error={errors.confirmPassword}
+					/>
+				</form>
 			</div>
 		</>
 	);
