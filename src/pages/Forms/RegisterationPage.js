@@ -28,8 +28,8 @@ function RegisterationPage(props) {
 		resolver: yupResolver(validationSchema),
 	});
 
-	const onSubmit = ({ email, password }) => {
-		console.log(email, password);
+	const onSubmit = ({ fullname, confirmPassword, email, password }) => {
+		console.log(fullname, confirmPassword, email, password);
 	};
 
 	return (
@@ -77,6 +77,7 @@ function RegisterationPage(props) {
 						id="confirmPassword"
 						error={errors.confirmPassword}
 					/>
+					<button type="submit">Register</button>
 				</form>
 			</div>
 		</>

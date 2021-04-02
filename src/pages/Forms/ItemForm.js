@@ -5,6 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import "./Form.scss";
 import Header from "../../components/Header/Header";
 import FormInput from "./Fields/FormInput";
+
+import SuggestionInput from "./Fields/SuggestionsInput";
+import cities from "./Fields/cities";
 function ItemForm(props) {
 	// const [imgTouched, setImgTouched] = useState(false);
 	const [mainImg, setMainImg] = useState(null);
@@ -53,7 +56,7 @@ function ItemForm(props) {
 			<Header />
 			<div className="form">
 				<div className="formContainer">
-					<form onSubmit={handleSubmit(onSubmit)}>
+					<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 						<FormInput
 							register={register}
 							type="text"
@@ -79,13 +82,13 @@ function ItemForm(props) {
 							id="itemName"
 							error={errors.itemName}
 						/>
-						<FormInput
+						<SuggestionInput
 							register={register}
 							type="text"
 							name="city"
-							label="City"
-							id="city"
+							label="Specific City ?"
 							error={errors.city}
+							data={cities}
 						/>
 						<FormInput
 							register={register}
@@ -100,30 +103,30 @@ function ItemForm(props) {
 					</form>
 					{/* Pictures Side */}
 					<div className="image-upload">
-						<h2>
-							There is no Ad without a picture <br /> please add one
-						</h2>
-						<label>
-							<input
-								type="file"
-								accept="image/*"
-								name="itemPicture"
-								onChange={(e) => {
-									setMainImg(URL.createObjectURL(e.target.files[0]));
-								}}
-							/>
-							<span>+</span>
-						</label>
+						{!mainImg && (
+							<div>
+								<h2>
+									There is no Ad without a picture <br /> please add one
+								</h2>
+								<label>
+									<input
+										type="file"
+										accept="image/*"
+										name="itemPicture"
+										onChange={(e) => {
+											setMainImg(URL.createObjectURL(e.target.files[0]));
+										}}
+									/>
+									<span>+</span>
+								</label>
+							</div>
+						)}
 						{errors.itemPicture && (
 							<div className="error">*{errors.itemPicture.message}</div>
 						)}
 						{mainImg && (
 							<div className="main-img">
-								<img
-									src={mainImg}
-									style={{ width: "60%", height: "60%" }}
-									alt=""
-								/>
+								<img src={mainImg} style={{ width: "80%" }} alt="" />
 							</div>
 						)}
 					</div>

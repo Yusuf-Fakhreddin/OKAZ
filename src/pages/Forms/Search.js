@@ -1,54 +1,58 @@
 import React from "react";
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import FormikControl from "./Fields/FormikControl";
-
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import FormInput from "./Fields/FormInput";
+import "./Form.scss";
+import SuggestionInput from "./Fields/SuggestionsInput";
+import cities from "./Fields/cities";
 function Search(props) {
-	const initialValues = {
+	const defaultValues = {
 		itemName: "",
 		city: "",
 	};
 	const validationSchema = Yup.object({
 		itemName: Yup.string().required("Required"),
 		// may need to make specify cities the value should be one of them
-		city: Yup.string(),
+		city: Yup.string().required("Required"),
 	});
 
-	const onSubmit = async (values, { setFieldError }) => {
-		console.log(values);
+	const { register, handleSubmit, errors, formState } = useForm({
+		mode: "onChange",
+		defaultValues: defaultValues,
+		resolver: yupResolver(validationSchema),
+	});
+
+	const onSubmit = ({ itemName, city }) => {
+		console.log(itemName, city);
 	};
 
 	return (
 		<div className="search-container">
-			<Formik
-				initialValues={initialValues}
-				validationSchema={validationSchema}
-				onSubmit={onSubmit}
-				validateOnBlur={false}
-				validateOnChange={false}
+			<form
+				className="search"
+				autoComplete="off"
+				onSubmit={handleSubmit(onSubmit)}
 			>
-				{(formik) => {
-					return (
-						<Form className="search" autoComplete="off">
-							<FormikControl
-								control="input"
-								type="text"
-								name="itemName"
-								label="Item Name"
-							/>
-							<FormikControl
-								control="input"
-								type="text"
-								name="city"
-								label="Specific City ?"
-							/>
-							<button type="submit" disabled={!formik.dirty || !formik.isValid}>
-								Search
-							</button>
-						</Form>
-					);
-				}}
-			</Formik>
+				<FormInput
+					register={register}
+					type="text"
+					name="itemName"
+					label="Item Name"
+					error={errors.itemName}
+				/>
+				<SuggestionInput
+					register={register}
+					type="text"
+					name="city"
+					label="Specific City ?"
+					error={errors.city}
+					data={cities}
+				/>
+				<button type="submit" disabled={!formState.isValid}>
+					Search
+				</button>
+			</form>
 		</div>
 	);
 }
