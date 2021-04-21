@@ -3,14 +3,10 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormInput from "./Fields/FormInput";
-import "./Form.scss";
+import "../../../styles/Form.scss";
 import SuggestionInput from "./Fields/SuggestionsInput";
 import cities from "./Fields/cities";
 function Search(props) {
-	const defaultValues = {
-		itemName: "",
-		city: "",
-	};
 	const validationSchema = Yup.object({
 		itemName: Yup.string().required("Required"),
 		// may need to make specify cities the value should be one of them
@@ -19,7 +15,6 @@ function Search(props) {
 
 	const { register, handleSubmit, errors, formState } = useForm({
 		mode: "onChange",
-		defaultValues: defaultValues,
 		resolver: yupResolver(validationSchema),
 	});
 

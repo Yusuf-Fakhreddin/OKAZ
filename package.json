@@ -1,5 +1,6 @@
 {
 	"name": "frontend",
+	"proxy": "https://okazapp.herokuapp.com/api/",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -12,8 +13,12 @@
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
 		"react-hook-form": "^6.15.5",
+		"react-redux": "^7.2.3",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.1",
+		"redux": "^4.0.5",
+		"redux-devtools-extension": "^2.13.9",
+		"redux-thunk": "^2.3.0",
 		"sass": "^1.32.4",
 		"web-vitals": "^0.2.4",
 		"yup": "^0.32.8"

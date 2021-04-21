@@ -3,14 +3,26 @@ import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import "./Form.scss";
-import Header from "../../components/Header/Header";
+import "../../../styles/Form.scss";
 import FormInput from "./Fields/FormInput";
+import Header from "../../Header/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../../actions/userActions";
 
-function LoginPage(props) {
+function LoginPage({ props, history, location }) {
+	const dispatch = useDispatch();
+
+	const userLogin = useSelector((state) => state.userLogin);
+
+	const { loading, error, userInfo } = userLogin;
+	const redirect = location.search ? location.search.split("=")[1] : "/";
+
 	useEffect(() => {
 		document.title = "Login";
-	}, []);
+		if (userInfo) {
+			history.push(redirect);
+		}
+	}, [history, userInfo, redirect]);
 
 	const validationSchema = Yup.object().shape({
 		email: Yup.string().email("Invalid email format").required("Required"),
@@ -23,7 +35,7 @@ function LoginPage(props) {
 	});
 
 	const onSubmit = ({ email, password }) => {
-		console.log(email, password);
+		dispatch(login(email, password));
 	};
 	return (
 		<>
@@ -31,11 +43,16 @@ function LoginPage(props) {
 			<div className="formContainer form">
 				<div className="haveAccount">
 					<h2>Does not have an account ?</h2>
-					<NavLink activeClassName="active" to="/register">
+					<NavLink
+						activeClassName="active"
+						to={redirect ? `/register?redirect=${redirect}` : "/register"}
+					>
 						<button type="submit">Sign up</button>
 					</NavLink>
 				</div>
 				<form onSubmit={handleSubmit(onSubmit)}>
+					{error && <h1 className="error">{error}</h1>}
+					{loading && <div className="loader"></div>}
 					<FormInput
 						register={register}
 						type="email"

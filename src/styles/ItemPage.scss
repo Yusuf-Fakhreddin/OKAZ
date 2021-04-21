@@ -20,10 +20,9 @@
 	}
 	.ad {
 		.item-info {
-			width: min(500px, 100%);
+			width: min(700px, 100%);
 			display: flex;
 			justify-content: space-between;
-			align-items: center;
 			.price {
 				font-size: 3em;
 			}
@@ -31,7 +30,7 @@
 		.img-contact {
 			margin: 1.2em 0;
 			.img {
-				cursor: pointer;
+				object-fit: cover;
 				background-color: grey;
 				// background: url("./Er3mmA_XcAI-mI1.jfif") no-repeat center center;
 				background-position: center center;

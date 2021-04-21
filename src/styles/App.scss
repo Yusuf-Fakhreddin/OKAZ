@@ -1,0 +1,107 @@
+:root {
+	--primaryColor: #98583c;
+	--secondaryColor: #cf8970;
+	--buttonColor: #543c2c;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap");
+
+* {
+	font-family: "Ubuntu", sans-serif;
+	font-weight: 400;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	outline: none;
+	border: none;
+}
+body {
+	background-color: #f8f2da;
+}
+// utilites
+.container {
+	width: min(80vw, 1200px);
+	margin: 0 auto;
+}
+.okaz {
+	font-weight: 500;
+	font-size: 2.5em;
+	font-family: "Ubuntu";
+}
+.active {
+	text-decoration: none;
+	border: none;
+	color: inherit;
+	outline: none;
+}
+.flex {
+	display: flex;
+}
+// to center items in container
+.center {
+	display: grid;
+	place-items: center;
+}
+
+// Components
+.header {
+	background-color: var(--primaryColor);
+	height: max(5vh, 100px);
+	padding: 20px;
+	margin-bottom: 20px;
+	color: #f8f2da;
+	display: grid;
+	place-items: center;
+	.logo {
+		width: 120px;
+		height: auto;
+		img {
+			width: 100%;
+		}
+
+		// background-color: black;
+	}
+	.nav {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.menu {
+		display: flex;
+		h2 {
+			margin: 0 5px;
+		}
+	}
+}
+// Screens
+.homePage {
+	.cards {
+		display: grid;
+		grid-gap: 2em;
+		place-items: center;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	}
+}
+
+// h1,
+// h2,
+// h3 {
+// 	color: var(--buttonColor);
+// }
+.loader {
+	border: 16px solid #f3f3f3; /* Light grey */
+	border-top: 16px solid var(--primaryColor);
+	border-radius: 50%;
+	width: 120px;
+	height: 120px;
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
