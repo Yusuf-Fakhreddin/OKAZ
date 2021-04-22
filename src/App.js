@@ -11,6 +11,7 @@ import ProfilePage from "./components/pages/Forms/ProfilePage";
 import UserListPage from "./components/pages/userListPage/UserListPage";
 import UserEditPage from "./components/pages/UserEditPage.js/UserEditPage";
 import AdsListPage from "./components/pages/AdsListPage/AdsListPage";
+import AdUpdatePage from "./components/pages/AdUpdatePage.js/AdUpdatePage";
 function App() {
 	return (
 		<Router>
@@ -29,6 +30,8 @@ function App() {
 				<Route path="/favorites">
 					<FavoritesPage />
 				</Route>
+				<Route path="/product/:id/edit" component={AdUpdatePage} />
+
 				<Route path="/profile" component={ProfilePage} />
 				<Route path="/admin/userlist" component={UserListPage} />
 				<Route path="/admin/adsList" component={AdsListPage} />

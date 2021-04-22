@@ -48,7 +48,7 @@ export const listProductsDetails = (id) => async (dispatch) => {
 		dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
 		const { data } = await http.get(
-			`https://okazapp.herokuapp.com/products/${id}`
+			`https://okazapp.herokuapp.com/api/products/${id}`
 		);
 		dispatch({
 			type: PRODUCT_DETAILS_SUCCESS,

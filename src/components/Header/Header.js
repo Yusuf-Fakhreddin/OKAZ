@@ -52,7 +52,7 @@ const Header = () => {
 								</NavLink>
 							</>
 						)}
-						<NavLink to="/login?redirect=placeAd">
+						<NavLink to="/placeAd">
 							<h2>placeAd</h2>
 						</NavLink>
 					</div>

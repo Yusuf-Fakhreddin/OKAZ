@@ -20,9 +20,9 @@ function LoginPage({ props, history, location }) {
 	useEffect(() => {
 		document.title = "Login";
 		if (userInfo) {
-			history.push(redirect);
+			history.goBack();
 		}
-	}, [history, userInfo, redirect]);
+	}, [history, userInfo]);
 
 	const validationSchema = Yup.object().shape({
 		email: Yup.string().email("Invalid email format").required("Required"),
@@ -43,10 +43,7 @@ function LoginPage({ props, history, location }) {
 			<div className="formContainer form">
 				<div className="haveAccount">
 					<h2>Does not have an account ?</h2>
-					<NavLink
-						activeClassName="active"
-						to={redirect ? `/register?redirect=${redirect}` : "/register"}
-					>
+					<NavLink activeClassName="active" to="/register">
 						<button type="submit">Sign up</button>
 					</NavLink>
 				</div>

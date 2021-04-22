@@ -22,7 +22,8 @@ function RegisterationPage({ props, history, location }) {
 	useEffect(() => {
 		document.title = "Register";
 		if (userInfo) {
-			history.push(redirect);
+			// history.push(redirect);
+			history.goBack();
 		}
 	}, [history, userInfo, redirect]);
 
@@ -43,12 +44,11 @@ function RegisterationPage({ props, history, location }) {
 	});
 
 	const { register, handleSubmit, errors } = useForm({
-		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
 	const onSubmit = ({ name, email, password, phoneNumber }) => {
 		console.log("Submitting");
-		dispatch(registerUser(name, phoneNumber, email, password));
+		dispatch(registerUser(name, email, password, phoneNumber));
 	};
 	return (
 		<>

@@ -30,7 +30,7 @@ function AutoComplete(props) {
 			return null;
 		}
 		return (
-			<ul class="suggestions">
+			<ul className="suggestions">
 				{suggestions.map((item) => (
 					<li onClick={() => suggestionSelected(item)}>{item}</li>
 				))}

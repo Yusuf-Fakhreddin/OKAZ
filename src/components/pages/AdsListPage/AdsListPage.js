@@ -70,7 +70,7 @@ const AdsListPage = ({ history, match }) => {
 										<td>{product.category}</td>
 
 										<td>
-											<NavLink to={`/admin/product/${product._id}/edit`}>
+											<NavLink to={`/product/${product._id}/edit`}>
 												<button className="delete">
 													<i className="fas fa-edit"></i>
 												</button>

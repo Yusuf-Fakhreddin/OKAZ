@@ -66,7 +66,9 @@ export const logout = () => (dispatch) => {
 	dispatch({ type: USER_LIST_RESET });
 };
 
-export const registerUser = (name, email, password) => async (dispatch) => {
+export const registerUser = (name, email, password, phoneNumber) => async (
+	dispatch
+) => {
 	try {
 		dispatch({
 			type: USER_REGISTER_REQUEST,
@@ -79,7 +81,7 @@ export const registerUser = (name, email, password) => async (dispatch) => {
 		};
 		const { data } = await http.post(
 			"https://okazapp.herokuapp.com/api/users",
-			{ name, email, password },
+			{ name, email, password, phoneNumber },
 			config
 		);
 

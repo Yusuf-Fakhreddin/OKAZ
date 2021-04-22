@@ -3,44 +3,72 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "../../../styles/Form.scss";
-import FormInput from "./Fields/FormInput";
+import FormInput from "../Forms/Fields/FormInput";
 
-import SuggestionInput from "./Fields/SuggestionsInput";
-import cities from "./Fields/cities";
+import SuggestionInput from "../Forms/Fields/SuggestionsInput";
+import cities from "../Forms/Fields/cities";
 import Header from "../../Header/Header";
 import { useDispatch, useSelector } from "react-redux";
-import { createProduct } from "../../../actions/productActions";
+import {
+	createProduct,
+	listProductsDetails,
+	updateProduct,
+} from "../../../actions/productActions";
 import http from "../../../htppService";
-function ItemForm({ props, history }) {
-	const [image, setImage] = useState(null);
-	const [imageError, setImageError] = useState(null);
+import { PRODUCT_UPDATE_RESET } from "../../../constants/productConstants";
+
+function AdUpdatePage({ match, history }) {
+	const productId = match.params.id;
 
 	const dispatch = useDispatch();
+
+	const [image, setImage] = useState(null);
+	const [imageError, setImageError] = useState(null);
 
 	const [mainImg, setMainImg] = useState(null);
 	const [uploading, setUploading] = useState(false);
 
 	const userLogin = useSelector((state) => state.userLogin);
-	const { loading, error, userInfo } = userLogin;
+	const { userInfo } = userLogin;
 
-	const productCreate = useSelector((state) => state.productCreate);
+	const productDetails = useSelector((state) => state.productDetails);
+	const { loading, error, product } = productDetails;
+
+	const productUpdate = useSelector((state) => state.productUpdate);
 	const {
-		loading: loadingCreate,
-		error: errorCreate,
-		success: successCreate,
-		product: createdProduct,
-	} = productCreate;
+		loading: loadingUpdate,
+		error: errorUpdate,
+		success: successUpdate,
+	} = productUpdate;
 
 	useEffect(() => {
-		document.title = "Place Ad";
-		if (!userInfo) {
+		document.title = "Update AD";
+		console.log(product);
+		if (
+			!(userInfo && (userInfo._id === product.ownerName || userInfo.isAdmin))
+		) {
 			history.push("/login");
 		}
-
-		if (successCreate) {
-			history.push(`/product/${createdProduct._id}`);
+		if (successUpdate) {
+			dispatch({ type: PRODUCT_UPDATE_RESET });
+			if (userInfo.isAdmin) history.push("/item/productlist");
+			else history.push(`/item/${productId}`);
+		} else {
+			if (!product.productName || product._id !== productId) {
+				dispatch(listProductsDetails(productId));
+			} else {
+				console.log("hello");
+				setValue("itemName", product.productName);
+				setValue("ownerName", product.ownerName);
+				setValue("price", product.price);
+				setMainImg(product.image);
+				setImage(product.image);
+				// setValue("category", product.category);
+				setValue("description", product.description);
+				setValue("city", product.city);
+			}
 		}
-	}, [history, userInfo, successCreate]);
+	}, [history, userInfo, productId, product, successUpdate]);
 
 	const validationSchema = Yup.object({
 		itemName: Yup.string().required("Required"),
@@ -51,25 +79,22 @@ function ItemForm({ props, history }) {
 		ownerName: Yup.string()
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
-		// itemPicture: Yup.mixed()
-		// 	.test(
-		// 		"fileSize",
-		// 		"File is too large",
-		// 		(value) => value && value[0].size <= FILE_SIZE
-		// 	)
-		// 	.test(
-		// 		"fileType",
-		// 		"Format is not supported",
-		// 		(value) => value && SUPPORTED_FORMATS.includes(value[0].type)
-		// 	),
 	});
 	const { register, handleSubmit, errors, setValue, setError } = useForm({
-		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
 
-	const uploadFileHandler = async (e) => {
-		const file = e.target.files[0];
+	const uploadFileHandler = (e) => {
+		setImage(e.target.files[0]);
+		setMainImg(URL.createObjectURL(e.target.files[0]));
+	};
+
+	const onSubmit = async (data, errors) => {
+		if (!image) {
+			setImageError("Required");
+			return;
+		}
+		const file = image;
 		console.log(file);
 
 		const formData = new FormData();
@@ -93,14 +118,8 @@ function ItemForm({ props, history }) {
 			console.error(error);
 			setUploading(false);
 		}
-	};
 
-	const onSubmit = async (data, errors) => {
-		if (!image) {
-			setImageError("Required");
-			return;
-		}
-		// dispatch(createProduct(data));
+		// dispatch(updateProduct({ ...data, itemPicture: image }));
 		console.log({ ...data, itemPicture: image });
 	};
 
@@ -206,8 +225,7 @@ function ItemForm({ props, history }) {
 							</label>
 
 							{imageError && <div className="error">*{imageError}</div>}
-
-							{loadingCreate && <div className="loader"></div>}
+							{loadingUpdate && <div className="loader"></div>}
 
 							{mainImg && (
 								<div className="main-img">
@@ -224,4 +242,4 @@ function ItemForm({ props, history }) {
 	);
 }
 
-export default ItemForm;
+export default AdUpdatePage;

@@ -38,14 +38,6 @@ const HomePage = () => {
 						))}
 					</div>
 				)}
-				{/* <div className="cards">
-					<ItemCard />
-					<ItemCard />
-					<ItemCard />
-					<ItemCard />
-					<ItemCard />
-
-				</div> */}
 			</div>
 		</>
 	);
