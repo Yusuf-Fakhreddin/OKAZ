@@ -43,11 +43,11 @@ const ProfilePage = ({ props, history }) => {
 		if (!userInfo) {
 			history.push("/login");
 		} else {
-			if (!user.name) {
+			if (!userInfo.name) {
 				dispatch(getUserDetails("profile"));
 			} else {
-				setValue("fullname", user.name, { shouldDirty: true });
-				setValue("email", user.email, { shouldDirty: true });
+				setValue("fullname", userInfo.name, { shouldDirty: true });
+				setValue("email", userInfo.email, { shouldDirty: true });
 			}
 		}
 	}, [history, dispatch, userInfo, user]);

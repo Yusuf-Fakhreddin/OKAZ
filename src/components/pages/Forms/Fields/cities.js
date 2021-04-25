@@ -1,13 +1,4 @@
-export default `Cairo,
-	Alexandria	
-	,Gizeh		 	
-	,Shubra 
-	,Port Said	
-	,Suez		
-	,Luxor		 
-	,al-Mansura		 
-	,El-Mahalla El-Kubra	 	
-	,Tanta		 
+export default `Cairo,Alexandria,Gizeh,Shubra,Port Said,Suez,Luxor,al-Mansura,El-Mahalla El-Kubra,Tanta		 
 	,Asyut		
 	,Ismailia		 
 	,Fayyum		 

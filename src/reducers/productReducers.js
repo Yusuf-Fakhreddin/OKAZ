@@ -16,6 +16,9 @@ import {
 	PRODUCT_UPDATE_SUCCESS,
 	PRODUCT_UPDATE_FAIL,
 	PRODUCT_UPDATE_RESET,
+	MY_PRODUCT_LIST_REQUEST,
+	MY_PRODUCT_LIST_SUCCESS,
+	MY_PRODUCT_LIST_FAIL,
 } from "../constants/productConstants";
 // actions reducer for every phase of the axios request
 export const productListReducer = (state = { products: [] }, action) => {
@@ -31,6 +34,20 @@ export const productListReducer = (state = { products: [] }, action) => {
 			return state;
 	}
 };
+export const myProductsReducer = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case MY_PRODUCT_LIST_REQUEST:
+			return { loading: true, products: [] };
+		case MY_PRODUCT_LIST_SUCCESS:
+			return { loading: false, products: action.payload };
+		case MY_PRODUCT_LIST_FAIL:
+			return { loading: false, error: action.payload };
+
+		default:
+			return state;
+	}
+};
+
 // action reducer for every phase of the axios request
 export const productDetailsReducer = (state = { product: {} }, action) => {
 	switch (action.type) {

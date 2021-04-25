@@ -51,27 +51,29 @@ function AdUpdatePage({ match, history }) {
 		}
 		if (successUpdate) {
 			dispatch({ type: PRODUCT_UPDATE_RESET });
-			if (userInfo.isAdmin) history.push("/item/productlist");
+			if (userInfo.isAdmin) history.push("/admin/adsList");
 			else history.push(`/item/${productId}`);
 		} else {
 			if (!product.productName || product._id !== productId) {
 				dispatch(listProductsDetails(productId));
 			} else {
 				console.log("hello");
-				setValue("itemName", product.productName);
+				setValue("productName", product.productName);
 				setValue("ownerName", product.ownerName);
 				setValue("price", product.price);
 				setMainImg(product.image);
 				setImage(product.image);
-				// setValue("category", product.category);
+				setValue("category", product.category);
+				setValue("condition", product.condition);
 				setValue("description", product.description);
+				setValue("ownerPhoneNumber", product.ownerPhoneNumber);
 				setValue("city", product.city);
 			}
 		}
 	}, [history, userInfo, productId, product, successUpdate]);
 
 	const validationSchema = Yup.object({
-		itemName: Yup.string().required("Required"),
+		productName: Yup.string().required("Required"),
 		city: Yup.string().required("Required"),
 		description: Yup.string(),
 		category: Yup.string(),
@@ -80,26 +82,57 @@ function AdUpdatePage({ match, history }) {
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 	});
-	const { register, handleSubmit, errors, setValue, setError } = useForm({
+
+	const {
+		register,
+		handleSubmit,
+		errors,
+		setValue,
+		setError,
+		formState,
+	} = useForm({
+		defaultValues: {
+			city: "",
+		},
 		resolver: yupResolver(validationSchema),
 	});
 
-	const uploadFileHandler = (e) => {
-		setImage(e.target.files[0]);
-		setMainImg(URL.createObjectURL(e.target.files[0]));
-	};
+	// const uploadFileHandler = async (e) => {
+	// 	setMainImg(URL.createObjectURL(e.target.files[0]));
+	// 	const file = e.target.files[0];
+	// 	console.log(file);
 
-	const onSubmit = async (data, errors) => {
-		if (!image) {
-			setImageError("Required");
-			return;
-		}
-		const file = image;
-		console.log(file);
-
+	// 	const formData = new FormData();
+	// 	formData.append("image", file);
+	// 	setUploading(true);
+	// 	try {
+	// 		const config = {
+	// 			headers: {
+	// 				"Content-Type": "multipart/form-data",
+	// 			},
+	// 		};
+	// 		console.log(formData, formData.image);
+	// 		const { data } = await http.post(
+	// 			"https://okazapp.herokuapp.com/api/upload",
+	// 			formData,
+	// 			config
+	// 		);
+	// 		setImage(data);
+	// 		console.log(image);
+	// 		setUploading(false);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 		setUploading(false);
+	// 	}
+	// };
+	const uploadFileHandler = async (e) => {
+		const file = e.target.files[0];
 		const formData = new FormData();
-		formData.append("image", file);
+		formData.append("image", e.target.files[0]);
 		setUploading(true);
+		console.log(formData.getAll("image"));
+		// 		var options = { content: formData };
+		// console.log(options);
 		try {
 			const config = {
 				headers: {
@@ -112,15 +145,20 @@ function AdUpdatePage({ match, history }) {
 				formData,
 				config
 			);
-			setImage(data);
+			console.log(data);
+			console.log(`https://okazapp.herokuapp.com/${data}`);
+			setImage(`https://okazapp.herokuapp.com/${data}`);
 			setUploading(false);
+			setMainImg(URL.createObjectURL(e.target.files[0]));
 		} catch (error) {
 			console.error(error);
 			setUploading(false);
 		}
+	};
 
-		// dispatch(updateProduct({ ...data, itemPicture: image }));
-		console.log({ ...data, itemPicture: image });
+	const onSubmit = async (data, errors) => {
+		dispatch(updateProduct({ productId, ...data, image }));
+		// console.log({ productId, ...data, image });
 	};
 
 	return (
@@ -140,19 +178,19 @@ function AdUpdatePage({ match, history }) {
 						<FormInput
 							register={register}
 							type="number"
-							name="ownerNumber"
+							name="ownerPhoneNumber"
 							label="Owner Number"
 							onWheel={(e) => e.preventDefault()}
-							id="ownerNumber"
+							id="ownerPhoneNumber"
 							error={errors.fullname}
 						/>
 						<FormInput
 							register={register}
 							type="text"
-							name="itemName"
+							name="productName"
 							label="Item Name"
-							id="itemName"
-							error={errors.itemName}
+							id="productName"
+							error={errors.productName}
 						/>
 						<FormInput
 							register={register}
@@ -169,6 +207,8 @@ function AdUpdatePage({ match, history }) {
 							name="city"
 							label="Specific City ?"
 							error={errors.city}
+							id="city"
+							value={formState.city}
 							data={cities}
 						/>
 						<div className="form-control">
@@ -218,14 +258,14 @@ function AdUpdatePage({ match, history }) {
 								<input
 									type="file"
 									accept="image/*"
-									name="itemPicture"
+									name="image"
 									onChange={uploadFileHandler}
 								/>
 								<span>+</span>
 							</label>
 
 							{imageError && <div className="error">*{imageError}</div>}
-							{loadingUpdate && <div className="loader"></div>}
+							{uploading && <div className="loader"></div>}
 
 							{mainImg && (
 								<div className="main-img">

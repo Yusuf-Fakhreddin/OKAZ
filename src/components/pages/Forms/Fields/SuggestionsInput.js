@@ -7,10 +7,12 @@ const SuggestionInput = ({
 	label,
 	id,
 	data,
+	name,
+	value,
 	...inputProps
 }) => {
 	const [suggestions, setSuggestions] = useState([]);
-	const [text, setText] = useState("");
+	const [text, setText] = useState(value);
 	// const [items, setItems] = useState(["white", "whiteee", "yellow", "Helloww"]);
 
 	const onTextChanged = (e) => {
@@ -23,12 +25,12 @@ const SuggestionInput = ({
 					suggestion.toLowerCase().indexOf(value.toLowerCase()) > -1
 			);
 		}
-
 		setSuggestions(suggestions.sort());
 		setText(value);
 	};
 
 	const suggestionSelected = (value) => {
+		console.log(value);
 		setText(value);
 		setSuggestions([]);
 	};
@@ -40,7 +42,7 @@ const SuggestionInput = ({
 		return (
 			<ul className="suggestions">
 				{suggestions.map((item) => (
-					<li key={item} onClick={() => suggestionSelected(item)}>
+					<li key={item} onClick={() => suggestionSelected(item.trim())}>
 						{item}
 					</li>
 				))}
@@ -57,6 +59,7 @@ const SuggestionInput = ({
 					onChange={onTextChanged}
 					value={text}
 					type={type}
+					name={name}
 					{...inputProps}
 				/>
 				{renderSuggestions()}

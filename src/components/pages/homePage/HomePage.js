@@ -16,7 +16,7 @@ const HomePage = () => {
 
 	useEffect(() => {
 		// firing the listProducts Action
-		dispatch(listProducts());
+		dispatch(listProducts(6));
 		console.log(products);
 	}, [dispatch]);
 

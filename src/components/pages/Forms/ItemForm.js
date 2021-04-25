@@ -35,15 +35,17 @@ function ItemForm({ props, history }) {
 		document.title = "Place Ad";
 		if (!userInfo) {
 			history.push("/login");
+		} else {
+			setValue("ownerPhoneNumber", userInfo.phoneNumber);
+			setValue("ownerName", userInfo.name);
 		}
-
 		if (successCreate) {
-			history.push(`/product/${createdProduct._id}`);
+			history.push(`/item/${createdProduct._id}`);
 		}
 	}, [history, userInfo, successCreate]);
 
 	const validationSchema = Yup.object({
-		itemName: Yup.string().required("Required"),
+		productName: Yup.string().required("Required"),
 		city: Yup.string().required("Required"),
 		description: Yup.string(),
 		category: Yup.string(),
@@ -51,17 +53,6 @@ function ItemForm({ props, history }) {
 		ownerName: Yup.string()
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
-		// itemPicture: Yup.mixed()
-		// 	.test(
-		// 		"fileSize",
-		// 		"File is too large",
-		// 		(value) => value && value[0].size <= FILE_SIZE
-		// 	)
-		// 	.test(
-		// 		"fileType",
-		// 		"Format is not supported",
-		// 		(value) => value && SUPPORTED_FORMATS.includes(value[0].type)
-		// 	),
 	});
 	const { register, handleSubmit, errors, setValue, setError } = useForm({
 		mode: "onBlur",
@@ -70,11 +61,10 @@ function ItemForm({ props, history }) {
 
 	const uploadFileHandler = async (e) => {
 		const file = e.target.files[0];
-		console.log(file);
-
 		const formData = new FormData();
-		formData.append("image", file);
+		formData.append("image", e.target.files[0]);
 		setUploading(true);
+		console.log(formData.getAll("image"));
 		try {
 			const config = {
 				headers: {
@@ -87,8 +77,11 @@ function ItemForm({ props, history }) {
 				formData,
 				config
 			);
-			setImage(data);
+			console.log(data);
+			console.log(`https://okazapp.herokuapp.com/${data}`);
+			setImage(`https://okazapp.herokuapp.com/${data}`);
 			setUploading(false);
+			setMainImg(URL.createObjectURL(e.target.files[0]));
 		} catch (error) {
 			console.error(error);
 			setUploading(false);
@@ -96,12 +89,8 @@ function ItemForm({ props, history }) {
 	};
 
 	const onSubmit = async (data, errors) => {
-		if (!image) {
-			setImageError("Required");
-			return;
-		}
-		// dispatch(createProduct(data));
-		console.log({ ...data, itemPicture: image });
+		dispatch(createProduct({ ...data, image }));
+		// console.log({ productId, ...data, image });
 	};
 
 	return (
@@ -121,19 +110,19 @@ function ItemForm({ props, history }) {
 						<FormInput
 							register={register}
 							type="number"
-							name="ownerNumber"
+							name="ownerPhoneNumber"
 							label="Owner Number"
-							onWheel={(e) => e.preventDefault()}
-							id="ownerNumber"
-							error={errors.fullname}
+							onWheel={(event) => event.currentTarget.blur()}
+							id="ownerPhoneNumber"
+							// error={errors.fullname}
 						/>
 						<FormInput
 							register={register}
 							type="text"
-							name="itemName"
+							name="productName"
 							label="Item Name"
-							id="itemName"
-							error={errors.itemName}
+							id="productName"
+							error={errors.productName}
 						/>
 						<FormInput
 							register={register}
@@ -207,7 +196,7 @@ function ItemForm({ props, history }) {
 
 							{imageError && <div className="error">*{imageError}</div>}
 
-							{loadingCreate && <div className="loader"></div>}
+							{uploading && <div className="loader"></div>}
 
 							{mainImg && (
 								<div className="main-img">

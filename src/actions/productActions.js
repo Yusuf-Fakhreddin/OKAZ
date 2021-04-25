@@ -17,16 +17,21 @@ import {
 	PRODUCT_UPDATE_REQUEST,
 	PRODUCT_UPDATE_SUCCESS,
 	PRODUCT_UPDATE_FAIL,
+	MY_PRODUCT_LIST_SUCCESS,
+	MY_PRODUCT_LIST_FAIL,
+	MY_PRODUCT_LIST_REQUEST,
 } from "../constants/productConstants";
 import { logout } from "./userActions";
+
 // getting last 6 items action
-export const listProducts = () => async (dispatch) => {
+export const listProducts = (cnt) => async (dispatch) => {
 	try {
 		dispatch({ type: PRODUCT_LIST_REQUEST });
 
 		const { data } = await http.get(
-			"https://okazapp.herokuapp.com/api/products/"
+			`https://okazapp.herokuapp.com/api/products/recent/${cnt}`
 		);
+		console.log(`https://okazapp.herokuapp.com/api/products/recent/${cnt}`);
 		dispatch({
 			type: PRODUCT_LIST_SUCCESS,
 			payload: data,
@@ -34,6 +39,38 @@ export const listProducts = () => async (dispatch) => {
 	} catch (error) {
 		dispatch({
 			type: PRODUCT_LIST_FAIL,
+			payload:
+				error.response && error.response.data.message
+					? error.response.data.message
+					: error.message,
+		});
+	}
+};
+// getting last 6 items action
+export const listMyProducts = () => async (dispatch, getState) => {
+	try {
+		dispatch({ type: MY_PRODUCT_LIST_REQUEST });
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+		const { data } = await http.get(
+			`https://okazapp.herokuapp.com/api/users/myProducts`,
+			config
+		);
+		dispatch({
+			type: MY_PRODUCT_LIST_SUCCESS,
+			payload: data,
+		});
+	} catch (error) {
+		dispatch({
+			type: MY_PRODUCT_LIST_FAIL,
 			payload:
 				error.response && error.response.data.message
 					? error.response.data.message
@@ -104,6 +141,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 };
 
 export const createProduct = (product) => async (dispatch, getState) => {
+	console.log(product);
 	try {
 		dispatch({
 			type: PRODUCT_CREATE_REQUEST,
@@ -123,7 +161,7 @@ export const createProduct = (product) => async (dispatch, getState) => {
 
 		const { data } = await http.post(
 			`https://okazapp.herokuapp.com/api/products`,
-			{},
+			product,
 			config
 		);
 
@@ -164,7 +202,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
 		};
 
 		const { data } = await http.put(
-			`https://okazapp.herokuapp.com/api/products/${product._id}`,
+			`https://okazapp.herokuapp.com/api/products/${product.productId}`,
 			product,
 			config
 		);
@@ -175,6 +213,7 @@ export const updateProduct = (product) => async (dispatch, getState) => {
 		});
 		dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
 	} catch (error) {
+		console.log(error);
 		const message =
 			error.response && error.response.data.message
 				? error.response.data.message

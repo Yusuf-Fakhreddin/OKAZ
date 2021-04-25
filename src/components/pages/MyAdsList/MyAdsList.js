@@ -1,39 +1,38 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { deleteProduct, listProducts } from "../../../actions/productActions";
-import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
+import { deleteProduct } from "../../../actions/productActions";
+import { listMyProducts } from "../../../actions/productActions";
 import Header from "../../Header/Header";
 
 import "../userListPage/UserListPage.scss";
 
-const AdsListPage = ({ history, match }) => {
+const MyAdsList = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
 
 	const dispatch = useDispatch();
 
-	const productList = useSelector((state) => state.productList);
+	const productList = useSelector((state) => state.myProducts);
 	const { loading, error, products, page, pages } = productList;
-	const productDelete = useSelector((state) => state.productDelete);
-	const {
-		loading: loadingDelete,
-		error: errorDelete,
-		success: successDelete,
-	} = productDelete;
+	// const productDelete = useSelector((state) => state.productDelete);
+	// const {
+	// 	loading: loadingDelete,
+	// 	error: errorDelete,
+	// 	success: successDelete,
+	// } = productDelete;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
 	useEffect(() => {
 		console.log(products);
-		dispatch({ type: PRODUCT_CREATE_RESET });
-
-		if (!userInfo || !userInfo.isAdmin) {
+		if (!userInfo) {
 			history.push("/login");
 		} else {
-			dispatch(listProducts());
+			dispatch(listMyProducts());
 		}
-	}, [dispatch, history, userInfo, successDelete, pageNumber]);
+		console.log(error);
+	}, [dispatch, history, userInfo, pageNumber]);
 	const deleteHandler = (id) => {
 		if (window.confirm("Are you sure")) {
 			dispatch(deleteProduct(id));
@@ -43,7 +42,7 @@ const AdsListPage = ({ history, match }) => {
 		<>
 			<Header />
 			<div className="container">
-				<h2>Ads</h2>
+				<h2>My Ads</h2>
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
@@ -53,10 +52,10 @@ const AdsListPage = ({ history, match }) => {
 						<table>
 							<thead>
 								<tr>
-									<th>Owner Name</th>
+									<th>Name</th>
 									<th>Phone Number</th>
 									<th>Price</th>
-									<th>Category</th>
+									<th>City</th>
 									<th></th>
 									<th></th>
 								</tr>
@@ -71,7 +70,7 @@ const AdsListPage = ({ history, match }) => {
 										</td>
 										<td>{product.ownerPhoneNumber}</td>
 										<td>${product.price}</td>
-										<td>{product.category}</td>
+										<td>{product.city}</td>
 
 										<td>
 											<NavLink to={`/product/${product._id}/edit`}>
@@ -99,4 +98,4 @@ const AdsListPage = ({ history, match }) => {
 	);
 };
 
-export default AdsListPage;
+export default MyAdsList;

@@ -89,10 +89,10 @@ const ItemPage = ({ match, history }) => {
 									<h1>{product.productName}</h1>
 									<h2>
 										{product.city}{" "}
-										<small>
+										{/* <small>
 											date added:{" "}
-											{/* {product ? product.updatedAt.split("T")[0] : null} */}
-										</small>{" "}
+											{product ? product.updatedAt.split("T")[0] : null}
+										</small>{" "} */}
 									</h2>
 								</div>
 								<h1 className="price">{product.price} EGP</h1>

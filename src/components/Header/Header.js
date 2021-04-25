@@ -33,6 +33,10 @@ const Header = () => {
 									{" "}
 									<h2>{userInfo.name}</h2>
 								</NavLink>
+								<NavLink to="/myAds">
+									{" "}
+									<h2>My Ads</h2>
+								</NavLink>
 								<h2 onClick={logoutHandler}>Logout</h2>{" "}
 							</>
 						) : (
@@ -48,12 +52,12 @@ const Header = () => {
 									<h2>Users</h2>
 								</NavLink>
 								<NavLink to="/admin/adsList">
-									<h2>Products</h2>
+									<h2>All Ads</h2>
 								</NavLink>
 							</>
 						)}
 						<NavLink to="/placeAd">
-							<h2>placeAd</h2>
+							<h2>Place Ad</h2>
 						</NavLink>
 					</div>
 				</div>
