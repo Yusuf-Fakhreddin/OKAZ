@@ -14,14 +14,16 @@ function RegisterationPage({ props, history, location }) {
 	const dispatch = useDispatch();
 
 	const userRegister = useSelector((state) => state.userRegister);
+	const userLogin = useSelector((state) => state.userLogin);
 
 	const { loading, error, userInfo } = userRegister;
+	const { userInfo: LogInInfo } = userLogin;
 
 	const redirect = location.search ? location.search.split("=")[1] : "/";
 
 	useEffect(() => {
 		document.title = "Register";
-		if (userInfo) {
+		if (userInfo || LogInInfo) {
 			// history.push(redirect);
 			history.goBack();
 		}
@@ -63,7 +65,7 @@ function RegisterationPage({ props, history, location }) {
 						<button type="submit">Login</button>
 					</NavLink>
 				</div>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
 					{error && <h1 className="error">{error}</h1>}
 					<FormInput
 						register={register}

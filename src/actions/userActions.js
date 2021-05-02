@@ -38,7 +38,7 @@ export const login = (email, password) => async (dispatch) => {
 			},
 		};
 		const { data } = await http.post(
-			"/users/login",
+			"https://okazapp.herokuapp.com/api/users/login",
 			{ email, password },
 			config
 		);

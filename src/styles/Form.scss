@@ -116,7 +116,8 @@ input:focus {
 	.form-control {
 		position: relative;
 		width: 100%;
-		input {
+		input,
+		select {
 			padding: 15px;
 			background-color: var(--secondaryColor);
 			&::placeholder {
@@ -143,7 +144,8 @@ input:focus {
 				text-decoration: none;
 				cursor: pointer;
 				padding: 10px;
-				background-color: var(--secondaryColor);
+				color: #f8f2da;
+				background-color: var(--primaryColor);
 				&:hover {
 					background-color: var(--buttonColor);
 					color: white;

@@ -47,7 +47,7 @@ function LoginPage({ props, history, location }) {
 						<button type="submit">Sign up</button>
 					</NavLink>
 				</div>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
 					{error && <h1 className="error">{error}</h1>}
 					{loading && <div className="loader"></div>}
 					<FormInput

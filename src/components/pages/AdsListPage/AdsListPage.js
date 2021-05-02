@@ -65,7 +65,7 @@ const AdsListPage = ({ history, match }) => {
 								{products.map((product) => (
 									<tr key={product._id}>
 										<td>
-											<NavLink to={"item/" + product._id}>
+											<NavLink to={"/item/" + product._id}>
 												{product.productName}
 											</NavLink>
 										</td>

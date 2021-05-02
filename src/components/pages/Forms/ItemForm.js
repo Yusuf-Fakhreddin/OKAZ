@@ -89,6 +89,10 @@ function ItemForm({ props, history }) {
 	};
 
 	const onSubmit = async (data, errors) => {
+		if (!image) {
+			setImageError("Image is Required");
+			return;
+		}
 		dispatch(createProduct({ ...data, image }));
 		// console.log({ productId, ...data, image });
 	};
@@ -97,7 +101,7 @@ function ItemForm({ props, history }) {
 		<>
 			<Header />
 			<div className="form">
-				<div className="formContainer">
+				<div>
 					<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 						<FormInput
 							register={register}
@@ -112,7 +116,7 @@ function ItemForm({ props, history }) {
 							type="number"
 							name="ownerPhoneNumber"
 							label="Owner Number"
-							onWheel={(event) => event.currentTarget.blur()}
+							onWheel={(event) => event.target.blur()}
 							id="ownerPhoneNumber"
 							// error={errors.fullname}
 						/>
@@ -128,7 +132,7 @@ function ItemForm({ props, history }) {
 							register={register}
 							type="number"
 							name="price"
-							onWheel={(e) => e.preventDefault()}
+							onWheel={(event) => event.currentTarget.blur()}
 							label="Price (EGP)"
 							id="price"
 							error={errors.price}
@@ -136,6 +140,7 @@ function ItemForm({ props, history }) {
 						<SuggestionInput
 							register={register}
 							type="text"
+							autoComplete="off"
 							name="city"
 							label="Specific City ?"
 							error={errors.city}
@@ -165,7 +170,7 @@ function ItemForm({ props, history }) {
 								</option>
 								<option value="New">New</option>
 								<option value="Used">Used</option>
-								<option value="doesNotApply">Does not apply</option>
+								<option value="Does not apply">Does not apply</option>
 							</select>
 						</div>
 

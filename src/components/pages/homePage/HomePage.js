@@ -4,6 +4,8 @@ import { listProducts } from "../../../actions/productActions";
 
 import Header from "../../Header/Header";
 import ItemCard from "../../ProductCard/ItemCard";
+import CategoriesSearch from "../Forms/Categories";
+import Explore from "../Forms/Explore";
 import Search from "../Forms/Search";
 
 const HomePage = () => {
@@ -15,6 +17,8 @@ const HomePage = () => {
 	const { loading, error, products } = productList;
 
 	useEffect(() => {
+		document.title = "Okaz";
+
 		// firing the listProducts Action
 		dispatch(listProducts(6));
 		console.log(products);
@@ -26,6 +30,7 @@ const HomePage = () => {
 			<div className="homePage container">
 				<h1>What are you looking for ?</h1>
 				<Search />
+				<Explore />
 				<h2>Latest Ads</h2>
 				{loading ? (
 					<div className="loader"> </div>

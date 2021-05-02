@@ -64,13 +64,13 @@ const UserListPage = ({ history }) => {
 												<i
 													className="fas fa-check "
 													style={{
-														color: "green",
+														color: "#f8f2da",
 													}}
 												></i>
 											) : (
 												<i
 													className="fas fa-times"
-													style={{ color: "#cc0000" }}
+													style={{ color: "#f8f2da" }}
 												></i>
 											)}
 										</td>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { logout } from "../../actions/userActions";
 
-import Logo from "./logo.png";
+import Logo from "./logoeng.png";
 
 const Header = () => {
 	const dispatch = useDispatch();
@@ -41,8 +41,8 @@ const Header = () => {
 							</>
 						) : (
 							<>
-								<NavLink to="login">
-									<h2>SignIn</h2>
+								<NavLink to="/login">
+									<h2>Login</h2>
 								</NavLink>
 							</>
 						)}

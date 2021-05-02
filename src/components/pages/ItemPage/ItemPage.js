@@ -101,7 +101,7 @@ const ItemPage = ({ match, history }) => {
 								<img src={product.image} />
 								<div className="side">
 									<h1>{product.ownerName}</h1>
-									<h2>0111******</h2>
+									<h2>{product.ownerPhoneNumber}</h2>
 									<h3>Item Description</h3>
 									<p>{product.description}</p>
 								</div>

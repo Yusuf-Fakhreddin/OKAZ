@@ -20,6 +20,9 @@ import {
 	MY_PRODUCT_LIST_SUCCESS,
 	MY_PRODUCT_LIST_FAIL,
 	MY_PRODUCT_LIST_REQUEST,
+	PRODUCT_SEARCH_REQUEST,
+	PRODUCT_SEARCH_SUCCESS,
+	PRODUCT_SEARCH_FAIL,
 } from "../constants/productConstants";
 import { logout } from "./userActions";
 
@@ -46,6 +49,43 @@ export const listProducts = (cnt) => async (dispatch) => {
 		});
 	}
 };
+
+// searchProducts
+export const searchProducts = (product) => async (dispatch, getState) => {
+	console.log(product);
+	try {
+		dispatch({ type: PRODUCT_SEARCH_REQUEST });
+
+		console.log(`https://okazapp.herokuapp.com/api/search`);
+
+		const config = {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		};
+
+		const { data } = await http.post(
+			`https://okazapp.herokuapp.com/api/search`,
+			product,
+			config
+		);
+
+		dispatch({
+			type: PRODUCT_SEARCH_SUCCESS,
+			payload: data,
+		});
+		console.log(data);
+	} catch (error) {
+		dispatch({
+			type: PRODUCT_SEARCH_FAIL,
+			payload:
+				error.response && error.response.data.message
+					? error.response.data.message
+					: error.message,
+		});
+	}
+};
+
 // getting last 6 items action
 export const listMyProducts = () => async (dispatch, getState) => {
 	try {

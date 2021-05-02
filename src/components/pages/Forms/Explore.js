@@ -7,11 +7,11 @@ import "../../../styles/Form.scss";
 import SuggestionInput from "./Fields/SuggestionsInput";
 import cities from "./Fields/cities";
 import { useHistory } from "react-router";
-function Search({ props }) {
-	const history = useHistory();
 
+function Explore({ props }) {
+	const history = useHistory();
 	const validationSchema = Yup.object({
-		itemName: Yup.string().required("Required"),
+		category: Yup.string().required("Required"),
 		// may need to make specify cities the value should be one of them
 		city: Yup.string(),
 	});
@@ -21,8 +21,9 @@ function Search({ props }) {
 		resolver: yupResolver(validationSchema),
 	});
 
-	const onSubmit = ({ itemName, city }) => {
-		history.push(`/search/${itemName}/${city}`);
+	const onSubmit = ({ category, city }) => {
+		console.log(city);
+		history.push(`/explore/${category}/${city}`);
 	};
 
 	return (
@@ -32,13 +33,20 @@ function Search({ props }) {
 				autoComplete="off"
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<FormInput
-					register={register}
-					type="text"
-					name="itemName"
-					label="Item Name"
-					error={errors.itemName}
-				/>
+				<div className="form-control">
+					<label htmlFor="category">Select a category</label>
+					<select ref={register} name="category">
+						<option value="" disabled selected>
+							{" "}
+							Select a category{" "}
+						</option>
+						<option value="Technology">Technology</option>
+						<option value="Home">Home</option>
+						<option value="Vehicles">Vehicles</option>
+						<option value="Fashion">Fashion</option>
+						<option value="Pets">Pets</option>
+					</select>
+				</div>
 				<SuggestionInput
 					register={register}
 					type="text"
@@ -47,10 +55,10 @@ function Search({ props }) {
 					error={errors.city}
 					data={cities}
 				/>
-				<button type="submit">Search</button>
+				<button type="submit">Explore</button>
 			</form>
 		</div>
 	);
 }
 
-export default Search;
+export default Explore;

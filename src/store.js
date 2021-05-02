@@ -9,6 +9,7 @@ import {
 	productCreateReducer,
 	productUpdateReducer,
 	myProductsReducer,
+	productSearchReducer,
 } from "./reducers/productReducers";
 import {
 	userDeleteReducer,
@@ -36,6 +37,7 @@ const reducer = combineReducers({
 	userDelete: userDeleteReducer,
 	userUpdate: userUpdateReducer,
 	myProducts: myProductsReducer,
+	productSearch: productSearchReducer,
 });
 
 const favoritesItemsFromStorage = localStorage.getItem("favoritesItems")
