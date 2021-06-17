@@ -37,6 +37,10 @@ const Header = () => {
 									{" "}
 									<h2>My Ads</h2>
 								</NavLink>
+								<NavLink to="/favorites">
+									{" "}
+									<h2>My Favorites</h2>
+								</NavLink>
 								<h2 onClick={logoutHandler}>Logout</h2>{" "}
 							</>
 						) : (

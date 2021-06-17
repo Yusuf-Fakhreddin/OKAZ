@@ -40,6 +40,8 @@ const ProfilePage = ({ props, history }) => {
 
 	const dispatch = useDispatch();
 	useEffect(() => {
+		document.title = "Profile";
+
 		if (!userInfo) {
 			history.push("/login");
 		} else {

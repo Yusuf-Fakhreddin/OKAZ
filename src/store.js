@@ -1,7 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { favoritesReducer } from "./reducers/favoritesReducers";
+import {
+	favoritesAddReducer,
+	favoritesListReducer,
+	favoritesRemoveReducer,
+} from "./reducers/favoritesReducers";
 import {
 	productListReducer,
 	productDetailsReducer,
@@ -28,7 +32,6 @@ const reducer = combineReducers({
 	productDelete: productDeleteReducer,
 	productCreate: productCreateReducer,
 	productUpdate: productUpdateReducer,
-	favorites: favoritesReducer,
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userDetails: userDetailsReducer,
@@ -38,20 +41,16 @@ const reducer = combineReducers({
 	userUpdate: userUpdateReducer,
 	myProducts: myProductsReducer,
 	productSearch: productSearchReducer,
+	favoritesList: favoritesListReducer,
+	favoritesAdd: favoritesAddReducer,
+	favoritesRemove: favoritesRemoveReducer,
 });
-
-const favoritesItemsFromStorage = localStorage.getItem("favoritesItems")
-	? JSON.parse(localStorage.getItem("favoritesItems"))
-	: [];
 
 // initializing the userinfo state from what's saved in local storage or nothing
 const userInfoFromStorage = localStorage.getItem("UserInfo")
 	? JSON.parse(localStorage.getItem("UserInfo"))
 	: null;
 const initialState = {
-	favorites: {
-		favoritesItems: favoritesItemsFromStorage,
-	},
 	userLogin: { userInfo: userInfoFromStorage },
 };
 

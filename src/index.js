@@ -6,13 +6,19 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>,
-	document.getElementById("root")
-);
+import GA4React, { useGA4React } from "ga-4-react";
+const ga4react = new GA4React("G-HT0EE0LNMW");
 
+(async () => {
+	await ga4react.initialize();
+
+	ReactDOM.render(
+		<Provider store={store}>
+			<App />
+		</Provider>,
+		document.getElementById("root")
+	);
+})();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

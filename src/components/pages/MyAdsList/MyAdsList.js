@@ -25,6 +25,7 @@ const MyAdsList = ({ history, match }) => {
 	const { userInfo } = userLogin;
 
 	useEffect(() => {
+		document.title = "My Ads";
 		console.log(products);
 		if (!userInfo) {
 			history.push("/login");

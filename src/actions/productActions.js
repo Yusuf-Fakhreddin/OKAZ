@@ -86,7 +86,6 @@ export const searchProducts = (product) => async (dispatch, getState) => {
 	}
 };
 
-// getting last 6 items action
 export const listMyProducts = () => async (dispatch, getState) => {
 	try {
 		dispatch({ type: MY_PRODUCT_LIST_REQUEST });
@@ -141,6 +140,7 @@ export const listProductsDetails = (id) => async (dispatch) => {
 		});
 	}
 };
+
 export const deleteProduct = (id) => async (dispatch, getState) => {
 	try {
 		dispatch({
@@ -182,6 +182,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 
 export const createProduct = (product) => async (dispatch, getState) => {
 	console.log(product);
+
 	try {
 		dispatch({
 			type: PRODUCT_CREATE_REQUEST,

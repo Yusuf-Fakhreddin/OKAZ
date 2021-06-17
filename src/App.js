@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./styles/App.scss";
 import FavoritesPage from "./components/pages/Favorites/FavoritesPage";
@@ -14,7 +14,14 @@ import AdsListPage from "./components/pages/AdsListPage/AdsListPage";
 import AdUpdatePage from "./components/pages/AdUpdatePage.js/AdUpdatePage";
 import MyAdsList from "./components/pages/MyAdsList/MyAdsList";
 import SearchPage from "./components/pages/ExplorePage/SearchPage";
+import GA4React, { useGA4React } from "ga-4-react";
+
 function App() {
+	const ga = useGA4React();
+	useEffect(() => {
+		console.log(ga);
+	}, [ga]);
+
 	return (
 		<Router>
 			<Switch>
