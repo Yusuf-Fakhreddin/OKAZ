@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormInput from "./Fields/FormInput";
-import "../../../styles/Form.scss";
-import SuggestionInput from "./Fields/SuggestionsInput";
 import cities from "./Fields/cities";
 import { useHistory } from "react-router";
+import {
+	Icon,
+	Button,
+	Select,
+	Autocomplete,
+	TextInput,
+} from "react-materialize";
 
 function Explore({ props }) {
 	const history = useHistory();
@@ -16,46 +21,88 @@ function Explore({ props }) {
 		city: Yup.string(),
 	});
 
-	const { register, handleSubmit, errors, formState } = useForm({
-		mode: "onChange",
+	const { register, handleSubmit, setValue, getValues, control } = useForm({
+		// mode: "onChange",
 		resolver: yupResolver(validationSchema),
 	});
 
+	const [selectedCategory, setselectedCategory] = useState("");
+	const [selectedCity, setselectedCity] = useState("");
 	const onSubmit = ({ category, city }) => {
-		console.log(city);
+		category = selectedCategory;
+		city = selectedCity;
 		history.push(`/explore/${category}/${city}`);
+	};
+
+	const values = getValues();
+	const select = (e) => {
+		setselectedCategory(e.target.value);
+	};
+	const complete = (e) => {
+		console.log(e.target.value);
+		setselectedCity(e.target.value);
 	};
 
 	return (
 		<div className="search-container">
-			<form
-				className="search"
-				autoComplete="off"
-				onSubmit={handleSubmit(onSubmit)}
-			>
-				<div className="form-control">
-					<label htmlFor="category">Select a category</label>
-					<select ref={register} name="category">
-						<option value="" disabled selected>
-							{" "}
-							Select a category{" "}
+			<form onSubmit={handleSubmit(onSubmit)}>
+				<h4>Explore a Category</h4>
+				<div>
+					<Select
+						onChange={select}
+						ref={register}
+						multiple={false}
+						options={{
+							classes: "",
+							dropdownOptions: {
+								alignment: "left",
+								autoTrigger: true,
+								closeOnClick: true,
+								constrainWidth: true,
+								coverTrigger: true,
+								hover: false,
+								inDuration: 150,
+								onCloseEnd: null,
+								onCloseStart: null,
+								onOpenEnd: null,
+								onOpenStart: null,
+								outDuration: 250,
+							},
+						}}
+						name="category"
+					>
+						<label htmlFor="">Select a category</label>
+						<option value="" selected disabled>
+							Select a category
 						</option>
 						<option value="Technology">Technology</option>
 						<option value="Home">Home</option>
 						<option value="Vehicles">Vehicles</option>
 						<option value="Fashion">Fashion</option>
 						<option value="Pets">Pets</option>
-					</select>
+					</Select>
 				</div>
-				<SuggestionInput
-					register={register}
-					type="text"
+				<Autocomplete
+					ref={register}
 					name="city"
-					label="Specific City ?"
-					error={errors.city}
-					data={cities}
+					type="text"
+					onChange={complete}
+					icon={<Icon>place</Icon>}
+					id="city"
+					options={{
+						onAutocomplete: function (value) {
+							console.log(value);
+							setselectedCity(value);
+						},
+						data: cities,
+					}}
+					placeholder="Choose a City to search in"
+					title="Specific City ?"
 				/>
-				<button type="submit">Explore</button>
+				<Button node="button" waves="light" type="submit" onClick={onSubmit}>
+					Explore
+					<Icon right>category</Icon>
+				</Button>{" "}
 			</form>
 		</div>
 	);

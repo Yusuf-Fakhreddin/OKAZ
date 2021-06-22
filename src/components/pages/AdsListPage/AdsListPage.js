@@ -4,8 +4,9 @@ import { NavLink } from "react-router-dom";
 import { deleteProduct, listProducts } from "../../../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 import Header from "../../Header/Header";
+import { Table, Icon } from "react-materialize";
 
-import "../userListPage/UserListPage.scss";
+// import "../userListPage/UserListPage.scss";
 
 const AdsListPage = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
@@ -49,8 +50,8 @@ const AdsListPage = ({ history, match }) => {
 				) : error ? (
 					<h1 className="error">{error}</h1>
 				) : (
-					<div className="container">
-						<table>
+					<div>
+						<Table bordered hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
 									<th>Owner Name</th>
@@ -70,28 +71,25 @@ const AdsListPage = ({ history, match }) => {
 											</NavLink>
 										</td>
 										<td>{product.ownerPhoneNumber}</td>
-										<td>${product.price}</td>
+										<td>{product.price} EGP</td>
 										<td>{product.category}</td>
 
 										<td>
 											<NavLink to={`/product/${product._id}/edit`}>
-												<button className="delete">
-													<i className="fas fa-edit"></i>
+												<button>
+													<Icon>edit</Icon>
 												</button>
 											</NavLink>
 										</td>
 										<td>
-											<button
-												className="delete"
-												onClick={() => deleteHandler(product._id)}
-											>
-												<i className="fas fa-trash"></i>
+											<button onClick={() => deleteHandler(product._id)}>
+												<Icon>delete</Icon>
 											</button>
 										</td>
 									</tr>
 								))}
 							</tbody>
-						</table>
+						</Table>
 					</div>
 				)}
 			</div>

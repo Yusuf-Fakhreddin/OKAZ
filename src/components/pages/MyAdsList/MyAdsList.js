@@ -5,7 +5,7 @@ import { deleteProduct } from "../../../actions/productActions";
 import { listMyProducts } from "../../../actions/productActions";
 import Header from "../../Header/Header";
 
-import "../userListPage/UserListPage.scss";
+import { Table, Icon } from "react-materialize";
 
 const MyAdsList = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
@@ -50,7 +50,7 @@ const MyAdsList = ({ history, match }) => {
 					<h1 className="error">{error}</h1>
 				) : (
 					<div className="container">
-						<table>
+						<Table>
 							<thead>
 								<tr>
 									<th>Name</th>
@@ -72,26 +72,22 @@ const MyAdsList = ({ history, match }) => {
 										<td>{product.ownerPhoneNumber}</td>
 										<td>${product.price}</td>
 										<td>{product.city}</td>
-
 										<td>
 											<NavLink to={`/product/${product._id}/edit`}>
-												<button className="delete">
-													<i className="fas fa-edit"></i>
+												<button>
+													<Icon>edit</Icon>
 												</button>
 											</NavLink>
 										</td>
 										<td>
-											<button
-												className="delete"
-												onClick={() => deleteHandler(product._id)}
-											>
-												<i className="fas fa-trash"></i>
+											<button onClick={() => deleteHandler(product._id)}>
+												<Icon>delete</Icon>
 											</button>
 										</td>
 									</tr>
 								))}
 							</tbody>
-						</table>
+						</Table>
 					</div>
 				)}
 			</div>

@@ -1,33 +1,36 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./ItemCard.scss";
+import { Icon, Row, Col, Card, CardTitle } from "react-materialize";
+
 const ItemCard = ({ product }) => {
 	console.log(product.image);
 	return (
-		<NavLink to={`/item/${product._id}`}>
-			<div className="wrapper">
-				<div className="itemCard">
-					<div className="card-header">
-						<img src={product.image} alt="rover" />
-					</div>
-					<div className="card-body">
-						<span className="tag ">{product.category}</span>
-						<h3>{product.productName}</h3>
-						{/* <p className="truncate3">{product.description}</p> */}
-						<div className="user-info">
-							{/* <h3>{product.ownerName}</h3> */}
-							<h4>{product.ownerName}</h4>
-							<h4>{product.city} </h4>
-							{product.condition && <h4> Condition: {product.condition}</h4>}
-							{/* <small>{product.updatedAt}</small> */}
-						</div>
-						<div>
-							<h2 className="price">{product.price} EGP</h2>
-						</div>
-					</div>
+		<div>
+			<Card
+				className="newCard"
+				// closeIcon={<Icon>close</Icon>}
+				header={
+					<NavLink to={`/item/${product._id}`}>
+						<CardTitle image={product.image} waves="light" />{" "}
+					</NavLink>
+				}
+				// reveal={<p>{product.description}</p>}
+				// revealIcon={<Icon>more_vert</Icon>}
+			>
+				<div className="card-content">
+					<span className="card-title truncate">{product.productName}</span>
+					<h5>{product.price} EGP</h5>
+					<p>
+						{product.city} - {product.condition}
+					</p>
 				</div>
-			</div>
-		</NavLink>
+
+				{/* <div class="card-action">
+					<NavLink to={`/item/${product._id}`}>See More</NavLink>{" "}
+				</div> */}
+			</Card>
+		</div>
 	);
 };
 

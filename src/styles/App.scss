@@ -3,98 +3,77 @@
 	--secondaryColor: #cf8970;
 	--buttonColor: #543c2c;
 }
+@import "./materialize-src/sass/materialize.scss";
 
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500&display=swap");
-
-* {
-	font-family: "Ubuntu", sans-serif;
-	font-weight: 400;
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	outline: none;
-	border: none;
-}
 body {
 	background-color: #f8f2da;
 }
-// utilites
-.container {
-	width: min(80vw, 1200px);
-	margin: 0 auto;
-}
-.okaz {
-	font-weight: 500;
-	font-size: 2.5em;
-	font-family: "Ubuntu";
-}
-.active {
-	text-decoration: none;
-	border: none;
-	color: inherit;
-	outline: none;
-}
-.flex {
-	display: flex;
-}
-// to center items in container
-.center {
-	display: grid;
-	place-items: center;
+
+$link-color: #cf8970;
+.bg {
+	background-color: #f8f2da;
 }
 
-// Components
-.header {
-	background-color: var(--primaryColor);
-	height: max(5vh, 100px);
-	padding: 20px;
-	margin-bottom: 20px;
+.bg-primary {
+	background-color: #98583c;
+}
+
+.bg-secondary {
+	background-color: #cf8970;
+}
+
+.bg-button::hover {
+	background-color: #543c2c;
+}
+
+.text {
 	color: #f8f2da;
+}
+
+.text-primary {
+	color: #98583c;
+}
+
+.text-secondary {
+	color: #cf8970;
+}
+
+.text-button {
+	color: #543c2c;
+}
+
+.logo {
+	width: 120px;
+	height: auto;
+	margin-top: 5px;
+	img {
+		width: 100%;
+	}
+}
+
+.search {
 	display: grid;
-	place-items: center;
-	.logo {
-		width: 120px;
-		height: auto;
-		img {
-			width: 100%;
-		}
-
-		// background-color: black;
-	}
-	.nav {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-	.menu {
-		display: flex;
-		h2 {
-			margin: 0 5px;
-		}
-	}
-}
-// Screens
-.homePage {
-	.cards {
-		display: grid;
-		grid-gap: 2em;
-		place-items: center;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-	}
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	grid-gap: 2em;
 }
 
-// h1,
-// h2,
-// h3 {
-// 	color: var(--buttonColor);
-// }
+.itemBtn {
+	margin: 0 5px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
 .loader {
-	border: 16px solid #f3f3f3; /* Light grey */
-	border-top: 16px solid var(--primaryColor);
+	border: 5px solid #f8f2da;
+	border-top: 5px solid #543c2c;
 	border-radius: 50%;
 	width: 120px;
 	height: 120px;
-	animation: spin 2s linear infinite;
+	animation: spin 1s linear infinite;
 }
 
 @keyframes spin {

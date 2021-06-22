@@ -7,6 +7,7 @@ import {
 } from "../../../actions/favoritesActions";
 import Header from "../../Header/Header";
 import ItemCard from "../../ProductCard/ItemCard";
+import { Row, Col } from "react-materialize";
 
 const FavoritesPage = () => {
 	const favoritesList = useSelector((state) => state.favoritesList);
@@ -35,12 +36,13 @@ const FavoritesPage = () => {
 				) : !favorites ? (
 					<h1>You have no favorites yet</h1>
 				) : (
-					<div className="cards">
-						{/* item.product is the ID of the product we make it key for list */}
-						{favorites.map((item) => (
-							<ItemCard key={item.product} product={item} />
+					<Row>
+						{favorites.map((product) => (
+							<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
+								<ItemCard key={product.product} product={product} />
+							</Col>
 						))}
-					</div>
+					</Row>
 				)}
 			</div>
 		</div>

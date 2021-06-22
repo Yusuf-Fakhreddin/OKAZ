@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { listUsers, deleteUser } from "../../../actions/userActions";
 import Header from "../../Header/Header";
-import "./UserListPage.scss";
+import { Table, Icon, Preloader } from "react-materialize";
 const UserListPage = ({ history }) => {
 	const dispatch = useDispatch();
 
@@ -37,10 +37,10 @@ const UserListPage = ({ history }) => {
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
-					<h1 className="error">{error}</h1>
+					<p className="red-text">{error}</p>
 				) : (
 					<div className="container">
-						<table>
+						<Table bordered hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
 									<th>ID</th>
@@ -61,38 +61,28 @@ const UserListPage = ({ history }) => {
 										</td>
 										<td className="admin">
 											{user.isAdmin ? (
-												<i
-													className="fas fa-check "
-													style={{
-														color: "#f8f2da",
-													}}
-												></i>
+												<Icon>check_circle_outline</Icon>
 											) : (
-												<i
-													className="fas fa-times"
-													style={{ color: "#f8f2da" }}
-												></i>
+												<Icon>highlight_off</Icon>
 											)}
 										</td>
+
 										<td>
 											<NavLink to={`/admin/user/${user._id}/edit`}>
-												<button className="delete">
-													<i className="fas fa-edit"></i>
+												<button>
+													<Icon>edit</Icon>
 												</button>
 											</NavLink>
 										</td>
 										<td>
-											<button
-												className="delete"
-												onClick={() => deleteHandler(user._id)}
-											>
-												<i className="fas fa-trash"></i>
+											<button onClick={() => deleteHandler(user._id)}>
+												<Icon>delete</Icon>
 											</button>
 										</td>
 									</tr>
 								))}
 							</tbody>
-						</table>
+						</Table>
 					</div>
 				)}
 			</div>

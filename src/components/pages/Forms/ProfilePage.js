@@ -4,8 +4,8 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
+import { Icon, Button } from "react-materialize";
 
-import "../../../styles/Form.scss";
 import FormInput from "./Fields/FormInput";
 import Header from "../../Header/Header";
 import {
@@ -33,7 +33,7 @@ const ProfilePage = ({ props, history }) => {
 			.oneOf([Yup.ref("password"), ""], "Passwords must match")
 			.required("Required"),
 	});
-	const { register, handleSubmit, errors, setValue } = useForm({
+	const { register, handleSubmit, errors, setValue, getValues } = useForm({
 		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
@@ -58,11 +58,13 @@ const ProfilePage = ({ props, history }) => {
 		// console.log(fullname, confirmPassword, email, password);
 		dispatch(updateUserProfile({ id: user._id, fullname, email, password }));
 	};
+	const values = getValues();
 
 	return (
 		<>
 			<Header />
-			<div className="formContainer form">
+			<div className="formContainer section form container">
+				<h2>Your Profile infomation</h2>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					{error && <h1 className="error">{error}</h1>}
 					{success && <h1 className="success">Profile Updated</h1>}
@@ -73,8 +75,8 @@ const ProfilePage = ({ props, history }) => {
 						label="Full Name"
 						id="fullname"
 						error={errors.fullname}
+						value={values.fullname}
 					/>
-
 					<FormInput
 						register={register}
 						type="email"
@@ -82,8 +84,8 @@ const ProfilePage = ({ props, history }) => {
 						label="Email"
 						id="email"
 						error={errors.email}
+						value={values.email}
 					/>
-
 					<FormInput
 						register={register}
 						type="password"
@@ -100,7 +102,9 @@ const ProfilePage = ({ props, history }) => {
 						id="confirmPassword"
 						error={errors.confirmPassword}
 					/>
-					<button type="submit">Update</button>
+					<Button large node="button" waves="light" type="submit">
+						Update
+					</Button>{" "}
 				</form>
 			</div>
 		</>

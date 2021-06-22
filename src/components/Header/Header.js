@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { logout } from "../../actions/userActions";
+import { Icon, Navbar, NavItem, Dropdown, Divider } from "react-materialize";
 
 import Logo from "./logoeng.png";
 
@@ -15,58 +16,77 @@ const Header = () => {
 		dispatch(logout());
 	};
 	return (
-		<nav className="header">
-			<div className="container ">
-				<div className="nav">
-					<div className="logo">
-						<NavLink
-							activeStyle={{ textDecoration: "none", color: "inherit" }}
-							to="/"
-						>
-							<img src={Logo} alt="Logo" />
-						</NavLink>
-					</div>
-					<div className="menu">
-						{userInfo ? (
-							<>
-								<NavLink to="/profile">
-									{" "}
-									<h2>{userInfo.name}</h2>
-								</NavLink>
-								<NavLink to="/myAds">
-									{" "}
-									<h2>My Ads</h2>
-								</NavLink>
-								<NavLink to="/favorites">
-									{" "}
-									<h2>My Favorites</h2>
-								</NavLink>
-								<h2 onClick={logoutHandler}>Logout</h2>{" "}
-							</>
-						) : (
-							<>
-								<NavLink to="/login">
-									<h2>Login</h2>
-								</NavLink>
-							</>
-						)}
+		<>
+			<Navbar
+				className="bg-primary"
+				centerChildren
+				alignLinks="right"
+				brand={
+					<a className="brand-logo logo" href="/">
+						<img src={Logo} alt="Okaz" />
+					</a>
+				}
+				id="mobile-nav"
+				menuIcon={<Icon>menu</Icon>}
+				options={{
+					draggable: true,
+					edge: "left",
+					inDuration: 250,
+					onCloseEnd: null,
+					onCloseStart: null,
+					onOpenEnd: null,
+					onOpenStart: null,
+					outDuration: 200,
+					preventScrolling: true,
+				}}
+			>
+				{userInfo ? (
+					<Dropdown
+						className=".hide-on-small-only"
+						id="Dropdown_6"
+						options={{
+							alignment: "left",
+							autoTrigger: true,
+							closeOnClick: true,
+							constrainWidth: true,
+							container: null,
+							coverTrigger: false,
+							hover: true,
+							inDuration: 150,
+							onCloseEnd: null,
+							onCloseStart: null,
+							onOpenEnd: null,
+							onOpenStart: null,
+							outDuration: 250,
+						}}
+						trigger={
+							<a href="#">
+								{userInfo.name} <Icon right>arrow_drop_down</Icon>
+							</a>
+						}
+					>
+						<NavItem href="/profile">Profile</NavItem>
+						<NavItem href="/myAds">My Ads</NavItem>
+						<NavItem href="/favorites">My Favorites</NavItem>
 						{userInfo && userInfo.isAdmin && (
 							<>
-								<NavLink to="/admin/userList">
-									<h2>Users</h2>
-								</NavLink>
-								<NavLink to="/admin/adsList">
-									<h2>All Ads</h2>
-								</NavLink>
+								<Divider />
+
+								<NavItem href="/admin/userList">All Users</NavItem>
+								<NavItem href="/admin/adsList">All Ads</NavItem>
 							</>
 						)}
-						<NavLink to="/placeAd">
-							<h2>Place Ad</h2>
-						</NavLink>
-					</div>
-				</div>
-			</div>
-		</nav>
+					</Dropdown>
+				) : (
+					<>
+						<NavItem href="/login">Login</NavItem>
+					</>
+				)}
+
+				<NavItem href="/placeAd">Place Ad</NavItem>
+				{userInfo && <NavItem onClick={logoutHandler}>Logout</NavItem>}
+			</Navbar>
+		</>
 	);
 };
 

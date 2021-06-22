@@ -1,20 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./styles/App.scss";
 import FavoritesPage from "./components/pages/Favorites/FavoritesPage";
-import ItemForm from "./components/pages/Forms/ItemForm";
+import PlaceAd from "./components/pages/Forms/PlaceAd";
 import LoginPage from "./components/pages/Forms/LoginPage";
 import RegisterationPage from "./components/pages/Forms/RegisterationPage";
-import ItemPage from "./components/pages/ItemPage/ItemPage";
+import ProductPage from "./components/pages/ProductPage/ProductPage";
 import HomePage from "./components/pages/homePage/HomePage";
 import ProfilePage from "./components/pages/Forms/ProfilePage";
-import UserListPage from "./components/pages/userListPage/UserListPage";
-import UserEditPage from "./components/pages/UserEditPage.js/UserEditPage";
-import AdsListPage from "./components/pages/AdsListPage/AdsListPage";
 import AdUpdatePage from "./components/pages/AdUpdatePage.js/AdUpdatePage";
 import MyAdsList from "./components/pages/MyAdsList/MyAdsList";
 import SearchPage from "./components/pages/ExplorePage/SearchPage";
 import GA4React, { useGA4React } from "ga-4-react";
+
+// lazy loading of admin functionalities
+const UserListPage = React.lazy(() =>
+	import("./components/pages/userListPage/UserListPage")
+);
+const UserEditPage = React.lazy(() =>
+	import("./components/pages/UserEditPage/UserEditPage")
+);
+const AdsListPage = React.lazy(() =>
+	import("./components/pages/AdsListPage/AdsListPage")
+);
 
 function App() {
 	const ga = useGA4React();
@@ -32,9 +40,9 @@ function App() {
 
 				<Route path="/login" component={LoginPage} />
 
-				<Route path="/placeAd" component={ItemForm} />
+				<Route path="/placeAd" component={PlaceAd} />
 
-				<Route path="/item/:id" component={ItemPage} />
+				<Route path="/item/:id" component={ProductPage} />
 
 				<Route path="/favorites">
 					<FavoritesPage />
@@ -46,9 +54,36 @@ function App() {
 				<Route path="/explore/:category/:city?" component={SearchPage} />
 
 				<Route path="/profile" component={ProfilePage} />
-				<Route path="/admin/userlist" component={UserListPage} />
-				<Route path="/admin/adsList" component={AdsListPage} />
-				<Route path="/admin/user/:id/edit" component={UserEditPage} />
+				{/* Admin */}
+
+				<Route
+					path="/admin/userlist"
+					render={() => (
+						<Suspense fallback={<div className="loader"></div>}>
+							{" "}
+							<UserListPage />{" "}
+						</Suspense>
+					)}
+				/>
+
+				<Route
+					path="/admin/adsList"
+					render={() => (
+						<Suspense fallback={<div className="loader"></div>}>
+							{" "}
+							<AdsListPage />{" "}
+						</Suspense>
+					)}
+				/>
+				<Route
+					path="/admin/user/:id/edit"
+					render={() => (
+						<Suspense fallback={<div className="loader"></div>}>
+							{" "}
+							<UserEditPage />{" "}
+						</Suspense>
+					)}
+				/>
 			</Switch>
 		</Router>
 	);

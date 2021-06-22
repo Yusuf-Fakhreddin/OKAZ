@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../../actions/userActions";
+import { Button, Divider } from "react-materialize";
 
-import "../../../styles/Form.scss";
 import FormInput from "./Fields/FormInput";
 import Header from "../../Header/Header";
 
@@ -55,18 +55,24 @@ function RegisterationPage({ props, history, location }) {
 	return (
 		<>
 			<Header />
-			<div className="formContainer form">
-				<div className="haveAccount">
-					<h2>Already have an account ?</h2>
+			<div className="container ">
+				<div className="section">
+					<h5>Already have an account ?</h5>
 					<NavLink
 						to={redirect ? `/login?redirect=${redirect}` : "/login"}
 						activeClassName="active"
 					>
-						<button type="submit">Login</button>
+						<Button type="submit">Login</Button>
 					</NavLink>
 				</div>
-				<form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+				<Divider />
+				<form
+					autoComplete="off"
+					className="section"
+					onSubmit={handleSubmit(onSubmit)}
+				>
 					{error && <h1 className="error">{error}</h1>}
+					<h3>New Account</h3>
 					<FormInput
 						register={register}
 						type="text"
@@ -111,7 +117,9 @@ function RegisterationPage({ props, history, location }) {
 						id="confirmPassword"
 						error={errors.confirmPassword}
 					/>
-					<button type="submit">Register</button>
+					<Button large type="submit">
+						Register
+					</Button>
 				</form>
 			</div>
 		</>

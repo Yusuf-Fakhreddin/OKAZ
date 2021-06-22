@@ -39,7 +39,9 @@ const SearchPage = () => {
 					<>
 						{
 							<h2>
-								Results for {Params.productName} {Params.city} {Params.category}{" "}
+								Results for {Params.productName}{" "}
+								{Params.city && "in " + Params.city}{" "}
+								{Params.category && "category: " + Params.category}{" "}
 							</h2>
 						}
 						<div className="cards">

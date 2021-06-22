@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import "../../../styles/Form.scss";
 import FormInput from "../Forms/Fields/FormInput";
-
-import SuggestionInput from "../Forms/Fields/SuggestionsInput";
 import cities from "../Forms/Fields/cities";
 import Header from "../../Header/Header";
 import { useDispatch, useSelector } from "react-redux";
 import {
-	createProduct,
+	Icon,
+	Button,
+	Autocomplete,
+	Select,
+	TextInput,
+	MediaBox,
+	ProgressBar,
+} from "react-materialize";
+import {
 	listProductsDetails,
 	updateProduct,
 } from "../../../actions/productActions";
@@ -74,7 +79,7 @@ function AdUpdatePage({ match, history }) {
 
 	const validationSchema = Yup.object({
 		productName: Yup.string().required("Required"),
-		city: Yup.string().required("Required"),
+		city: Yup.string(),
 		description: Yup.string(),
 		category: Yup.string(),
 		price: Yup.string().required("Required"),
@@ -83,47 +88,10 @@ function AdUpdatePage({ match, history }) {
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 	});
 
-	const {
-		register,
-		handleSubmit,
-		errors,
-		setValue,
-		setError,
-		formState,
-	} = useForm({
-		defaultValues: {
-			city: "",
-		},
+	const { register, handleSubmit, errors, setValue, getValues } = useForm({
 		resolver: yupResolver(validationSchema),
 	});
 
-	// const uploadFileHandler = async (e) => {
-	// 	setMainImg(URL.createObjectURL(e.target.files[0]));
-	// 	const file = e.target.files[0];
-	// 	console.log(file);
-
-	// 	const formData = new FormData();
-	// 	formData.append("image", file);
-	// 	setUploading(true);
-	// 	try {
-	// 		const config = {
-	// 			headers: {
-	// 				"Content-Type": "multipart/form-data",
-	// 			},
-	// 		};
-	// 		console.log(formData, formData.image);
-	// 		const { data } = await http.post(
-	// 			"https://okazapp.herokuapp.com/api/upload",
-	// 			formData,
-	// 			config
-	// 		);
-	// 		setImage(data);
-	// 		console.log(image);
-	// 		setUploading(false);
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		setUploading(false);
-	// 	}
 	// };
 	const uploadFileHandler = async (e) => {
 		const file = e.target.files[0];
@@ -155,21 +123,41 @@ function AdUpdatePage({ match, history }) {
 			setUploading(false);
 		}
 	};
+	const [selectedCategory, setselectedCategory] = useState("");
+	const [selectedCondition, setselectedCondition] = useState("");
+	const [selectedCity, setselectedCity] = useState("");
+	const values = getValues();
 
 	const onSubmit = async (data, errors) => {
 		if (!image) {
 			setImageError("Image is Required");
 			return;
 		}
-		dispatch(updateProduct({ productId, ...data, image }));
+		dispatch(updateProduct({ productId, ...values, image }));
 		// console.log({ productId, ...data, image });
 	};
+	const selectCategory = (e) => {
+		setselectedCategory(e.target.value);
+		values.category = selectedCategory;
+	};
 
+	const selectCondition = (e) => {
+		setselectedCondition(e.target.value);
+		values.condition = selectedCondition;
+	};
+	const complete = (e) => {
+		console.log(e.target.value);
+		setselectedCity(e.target.value);
+		values.city = selectedCity;
+	};
 	return (
 		<>
 			<Header />
-			<div className="form">
+			<div className=" section container">
 				<div>
+					{loading && <div className="loader"></div>}
+					{errorUpdate && <p className="red-text">{errorUpdate}</p>}
+					{error && <p className="red-text">{error}</p>}
 					<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 						<FormInput
 							register={register}
@@ -178,6 +166,7 @@ function AdUpdatePage({ match, history }) {
 							label="Owner Name"
 							id="ownerName"
 							error={errors.ownerName}
+							value={values.ownerName}
 						/>
 						<FormInput
 							register={register}
@@ -186,15 +175,16 @@ function AdUpdatePage({ match, history }) {
 							label="Owner Number"
 							onWheel={(event) => event.currentTarget.blur()}
 							id="ownerPhoneNumber"
-							error={errors.fullname}
+							value={values.ownerPhoneNumber}
 						/>
 						<FormInput
 							register={register}
 							type="text"
 							name="productName"
-							label="Item Name"
+							label="Product Name"
 							id="productName"
 							error={errors.productName}
+							value={values.productName}
 						/>
 						<FormInput
 							register={register}
@@ -205,42 +195,93 @@ function AdUpdatePage({ match, history }) {
 							id="price"
 							error={errors.price}
 						/>
-						<SuggestionInput
-							register={register}
-							type="text"
+						<Autocomplete
+							ref={register}
 							name="city"
-							label="Specific City ?"
-							error={errors.city}
+							type="text"
+							onChange={complete}
+							icon={<Icon>place</Icon>}
 							id="city"
-							value={formState.city}
-							data={cities}
+							options={{
+								onAutocomplete: function (value) {
+									console.log(value);
+									setselectedCity(value);
+								},
+								data: cities,
+							}}
+							placeholder="Choose a City to search in"
+							title="Specific City ?"
 						/>
 						<div className="form-control">
-							<label htmlFor="category">Select a category</label>
-							<select ref={register} name="category">
-								<option value="" disabled selected>
-									{" "}
-									Select a category{" "}
+							<Select
+								onChange={selectCategory}
+								ref={register}
+								name="category"
+								id="Select-9"
+								multiple={false}
+								options={{
+									classes: "",
+									dropdownOptions: {
+										alignment: "left",
+										autoTrigger: true,
+										closeOnClick: true,
+										constrainWidth: true,
+										coverTrigger: true,
+										hover: false,
+										inDuration: 150,
+										onCloseEnd: null,
+										onCloseStart: null,
+										onOpenEnd: null,
+										onOpenStart: null,
+										outDuration: 250,
+									},
+								}}
+								value=""
+							>
+								<option disabled value="">
+									Select a category
 								</option>
 								<option value="Technology">Technology</option>
 								<option value="Home">Home</option>
 								<option value="Vehicles">Vehicles</option>
 								<option value="Fashion">Fashion</option>
 								<option value="Pets">Pets</option>
-							</select>
+							</Select>
 						</div>
 
 						<div className="form-control">
-							<label htmlFor="condition"> Condition </label>
-							<select ref={register} name="condition">
-								<option value="" disabled selected>
-									{" "}
-									Is it new or used ?{" "}
+							<Select
+								ref={register}
+								onChange={selectCondition}
+								name="condition"
+								id="Select-9"
+								multiple={false}
+								options={{
+									classes: "",
+									dropdownOptions: {
+										alignment: "left",
+										autoTrigger: true,
+										closeOnClick: true,
+										constrainWidth: true,
+										coverTrigger: true,
+										hover: false,
+										inDuration: 150,
+										onCloseEnd: null,
+										onCloseStart: null,
+										onOpenEnd: null,
+										onOpenStart: null,
+										outDuration: 250,
+									},
+								}}
+								value=""
+							>
+								<option disabled value="">
+									New or Used ?
 								</option>
 								<option value="New">New</option>
 								<option value="Used">Used</option>
 								<option value="Does not apply">Does not apply</option>
-							</select>
+							</Select>
 						</div>
 
 						<FormInput
@@ -253,33 +294,50 @@ function AdUpdatePage({ match, history }) {
 						/>
 						<div className="image-upload">
 							{!mainImg && (
-								<h2>
+								<h5 className="center-align">
 									There is no Ad without a picture <br /> please add one
-								</h2>
+								</h5>
 							)}
-							{mainImg && <h2>Change Picture ?</h2>}
-							<label>
-								<input
-									type="file"
-									accept="image/*"
-									name="image"
-									onChange={uploadFileHandler}
-								/>
-								<span>+</span>
-							</label>
+							{mainImg && <h5>Change Picture ?</h5>}
 
-							{imageError && <div className="error">*{imageError}</div>}
-							{uploading && <div className="loader"></div>}
+							<TextInput
+								id="TextInput-4"
+								label={<Icon>add</Icon>}
+								type="file"
+								accept="image/*"
+								name="itemPicture"
+								onChange={uploadFileHandler}
+							/>
+
+							{imageError && !mainImg && (
+								<div className="error">*{imageError}</div>
+							)}
+
+							{uploading && <ProgressBar />}
 
 							{mainImg && (
-								<div className="main-img">
-									<img src={mainImg} style={{ width: "80%" }} alt="" />
+								<div className="section">
+									<MediaBox
+										id="MediaBox_7"
+										options={{
+											inDuration: 275,
+											onCloseEnd: null,
+											onCloseStart: null,
+											onOpenEnd: null,
+											onOpenStart: null,
+											outDuration: 200,
+										}}
+									>
+										<img alt="" src={mainImg} width="650" />
+									</MediaBox>
 								</div>
 							)}
 						</div>
-						<button type="submit">Update Ad</button>
+						{loadingUpdate && <ProgressBar />}
+						<Button large type="submit">
+							Update Ad
+						</Button>
 					</form>
-					{/* Pictures Side */}
 				</div>
 			</div>
 		</>

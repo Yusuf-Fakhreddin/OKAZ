@@ -1,17 +1,45 @@
 import React from "react";
+import { TextInput, Textarea } from "react-materialize";
 
-const FormInput = ({ type, register, error, label, id, ...inputProps }) => {
+const FormInput = ({
+	type,
+	register,
+	error,
+	label,
+	id,
+	value,
+	...inputProps
+}) => {
 	return (
 		<>
-			<div className="form-control">
-				<label htmlFor={id}>{label}</label>
+			<div>
+				{error && (
+					<small className="helper-text red-text">{error.message}</small>
+				)}
 				{type === "textarea" ? (
-					<textarea id={id} ref={register} {...inputProps} rows={10} />
+					<Textarea
+						label={label}
+						ref={register}
+						id={id}
+						placeholder={value}
+						l={12}
+						m={12}
+						s={12}
+						xl={12}
+					/>
 				) : (
-					<input id={id} ref={register} type={type} {...inputProps} />
+					<TextInput
+						label={label}
+						type={type}
+						id={id}
+						ref={register}
+						{...inputProps}
+						placeholder={value}
+						error={error && error.message}
+					/>
 				)}
 
-				{error && <h1 className="error">{error.message}</h1>}
+				{/* {error && <p>{error.message}</p>} */}
 			</div>
 		</>
 	);

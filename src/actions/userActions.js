@@ -242,7 +242,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 			},
 		};
 
-		await http.delete(`/users/${id}`, config);
+		await http.delete(`https://okazapp.herokuapp.com/api/users/${id}`, config);
 
 		dispatch({
 			type: USER_DELETE_SUCCESS,
