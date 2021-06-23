@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,8 +11,10 @@ import FormInput from "../Forms/Fields/FormInput";
 import Header from "../../Header/Header";
 import { USER_UPDATE_RESET } from "../../../constants/userConstants";
 
-function UserEditPage({ props, match, history }) {
-	const userId = match.params.id;
+function UserEditPage({ props }) {
+	let { id } = useParams();
+	let history = useHistory();
+	const userId = id;
 
 	const dispatch = useDispatch();
 
@@ -37,7 +39,7 @@ function UserEditPage({ props, match, history }) {
 			} else {
 				setValue("fullname", user.name);
 				setValue("email", user.email);
-				setValue("isAdmin", user.isAdmin);
+				// setValue("isAdmin", user.isAdmin);
 				setValue("phoneNumber", user.phoneNumber);
 			}
 		}
@@ -54,18 +56,27 @@ function UserEditPage({ props, match, history }) {
 		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
-	const onSubmit = ({ fullname, email, isAdmin, phoneNumber }) => {
+
+	const [isAdmin, setAdmin] = useState(user.isAdmin);
+
+	const onSubmit = ({ fullname, email, phoneNumber }) => {
 		console.log({ fullname, email, isAdmin, phoneNumber });
-		dispatch(updateUser({ _id: userId, fullname, email, isAdmin }));
+		dispatch(updateUser({ _id: userId, name: fullname, email, isAdmin }));
 	};
 	const values = getValues();
+
+	const handleCheckbox = (e) => {
+		console.log(e.target.checked);
+		setAdmin(e.target.checked);
+	};
+
 	return (
 		<>
 			<Header />
 			<div className="container">
 				<h2>Edit User</h2>
 			</div>
-			<div>
+			<div className="container">
 				{(loadingUpdate || loading) && <div className="loader"></div>}
 				{errorUpdate && <p className="red-text">{errorUpdate}</p>}
 				<form onSubmit={handleSubmit(onSubmit)}>
@@ -102,9 +113,9 @@ function UserEditPage({ props, match, history }) {
 					/>
 
 					<Checkbox
-						ref={register}
+						checked={isAdmin}
+						onChange={handleCheckbox}
 						label="Admin?"
-						name="isAdmin"
 						id="Checkbox_3"
 						value="true"
 					/>

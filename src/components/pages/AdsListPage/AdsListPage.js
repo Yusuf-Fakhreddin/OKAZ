@@ -9,7 +9,7 @@ import { Table, Icon } from "react-materialize";
 // import "../userListPage/UserListPage.scss";
 
 const AdsListPage = ({ history, match }) => {
-	const pageNumber = match.params.pageNumber || 1;
+	// const pageNumber = match.params.pageNumber || 1;
 
 	const dispatch = useDispatch();
 
@@ -26,6 +26,7 @@ const AdsListPage = ({ history, match }) => {
 	const { userInfo } = userLogin;
 
 	useEffect(() => {
+		document.title = "All Ads";
 		console.log(products);
 		dispatch({ type: PRODUCT_CREATE_RESET });
 
@@ -34,7 +35,7 @@ const AdsListPage = ({ history, match }) => {
 		} else {
 			dispatch(listProducts());
 		}
-	}, [dispatch, history, userInfo, successDelete, pageNumber]);
+	}, [dispatch, history, userInfo, successDelete]);
 	const deleteHandler = (id) => {
 		if (window.confirm("Are you sure")) {
 			dispatch(deleteProduct(id));
@@ -45,10 +46,12 @@ const AdsListPage = ({ history, match }) => {
 			<Header />
 			<div className="container">
 				<h2>Ads</h2>
-				{loading ? (
+				{loading || loadingDelete ? (
 					<div className="loader"></div>
 				) : error ? (
 					<h1 className="error">{error}</h1>
+				) : errorDelete ? (
+					<h1 className="error">{errorDelete}</h1>
 				) : (
 					<div>
 						<Table bordered hoverable responsive className="responsive-table">

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { Icon, Button } from "react-materialize";
+import { Button } from "react-materialize";
 
 import FormInput from "./Fields/FormInput";
 import Header from "../../Header/Header";
@@ -68,6 +68,7 @@ const ProfilePage = ({ props, history }) => {
 				<form onSubmit={handleSubmit(onSubmit)}>
 					{error && <h1 className="error">{error}</h1>}
 					{success && <h1 className="success">Profile Updated</h1>}
+					{loading && <div className="loader"></div>}
 					<FormInput
 						register={register}
 						type="text"

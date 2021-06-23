@@ -6,11 +6,19 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
-import GA4React, { useGA4React } from "ga-4-react";
+import GA4React from "ga-4-react";
 const ga4react = new GA4React("G-HT0EE0LNMW");
 
 (async () => {
-	await ga4react.initialize();
+	await ga4react.initialize().then(
+		(ga4) => {
+			ga4.pageview("path");
+			ga4.gtag("event", "pageview", "path"); // or your custom gtag event
+		},
+		(err) => {
+			console.error(err);
+		}
+	);
 
 	ReactDOM.render(
 		<Provider store={store}>
