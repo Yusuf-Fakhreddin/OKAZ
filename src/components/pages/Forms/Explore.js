@@ -16,27 +16,34 @@ import {
 function Explore({ props }) {
 	const history = useHistory();
 	const validationSchema = Yup.object({
-		category: Yup.string().required("Required"),
+		category: Yup.string().required("required"),
 		// may need to make specify cities the value should be one of them
 		city: Yup.string(),
 	});
 
-	const { register, handleSubmit, setValue, getValues, control } = useForm({
-		// mode: "onChange",
+	const { register, handleSubmit, errors, getValues } = useForm({
+		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
 
 	const [selectedCategory, setselectedCategory] = useState("");
 	const [selectedCity, setselectedCity] = useState("");
+	const [categroyError, setcategroyError] = useState(false);
 	const onSubmit = ({ category, city }) => {
+		console.log(errors);
 		category = selectedCategory;
 		city = selectedCity;
+		if (!category) {
+			setcategroyError(true);
+			return;
+		}
 		history.push(`/explore/${category}/${city}`);
 	};
 
 	const values = getValues();
 	const select = (e) => {
 		setselectedCategory(e.target.value);
+		setcategroyError(false);
 	};
 	const complete = (e) => {
 		console.log(e.target.value);
@@ -47,6 +54,7 @@ function Explore({ props }) {
 		<div className="search-container">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h4>Explore a Category</h4>
+				{categroyError && <p className="red-text">Please select a category</p>}
 				<div>
 					<Select
 						onChange={select}

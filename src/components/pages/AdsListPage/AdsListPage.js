@@ -6,15 +6,11 @@ import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 import Header from "../../Header/Header";
 import { Table, Icon } from "react-materialize";
 
-// import "../userListPage/UserListPage.scss";
-
 const AdsListPage = ({ history, match }) => {
-	// const pageNumber = match.params.pageNumber || 1;
-
 	const dispatch = useDispatch();
 
 	const productList = useSelector((state) => state.productList);
-	const { loading, error, products, page, pages } = productList;
+	const { loading, error, products } = productList;
 	const productDelete = useSelector((state) => state.productDelete);
 	const {
 		loading: loadingDelete,

@@ -51,7 +51,7 @@ function App() {
 				<Route path="/myAds" component={MyAdsList} />
 
 				<Route path="/search/:productName/:city?" component={SearchPage} />
-				<Route path="/explore/:category/:city?" component={SearchPage} />
+				<Route path="/explore/:category?/:city?" component={SearchPage} />
 
 				<Route path="/profile" component={ProfilePage} />
 				{/* Admin */}

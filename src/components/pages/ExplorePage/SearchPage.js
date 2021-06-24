@@ -6,6 +6,7 @@ import Explore from "../Forms/Explore";
 import Search from "../Forms/Search";
 import { searchProducts } from "../../../actions/productActions";
 import ItemCard from "../../ProductCard/ItemCard";
+import { Row, Col } from "react-materialize";
 
 const SearchPage = () => {
 	const dispatch = useDispatch();
@@ -38,17 +39,19 @@ const SearchPage = () => {
 				) : (
 					<>
 						{
-							<h2>
-								Results for {Params.productName}{" "}
+							<h4>
+								{Params.productName && Params.productName}{" "}
 								{Params.city && "in " + Params.city}{" "}
 								{Params.category && "category: " + Params.category}{" "}
-							</h2>
+							</h4>
 						}
-						<div className="cards">
+						<Row>
 							{products.map((product) => (
-								<ItemCard key={product._id} product={product} />
+								<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
+									<ItemCard product={product} />
+								</Col>
 							))}
-						</div>
+						</Row>
 					</>
 				)}
 			</div>
