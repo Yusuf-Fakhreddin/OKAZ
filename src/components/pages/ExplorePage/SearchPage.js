@@ -7,13 +7,14 @@ import Search from "../Forms/Search";
 import { searchProducts } from "../../../actions/productActions";
 import ItemCard from "../../ProductCard/ItemCard";
 import { Row, Col } from "react-materialize";
+import Paginate from "../../Paginate/Paginate";
 
 const SearchPage = () => {
 	const dispatch = useDispatch();
 	const Params = useParams();
 
 	const productList = useSelector((state) => state.productSearch);
-	const { loading, error, products } = productList;
+	const { loading, error, products, pages, page } = productList;
 
 	useEffect(() => {
 		dispatch(
@@ -54,6 +55,13 @@ const SearchPage = () => {
 						</Row>
 					</>
 				)}
+				<Paginate
+					Link={`/search/${
+						Params.productName ? Params.productName : Params.city
+					}${Params.city ? "/" + Params.city : "/"}`}
+					pages={pages}
+					page={page}
+				/>
 			</div>
 		</>
 	);

@@ -1,5 +1,5 @@
 // import axios from "axios";
-import http from "../htppService";
+import http from "../httpService";
 
 import {
 	PRODUCT_LIST_REQUEST,
@@ -23,6 +23,9 @@ import {
 	PRODUCT_SEARCH_REQUEST,
 	PRODUCT_SEARCH_SUCCESS,
 	PRODUCT_SEARCH_FAIL,
+	PRODUCT_LIST_ALL_REQUEST,
+	PRODUCT_LIST_ALL_SUCCESS,
+	PRODUCT_LIST_ALL_FAIL,
 } from "../constants/productConstants";
 import { logout } from "./userActions";
 
@@ -34,7 +37,6 @@ export const listProducts = (cnt) => async (dispatch) => {
 		const { data } = await http.get(
 			`https://okazapp.herokuapp.com/api/products/recent/${cnt}`
 		);
-		console.log(`https://okazapp.herokuapp.com/api/products/recent/${cnt}`);
 		dispatch({
 			type: PRODUCT_LIST_SUCCESS,
 			payload: data,
@@ -42,6 +44,38 @@ export const listProducts = (cnt) => async (dispatch) => {
 	} catch (error) {
 		dispatch({
 			type: PRODUCT_LIST_FAIL,
+			payload:
+				error.response && error.response.data.message
+					? error.response.data.message
+					: error.message,
+		});
+	}
+};
+
+// getting All prodycts action
+export const listAllProducts = (pageNumber) => async (dispatch, getState) => {
+	try {
+		dispatch({ type: PRODUCT_LIST_ALL_REQUEST });
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+		const { data } = await http.get(
+			`https://okazapp.herokuapp.com/api/products?pageNumber=${pageNumber}`,
+			config
+		);
+		dispatch({
+			type: PRODUCT_LIST_ALL_SUCCESS,
+			payload: data,
+		});
+	} catch (error) {
+		dispatch({
+			type: PRODUCT_LIST_ALL_FAIL,
 			payload:
 				error.response && error.response.data.message
 					? error.response.data.message

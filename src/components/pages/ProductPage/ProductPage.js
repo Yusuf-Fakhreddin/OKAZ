@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../Header/Header";
-import { Icon, MediaBox, Button } from "react-materialize";
-
+import { Icon, MediaBox, Button, Row, Col } from "react-materialize";
+import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import {
 	deleteProduct,
 	listProductsDetails,
@@ -14,6 +14,7 @@ import {
 	listMyFavorites,
 	removeFromFavorites,
 } from "../../../actions/favoritesActions";
+import { toast } from "react-toastify";
 
 const ItemPage = ({ match, history }) => {
 	const [star, setStar] = useState(false);
@@ -32,20 +33,25 @@ const ItemPage = ({ match, history }) => {
 		if (!star) {
 			dispatch(addToFavorites(match.params.id));
 			setStar(true);
-			if (!addSuccess || addError) {
+			if (addError) {
 				setStar(false);
 				console.log(addSuccess);
+				toastFailure(addError);
+			} else {
+				toastSuccess("Item was added to your favorites list");
 			}
 		} else {
 			dispatch(removeFromFavorites(match.params.id));
 			setStar(false);
+
 			console.log("dispatched remove");
-			if (!removeSuccess || removeError) setStar(!star);
+			if (removeError) {
+				setStar(!star);
+				toastFailure(removeError);
+			} else toastSuccess("Item was removed from your favorites list");
 		}
 	};
 
-	// introducing dispatch Hook
-	// const dispatch = useDispatch();
 	// selecting part of the state
 	const ProductsDetails = useSelector((state) => state.productDetails);
 	// destructing the state part into its elements
@@ -66,27 +72,28 @@ const ItemPage = ({ match, history }) => {
 
 		// firing the listProductsDetails Action
 		dispatch(listProductsDetails(match.params.id));
+		if (userInfo) {
+			dispatch(listMyFavorites());
+			console.log("lol");
+			console.log(favorites ? true : false);
+		}
+
 		console.log(match.params);
 		console.log(product);
 		console.log(userInfo);
-	}, [match, dispatch]);
+	}, [match, dispatch, userInfo]);
 
 	useEffect(() => {
-		console.log(favorites);
-		if (!favorites && userInfo) {
-			dispatch(listMyFavorites());
-		}
-		for (let i = 0; i < favorites.length; i++) {
-			if (favorites[i]._id === product._id) {
-				console.log(favorites[i].productName, product.productName);
-				setStar(true);
-				console.log(star);
-				break;
-			} else {
-				setStar(false);
+		console.log(favorites.length);
+		if (favorites.length > 0)
+			for (let i = 0; i < favorites.length; i++) {
+				console.log(favorites[i]._id);
+				if (favorites[i]._id === match.params.id) {
+					console.log("exists");
+					setStar(true);
+				}
 			}
-		}
-	}, [product]);
+	}, [favorites.length]);
 	return (
 		<div className="item-page">
 			<Header />
@@ -129,56 +136,62 @@ const ItemPage = ({ match, history }) => {
 									</div>
 								)}
 						</div>
-						<div className="ad">
-							<div>
-								<MediaBox
-									className="row"
-									id="MediaBox_7"
-									options={{
-										inDuration: 275,
-										onCloseEnd: null,
-										onCloseStart: null,
-										onOpenEnd: null,
-										onOpenStart: null,
-										outDuration: 200,
-									}}
-								>
-									<img alt="" src={product.image} width="650" />
-								</MediaBox>
-								<div className="section ">
-									<div className="row container">
-										<h2 className="header">{product.productName}</h2>
-										<h3 className="header">
+						<div>
+							<h3>{product.productName}</h3>
+							<Row>
+								<Col m={6}>
+									<MediaBox
+										// className="row"
+										id="MediaBox_7"
+										options={{
+											inDuration: 275,
+											onCloseEnd: null,
+											onCloseStart: null,
+											onOpenEnd: null,
+											onOpenStart: null,
+											outDuration: 200,
+										}}
+									>
+										<img
+											alt=""
+											src={product.image}
+											width="100%"
+											max-height="450px"
+										/>
+									</MediaBox>
+								</Col>
+								<Col m={6}>
+									<div>
+										<h3>
 											<small>Price:</small> {product.price} EGP
 										</h3>
-										<h4 className="header">
+										<h4>
 											<small>City: </small>
 											{product.city}
 										</h4>
-										<h4 className="header">
+										<h4>
 											<small>Owner Name:</small> {product.ownerName}
 										</h4>
-										<h4 className="header">
+										<h4>
 											<small>Owner Phone Number:</small>{" "}
 											{product.ownerPhoneNumber}
 										</h4>
-										<h4 className="header">
+										<h4>
 											<small>Condition:</small> {product.condition}
 										</h4>
-										<h4 className="header">
+										<h4>
 											<small>Category:</small> {product.category}
 										</h4>
 										{product.updatedAt && (
-											<h6 className="header">
-												Last Updated: {product.updatedAt.split("T")[0]}
-											</h6>
+											<h6>Last Updated: {product.updatedAt.split("T")[0]}</h6>
 										)}
 										<p className="grey-text text-darken-3 lighten-3">
+											<strong>Description</strong> <br></br>
 											{product.description}
 										</p>
 									</div>
-								</div>
-							</div>
+								</Col>
+							</Row>
 						</div>{" "}
 					</>
 				)}

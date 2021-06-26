@@ -17,7 +17,7 @@ export const favoritesListReducer = (state = { favorites: [] }, action) => {
 		case FAVORITES_LIST_REQUEST:
 			return { loading: true, favorites: [] };
 		case FAVORITES_LIST_SUCCESS:
-			return { loading: false, favorites: action.payload };
+			return { loading: false, favorites: action.payload, success: true };
 		case FAVORITES_LIST_FAIL:
 			return { loading: false, error: action.payload };
 		case FAVORITES_LIST_RESET:

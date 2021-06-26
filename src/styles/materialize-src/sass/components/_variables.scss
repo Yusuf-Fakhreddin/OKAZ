@@ -34,7 +34,7 @@
 // 1. Colors
 // ==========================================================================
 
-$primary-color: color("green", "lighten-2") !default;
+$primary-color: #98583c !default;
 $primary-color-light: lighten($primary-color, 15%) !default;
 $primary-color-dark: darken($primary-color, 15%) !default;
 

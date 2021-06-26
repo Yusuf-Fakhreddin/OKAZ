@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { toast } from "react-toastify";
 axios.interceptors.response.use(null, (error) => {
 	const expectedError =
 		error.response &&
@@ -9,6 +9,15 @@ axios.interceptors.response.use(null, (error) => {
 	if (!expectedError) {
 		console.log("Logging the error", error);
 		error.message = "An unexpected error has occurred.";
+		toast.error("An unexpected error has occurred.", {
+			position: "bottom-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
 	}
 	// to pass the control to the catch block and resume the function we return a rejected promise
 	return Promise.reject(error);

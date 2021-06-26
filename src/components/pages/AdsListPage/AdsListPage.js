@@ -1,16 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { deleteProduct, listProducts } from "../../../actions/productActions";
+import { NavLink, useParams } from "react-router-dom";
+import {
+	deleteProduct,
+	listAllProducts,
+} from "../../../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 import Header from "../../Header/Header";
-import { Table, Icon } from "react-materialize";
+import { Table, Icon, Button, Modal } from "react-materialize";
+import Paginate from "../../Paginate/Paginate";
+import { toast } from "react-toastify";
+import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 
-const AdsListPage = ({ history, match }) => {
+const AdsListPage = ({ history }) => {
+	const Params = useParams();
+	const pageNumber = Params.pageNumber || 1;
+
 	const dispatch = useDispatch();
 
-	const productList = useSelector((state) => state.productList);
-	const { loading, error, products } = productList;
+	const productList = useSelector((state) => state.productAllList);
+	const { loading, error, products, pages, page } = productList;
 	const productDelete = useSelector((state) => state.productDelete);
 	const {
 		loading: loadingDelete,
@@ -29,19 +38,67 @@ const AdsListPage = ({ history, match }) => {
 		if (!userInfo || !userInfo.isAdmin) {
 			history.push("/login");
 		} else {
-			dispatch(listProducts());
+			dispatch(listAllProducts(pageNumber));
 		}
-	}, [dispatch, history, userInfo, successDelete]);
+	}, [dispatch, history, userInfo, pageNumber]);
+
+	useEffect(() => {
+		if (errorDelete) {
+			toastFailure(errorDelete);
+		} else if (successDelete) {
+			toastSuccess("Item Removed Successfuly");
+		}
+	}, [loadingDelete]);
+
+	const [selectedDeletion, setselectedDeletion] = useState(null);
+
 	const deleteHandler = (id) => {
-		if (window.confirm("Are you sure")) {
-			dispatch(deleteProduct(id));
-		}
+		setselectedDeletion(id);
+		// if (window.confirm("Are you sure")) {
+		// 	dispatch(deleteProduct(id));
+		// }
 	};
+
 	return (
 		<>
 			<Header />
 			<div className="container">
 				<h2>Ads</h2>
+
+				<Modal
+					actions={[]}
+					bottomSheet={false}
+					fixedFooter={false}
+					header="Are You sure ? "
+					id="modal1"
+					open={false}
+					options={{
+						dismissible: true,
+						endingTop: "10%",
+						inDuration: 250,
+						onCloseEnd: null,
+						onCloseStart: null,
+						onOpenEnd: null,
+						onOpenStart: null,
+						opacity: 0.5,
+						outDuration: 250,
+						preventScrolling: true,
+						startingTop: "4%",
+					}}
+					// root={[object HTMLBodyElement]}
+				>
+					<Button
+						onClick={() => dispatch(deleteProduct(selectedDeletion))}
+						className="itemBtn section"
+						large
+						modal="close"
+					>
+						Yes
+					</Button>
+					<Button flat modal="close" node="button" waves="green">
+						No
+					</Button>
+				</Modal>
 				{loading || loadingDelete ? (
 					<div className="loader"></div>
 				) : error ? (
@@ -50,7 +107,7 @@ const AdsListPage = ({ history, match }) => {
 					<h1 className="error">{errorDelete}</h1>
 				) : (
 					<div>
-						<Table bordered hoverable responsive className="responsive-table">
+						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
 									<th>Owner Name</th>
@@ -75,20 +132,26 @@ const AdsListPage = ({ history, match }) => {
 
 										<td>
 											<NavLink to={`/product/${product._id}/edit`}>
-												<button>
+												<Button>
 													<Icon>edit</Icon>
-												</button>
+												</Button>
 											</NavLink>
 										</td>
 										<td>
-											<button onClick={() => deleteHandler(product._id)}>
+											<Button
+												onClick={() => deleteHandler(product._id)}
+												className="modal-trigger"
+												href="#modal1"
+												node="button"
+											>
 												<Icon>delete</Icon>
-											</button>
+											</Button>
 										</td>
 									</tr>
 								))}
 							</tbody>
 						</Table>
+						<Paginate Link="/admin/adsList" pages={pages} page={page} />
 					</div>
 				)}
 			</div>

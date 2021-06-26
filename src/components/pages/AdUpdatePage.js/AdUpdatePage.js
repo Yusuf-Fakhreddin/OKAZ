@@ -19,7 +19,7 @@ import {
 	listProductsDetails,
 	updateProduct,
 } from "../../../actions/productActions";
-import http from "../../../htppService";
+import http from "../../../httpService";
 import { PRODUCT_UPDATE_RESET } from "../../../constants/productConstants";
 
 function AdUpdatePage({ match, history }) {

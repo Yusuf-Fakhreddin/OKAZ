@@ -17,7 +17,7 @@ import cities from "./Fields/cities";
 import Header from "../../Header/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct } from "../../../actions/productActions";
-import http from "../../../htppService";
+import http from "../../../httpService";
 function ItemForm({ props, history }) {
 	const [image, setImage] = useState(null);
 	const [imageError, setImageError] = useState(null);
@@ -301,6 +301,7 @@ function ItemForm({ props, history }) {
 
 							{mainImg && (
 								<MediaBox
+									className="section"
 									id="MediaBox_7"
 									options={{
 										inDuration: 275,

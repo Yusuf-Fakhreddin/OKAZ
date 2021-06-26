@@ -1,20 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { listUsers, deleteUser } from "../../../actions/userActions";
 import Header from "../../Header/Header";
-import { Table, Icon, Preloader } from "react-materialize";
+import { Table, Icon, Button, Modal } from "react-materialize";
+import Paginate from "../../Paginate/Paginate";
+import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 const UserListPage = ({ history }) => {
 	const dispatch = useDispatch();
 
 	const userList = useSelector((state) => state.userList);
-	const { loading, error, users } = userList;
+	const { loading, error, users, pages, page } = userList;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
 	const userDelete = useSelector((state) => state.userDelete);
-	const { success: successDelete } = userDelete;
+	const {
+		success: successDelete,
+		loading: loadingDelete,
+		error: errorDelete,
+	} = userDelete;
 
 	useEffect(() => {
 		if (userInfo && userInfo.isAdmin) {
@@ -24,23 +30,70 @@ const UserListPage = ({ history }) => {
 		}
 	}, [dispatch, history, successDelete, userInfo]);
 
-	const deleteHandler = (id) => {
-		if (window.confirm("Are you sure")) {
-			dispatch(deleteUser(id));
+	const [selectedDeletion, setselectedDeletion] = useState(null);
+	useEffect(() => {
+		if (errorDelete) {
+			toastFailure(errorDelete);
+		} else if (successDelete) {
+			toastSuccess("User Removed Successfuly");
 		}
+	}, [loadingDelete]);
+
+	const deleteHandler = (id) => {
+		setselectedDeletion(id);
+
+		// if (window.confirm("Are you sure")) {
+		// 	dispatch(deleteUser(id));
+		// }
 	};
 	return (
 		<>
 			<Header />
 			<div className="container">
 				<h2>Users</h2>
-				{loading ? (
+				<Modal
+					actions={[]}
+					bottomSheet={false}
+					fixedFooter={false}
+					header="Are You sure ? "
+					id="modal1"
+					open={false}
+					options={{
+						dismissible: true,
+						endingTop: "10%",
+						inDuration: 250,
+						onCloseEnd: null,
+						onCloseStart: null,
+						onOpenEnd: null,
+						onOpenStart: null,
+						opacity: 0.5,
+						outDuration: 250,
+						preventScrolling: true,
+						startingTop: "4%",
+					}}
+					// root={[object HTMLBodyElement]}
+				>
+					<Button
+						onClick={() => dispatch(deleteUser(selectedDeletion))}
+						className="itemBtn section"
+						large
+						modal="close"
+					>
+						Yes
+					</Button>
+					<Button flat modal="close" node="button" waves="green">
+						No
+					</Button>
+				</Modal>
+				{loading || loadingDelete ? (
 					<div className="loader"></div>
 				) : error ? (
 					<p className="red-text">{error}</p>
+				) : errorDelete ? (
+					<p className="red-text">{errorDelete}</p>
 				) : (
 					<div className="container">
-						<Table bordered hoverable responsive className="responsive-table">
+						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
 									<th>ID</th>
@@ -69,20 +122,26 @@ const UserListPage = ({ history }) => {
 
 										<td>
 											<NavLink to={`/admin/user/${user._id}/edit`}>
-												<button>
+												<Button>
 													<Icon>edit</Icon>
-												</button>
+												</Button>
 											</NavLink>
 										</td>
 										<td>
-											<button onClick={() => deleteHandler(user._id)}>
+											<Button
+												onClick={() => deleteHandler(user._id)}
+												className="modal-trigger"
+												href="#modal1"
+												node="button"
+											>
 												<Icon>delete</Icon>
-											</button>
+											</Button>
 										</td>
 									</tr>
 								))}
 							</tbody>
 						</Table>
+						<Paginate Link="/admin/userList" pages={pages} page={page} />
 					</div>
 				)}
 			</div>

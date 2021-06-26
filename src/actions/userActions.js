@@ -25,7 +25,7 @@ import {
 	USER_UPDATE_SUCCESS,
 	USER_UPDATE_FAIL,
 } from "../constants/userConstants";
-import http from "../htppService";
+import http from "../httpService";
 
 export const login = (email, password) => async (dispatch) => {
 	try {
@@ -69,50 +69,49 @@ export const logout = () => (dispatch) => {
 	dispatch({ type: FAVORITES_LIST_RESET });
 };
 
-export const registerUser = (name, email, password, phoneNumber) => async (
-	dispatch
-) => {
-	try {
-		dispatch({
-			type: USER_REGISTER_REQUEST,
-		});
+export const registerUser =
+	(name, email, password, phoneNumber) => async (dispatch) => {
+		try {
+			dispatch({
+				type: USER_REGISTER_REQUEST,
+			});
 
-		const config = {
-			headers: {
-				"Content-Type": "application/json",
-			},
-		};
-		const { data } = await http.post(
-			"https://okazapp.herokuapp.com/api/users",
-			{ name, email, password, phoneNumber },
-			config
-		);
+			const config = {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			};
+			const { data } = await http.post(
+				"https://okazapp.herokuapp.com/api/users",
+				{ name, email, password, phoneNumber },
+				config
+			);
 
-		dispatch({
-			type: USER_REGISTER_SUCCESS,
-			payload: data,
-		});
-		dispatch({
-			type: USER_LOGIN_SUCCESS,
-			payload: data,
-		});
+			dispatch({
+				type: USER_REGISTER_SUCCESS,
+				payload: data,
+			});
+			dispatch({
+				type: USER_LOGIN_SUCCESS,
+				payload: data,
+			});
 
-		localStorage.setItem("UserInfo", JSON.stringify(data));
-	} catch (error) {
-		dispatch({
-			type: USER_REGISTER_FAIL,
-			payload:
+			localStorage.setItem("UserInfo", JSON.stringify(data));
+		} catch (error) {
+			dispatch({
+				type: USER_REGISTER_FAIL,
+				payload:
+					error.response && error.response.data.message
+						? error.response.data.message
+						: error.message,
+			});
+			console.log(
 				error.response && error.response.data.message
 					? error.response.data.message
-					: error.message,
-		});
-		console.log(
-			error.response && error.response.data.message
-				? error.response.data.message
-				: error.message
-		);
-	}
-};
+					: error.message
+			);
+		}
+	};
 
 export const getUserDetails = (id) => async (dispatch, getState) => {
 	try {
@@ -189,7 +188,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 	}
 };
 
-export const listUsers = () => async (dispatch, getState) => {
+export const listUsers = (pageNumber) => async (dispatch, getState) => {
 	try {
 		dispatch({
 			type: USER_LIST_REQUEST,
@@ -206,7 +205,7 @@ export const listUsers = () => async (dispatch, getState) => {
 			},
 		};
 		const { data } = await http.get(
-			`https://okazapp.herokuapp.com/api/users`,
+			`https://okazapp.herokuapp.com/api/users?pageNumber=${pageNumber}`,
 			config
 		);
 

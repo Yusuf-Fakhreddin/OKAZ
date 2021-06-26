@@ -50,7 +50,7 @@ const MyAdsList = ({ history, match }) => {
 					<h1 className="error">{error}</h1>
 				) : (
 					<div className="container">
-						<Table>
+						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
 									<th>Name</th>

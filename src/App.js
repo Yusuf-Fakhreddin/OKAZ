@@ -1,5 +1,7 @@
 import React, { useEffect, Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./styles/App.scss";
 import FavoritesPage from "./components/pages/Favorites/FavoritesPage";
 import PlaceAd from "./components/pages/Forms/PlaceAd";
@@ -32,6 +34,7 @@ function App() {
 
 	return (
 		<Router>
+			<ToastContainer />
 			<Switch>
 				<Route path="/" exact>
 					<HomePage />
@@ -67,7 +70,7 @@ function App() {
 				/>
 
 				<Route
-					path="/admin/adsList"
+					path="/admin/adsList/:pageNumber?"
 					render={() => (
 						<Suspense fallback={<div className="loader"></div>}>
 							{" "}

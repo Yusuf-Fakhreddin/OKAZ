@@ -1,5 +1,5 @@
 // import axios from "axios";
-import http from "../htppService";
+import http from "../httpService";
 
 import {
 	FAVORITES_ADD_FAIL,
@@ -89,44 +89,44 @@ export const addToFavorites = (productId) => async (dispatch, getState) => {
 	}
 };
 
-export const removeFromFavorites = (productId) => async (
-	dispatch,
-	getState
-) => {
-	try {
-		dispatch({
-			type: FAVORITES_REMOVE_REQUEST,
-		});
+export const removeFromFavorites =
+	(productId) => async (dispatch, getState) => {
+		console.log(productId);
 
-		const {
-			userLogin: { userInfo },
-		} = getState();
+		try {
+			dispatch({
+				type: FAVORITES_REMOVE_REQUEST,
+			});
 
-		const config = {
-			headers: {
-				Authorization: `Bearer ${userInfo.token}`,
-			},
-		};
+			const {
+				userLogin: { userInfo },
+			} = getState();
 
-		await http.delete(
-			`https://okazapp.herokuapp.com/api/users/fav/${productId}`,
-			config
-		);
+			const config = {
+				headers: {
+					Authorization: `Bearer ${userInfo.token}`,
+				},
+			};
 
-		dispatch({
-			type: FAVORITES_REMOVE_SUCCESS,
-		});
-	} catch (error) {
-		const message =
-			error.response && error.response.data.message
-				? error.response.data.message
-				: error.message;
-		if (message === "Not authorized, token failed") {
-			dispatch(logout());
+			await http.delete(
+				`https://okazapp.herokuapp.com/api/users/fav/${productId}`,
+				config
+			);
+
+			dispatch({
+				type: FAVORITES_REMOVE_SUCCESS,
+			});
+		} catch (error) {
+			const message =
+				error.response && error.response.data.message
+					? error.response.data.message
+					: error.message;
+			if (message === "Not authorized, token failed") {
+				dispatch(logout());
+			}
+			dispatch({
+				type: FAVORITES_REMOVE_FAIL,
+				payload: message,
+			});
 		}
-		dispatch({
-			type: FAVORITES_REMOVE_FAIL,
-			payload: message,
-		});
-	}
-};
+	};

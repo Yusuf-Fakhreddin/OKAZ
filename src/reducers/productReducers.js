@@ -22,7 +22,11 @@ import {
 	PRODUCT_SEARCH_REQUEST,
 	PRODUCT_SEARCH_SUCCESS,
 	PRODUCT_SEARCH_FAIL,
+	PRODUCT_LIST_ALL_REQUEST,
+	PRODUCT_LIST_ALL_SUCCESS,
+	PRODUCT_LIST_ALL_FAIL,
 } from "../constants/productConstants";
+
 // actions reducer for every phase of the axios request
 export const productListReducer = (state = { products: [] }, action) => {
 	switch (action.type) {
@@ -38,12 +42,36 @@ export const productListReducer = (state = { products: [] }, action) => {
 	}
 };
 
+export const productListAllReducer = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case PRODUCT_LIST_ALL_REQUEST:
+			return { loading: true, products: [] };
+		case PRODUCT_LIST_ALL_SUCCESS:
+			return {
+				loading: false,
+				products: action.payload.products,
+				pages: action.payload.pages,
+				page: action.payload.page,
+			};
+		case PRODUCT_LIST_ALL_FAIL:
+			return { loading: false, error: action.payload };
+
+		default:
+			return state;
+	}
+};
+
 export const productSearchReducer = (state = { products: [] }, action) => {
 	switch (action.type) {
 		case PRODUCT_SEARCH_REQUEST:
 			return { loading: true, products: [] };
 		case PRODUCT_SEARCH_SUCCESS:
-			return { loading: false, products: action.payload };
+			return {
+				loading: false,
+				products: action.payload.products,
+				pages: action.payload.pages,
+				page: action.payload.page,
+			};
 		case PRODUCT_SEARCH_FAIL:
 			return { loading: false, error: action.payload };
 

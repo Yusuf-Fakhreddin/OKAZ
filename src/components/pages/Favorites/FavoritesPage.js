@@ -21,6 +21,7 @@ const FavoritesPage = () => {
 	useEffect(() => {
 		if (!userInfo) history.push("/");
 		dispatch(listMyFavorites());
+		console.log(favorites);
 	}, [userInfo]);
 
 	const removeFromfavoritesHandler = (id) => {
