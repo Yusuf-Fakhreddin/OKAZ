@@ -73,9 +73,7 @@ const ItemPage = ({ match, history }) => {
 		// firing the listProductsDetails Action
 		dispatch(listProductsDetails(match.params.id));
 		if (userInfo) {
-			dispatch(listMyFavorites());
-			console.log("lol");
-			console.log(favorites ? true : false);
+			if (!favorites) dispatch(listMyFavorites());
 		}
 
 		console.log(match.params);
@@ -126,15 +124,19 @@ const ItemPage = ({ match, history }) => {
 										>
 											<Icon>delete_outline</Icon>
 										</Button>
-										<Button
-											className="itemBtn"
-											large
-											onClick={() => toggleFavorites()}
-										>
-											<Icon>{star ? "favorite" : "favorite_border"}</Icon>
-										</Button>
 									</div>
 								)}
+							{userInfo && (
+								<div className="section">
+									<Button
+										className="itemBtn "
+										large
+										onClick={() => toggleFavorites()}
+									>
+										<Icon>{star ? "favorite" : "favorite_border"}</Icon>
+									</Button>
+								</div>
+							)}
 						</div>
 						<div>
 							<h3>{product.productName}</h3>

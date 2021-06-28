@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import "./ItemCard.scss";
-import { Icon, Row, Col, Card, CardTitle } from "react-materialize";
+import { Card, CardTitle } from "react-materialize";
 
 const ItemCard = ({ product }) => {
 	console.log(product.image);
@@ -24,6 +24,7 @@ const ItemCard = ({ product }) => {
 					<p>
 						{product.city} - {product.condition}
 					</p>
+					<p>{product.category}</p>
 				</div>
 
 				{/* <div class="card-action">

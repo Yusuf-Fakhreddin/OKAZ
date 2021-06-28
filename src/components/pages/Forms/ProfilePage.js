@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,20 +7,24 @@ import { Button } from "react-materialize";
 
 import FormInput from "./Fields/FormInput";
 import Header from "../../Header/Header";
-import {
-	getUserDetails,
-	updateUserProfile,
-} from "../../../actions/userActions";
+import { updateUserProfile } from "../../../actions/userActions";
+import { useHistory } from "react-router-dom";
+import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 
-const ProfilePage = ({ props, history }) => {
+const ProfilePage = ({ props }) => {
+	const history = useHistory();
 	const userDetails = useSelector((state) => state.userDetails);
 	const { loading, error, user } = userDetails;
 
 	const userLogin = useSelector((state) => state.userLogin);
-	const { userInfo } = userLogin;
+	let { userInfo } = userLogin;
 
 	const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
-	const { success } = userUpdateProfile;
+	const {
+		userInfo: newUserInfo,
+		success,
+		error: errorUpdate,
+	} = userUpdateProfile;
 
 	const validationSchema = Yup.object({
 		fullname: Yup.string()
@@ -41,72 +44,84 @@ const ProfilePage = ({ props, history }) => {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		document.title = "Profile";
-
+		console.log(userInfo);
 		if (!userInfo) {
 			history.push("/login");
 		} else {
-			if (!userInfo.name) {
-				dispatch(getUserDetails("profile"));
-			} else {
-				setValue("fullname", userInfo.name, { shouldDirty: true });
-				setValue("email", userInfo.email, { shouldDirty: true });
-			}
+			// if (!user || !user.name || success) {
+			// 	dispatch({ type: USER_UPDATE_PROFILE_RESET });
+			// 	dispatch(getUserDetails(userInfo._id));
+			// } else {
+			setValue("fullname", userInfo.name);
+			setValue("email", userInfo.email);
+			// }
 		}
 	}, [history, dispatch, userInfo, user]);
 
 	const onSubmit = ({ fullname, confirmPassword, email, password }) => {
-		// console.log(fullname, confirmPassword, email, password);
-		dispatch(updateUserProfile({ id: user._id, fullname, email, password }));
+		console.log({ name: fullname, confirmPassword, email, password });
+		dispatch(
+			updateUserProfile({ id: user._id, name: fullname, email, password })
+		);
+		if (errorUpdate) toastFailure(errorUpdate);
+		else toastSuccess("Profile Updated Successfuly");
 	};
 	const values = getValues();
+
+	useEffect(() => {
+		console.log(errors);
+		console.log(values);
+	}, [values, errors]);
 
 	return (
 		<>
 			<Header />
-			<div className="formContainer section form container">
+			<div className="section container">
 				<h2>Your Profile infomation</h2>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					{error && <h1 className="error">{error}</h1>}
-					{success && <h1 className="success">Profile Updated</h1>}
+				<div>
+					{/* {error && <h4 className="red-text">{error}</h4>}
+					{success && <h1 className="success">Profile Updated</h1>} */}
 					{loading && <div className="loader"></div>}
-					<FormInput
-						register={register}
-						type="text"
-						name="fullname"
-						label="Full Name"
-						id="fullname"
-						error={errors.fullname}
-						value={values.fullname}
-					/>
-					<FormInput
-						register={register}
-						type="email"
-						name="email"
-						label="Email"
-						id="email"
-						error={errors.email}
-						value={values.email}
-					/>
-					<FormInput
-						register={register}
-						type="password"
-						name="password"
-						label="Password"
-						id="password"
-						error={errors.password}
-					/>
-					<FormInput
-						register={register}
-						type="password"
-						name="confirmPassword"
-						label="Confirm Password"
-						id="confirmPassword"
-						error={errors.confirmPassword}
-					/>
-					<Button large node="button" waves="light" type="submit">
-						Update
-					</Button>{" "}
-				</form>
+					<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+						<FormInput
+							register={register}
+							type="text"
+							name="fullname"
+							label="Full Name"
+							id="fullname"
+							error={errors.fullname}
+							value={values.fullname}
+						/>
+						<FormInput
+							register={register}
+							type="email"
+							name="email"
+							label="Email"
+							id="email"
+							error={errors.email}
+							value={values.email}
+						/>
+						<FormInput
+							register={register}
+							type="password"
+							name="password"
+							label="Password"
+							id="password"
+							error={errors.password}
+						/>
+						<FormInput
+							register={register}
+							type="password"
+							name="confirmPassword"
+							label="Confirm Password"
+							id="confirmPassword"
+							error={errors.confirmPassword}
+						/>
+						<Button large node="button" waves="light" type="submit">
+							Update
+						</Button>{" "}
+					</form>
+				</div>
 			</div>
 		</>
 	);

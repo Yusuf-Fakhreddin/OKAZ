@@ -49,10 +49,9 @@ function AdUpdatePage({ match, history }) {
 	useEffect(() => {
 		document.title = "Update AD";
 		console.log(product);
-		if (
-			!(userInfo && (userInfo._id === product.ownerName || userInfo.isAdmin))
-		) {
-			history.push("/login");
+		if (!userInfo) {
+			if (!(userInfo._id === product.owner || userInfo.isAdmin))
+				history.push("/login");
 		}
 		if (successUpdate) {
 			dispatch({ type: PRODUCT_UPDATE_RESET });
@@ -62,20 +61,19 @@ function AdUpdatePage({ match, history }) {
 			if (!product.productName || product._id !== productId) {
 				dispatch(listProductsDetails(productId));
 			} else {
-				console.log("hello");
 				setValue("productName", product.productName);
 				setValue("ownerName", product.ownerName);
 				setValue("price", product.price);
 				setMainImg(product.image);
 				setImage(product.image);
-				setValue("category", product.category);
-				setValue("condition", product.condition);
+				setselectedCategory(product.category);
+				setselectedCondition(product.condition);
 				setValue("description", product.description);
 				setValue("ownerPhoneNumber", product.ownerPhoneNumber);
-				setValue("city", product.city);
+				setselectedCity(product.city);
 			}
 		}
-	}, [history, userInfo, productId, product, successUpdate]);
+	}, [history, userInfo, productId, product, successUpdate, dispatch]);
 
 	const validationSchema = Yup.object({
 		productName: Yup.string().required("Required"),
@@ -89,6 +87,7 @@ function AdUpdatePage({ match, history }) {
 	});
 
 	const { register, handleSubmit, errors, setValue, getValues } = useForm({
+		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
 
@@ -133,22 +132,23 @@ function AdUpdatePage({ match, history }) {
 			setImageError("Image is Required");
 			return;
 		}
+		values.city = selectedCity;
+		values.condition = selectedCondition;
+		values.category = selectedCategory;
+
+		console.log({ productId, ...values, image });
 		dispatch(updateProduct({ productId, ...values, image }));
-		// console.log({ productId, ...data, image });
 	};
 	const selectCategory = (e) => {
 		setselectedCategory(e.target.value);
-		values.category = selectedCategory;
 	};
 
 	const selectCondition = (e) => {
 		setselectedCondition(e.target.value);
-		values.condition = selectedCondition;
 	};
 	const complete = (e) => {
 		console.log(e.target.value);
 		setselectedCity(e.target.value);
-		values.city = selectedCity;
 	};
 	return (
 		<>
@@ -196,7 +196,7 @@ function AdUpdatePage({ match, history }) {
 							error={errors.price}
 						/>
 						<Autocomplete
-							ref={register}
+							// ref={register}
 							name="city"
 							type="text"
 							onChange={complete}
@@ -211,13 +211,14 @@ function AdUpdatePage({ match, history }) {
 							}}
 							placeholder="Choose a City to search in"
 							title="Specific City ?"
+							value={selectedCity}
 						/>
 						<div className="form-control">
 							<Select
 								onChange={selectCategory}
-								ref={register}
+								// ref={register}
 								name="category"
-								id="Select-9"
+								id="category"
 								multiple={false}
 								options={{
 									classes: "",
@@ -236,25 +237,43 @@ function AdUpdatePage({ match, history }) {
 										outDuration: 250,
 									},
 								}}
-								value=""
 							>
 								<option disabled value="">
 									Select a category
 								</option>
-								<option value="Technology">Technology</option>
-								<option value="Home">Home</option>
-								<option value="Vehicles">Vehicles</option>
-								<option value="Fashion">Fashion</option>
-								<option value="Pets">Pets</option>
+								<option
+									selected={selectedCategory === "Technology"}
+									value="Technology"
+								>
+									Technology
+								</option>
+								<option selected={selectedCategory === "Home"} value="Home">
+									Home
+								</option>
+								<option
+									selected={selectedCategory === "Vehicles"}
+									value="Vehicles"
+								>
+									Vehicles
+								</option>
+								<option
+									selected={selectedCategory === "Fashion"}
+									value="Fashion"
+								>
+									Fashion
+								</option>
+								<option selected={selectedCategory === "Pets"} value="Pets">
+									Pets
+								</option>
 							</Select>
 						</div>
 
 						<div className="form-control">
 							<Select
-								ref={register}
+								// ref={register}
 								onChange={selectCondition}
 								name="condition"
-								id="Select-9"
+								id="condition"
 								multiple={false}
 								options={{
 									classes: "",
@@ -273,14 +292,22 @@ function AdUpdatePage({ match, history }) {
 										outDuration: 250,
 									},
 								}}
-								value=""
 							>
 								<option disabled value="">
 									New or Used ?
 								</option>
-								<option value="New">New</option>
-								<option value="Used">Used</option>
-								<option value="Does not apply">Does not apply</option>
+								<option selected={selectedCondition === "New"} value="New">
+									New
+								</option>
+								<option selected={selectedCondition === "Used"} value="Used">
+									Used
+								</option>
+								<option
+									selected={selectedCondition === "Does not apply"}
+									value="Does not apply"
+								>
+									Does not apply
+								</option>
 							</Select>
 						</div>
 
@@ -291,6 +318,7 @@ function AdUpdatePage({ match, history }) {
 							label="Description"
 							id="description"
 							error={errors.description}
+							value={values.description}
 						/>
 						<div className="image-upload">
 							{!mainImg && (

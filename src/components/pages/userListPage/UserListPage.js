@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory, useParams } from "react-router-dom";
 import { listUsers, deleteUser } from "../../../actions/userActions";
 import Header from "../../Header/Header";
 import { Table, Icon, Button, Modal } from "react-materialize";
 import Paginate from "../../Paginate/Paginate";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
-const UserListPage = ({ history }) => {
+const UserListPage = () => {
+	const history = useHistory();
+	const Params = useParams();
+	const pageNumber = Params.pageNumber || 1;
 	const dispatch = useDispatch();
 
 	const userList = useSelector((state) => state.userList);
@@ -23,12 +26,14 @@ const UserListPage = ({ history }) => {
 	} = userDelete;
 
 	useEffect(() => {
-		if (userInfo && userInfo.isAdmin) {
-			dispatch(listUsers());
-		} else {
+		document.title = "All Users";
+
+		if (!userInfo || !userInfo.isAdmin) {
 			history.push("/login");
+		} else {
+			dispatch(listUsers(pageNumber));
 		}
-	}, [dispatch, history, successDelete, userInfo]);
+	}, [dispatch, history, userInfo, pageNumber, successDelete]);
 
 	const [selectedDeletion, setselectedDeletion] = useState(null);
 	useEffect(() => {
@@ -85,7 +90,7 @@ const UserListPage = ({ history }) => {
 						No
 					</Button>
 				</Modal>
-				{loading || loadingDelete ? (
+				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
 					<p className="red-text">{error}</p>

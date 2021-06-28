@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useHistory, useParams } from "react-router-dom";
 import {
 	deleteProduct,
 	listAllProducts,
@@ -9,10 +9,11 @@ import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 import Header from "../../Header/Header";
 import { Table, Icon, Button, Modal } from "react-materialize";
 import Paginate from "../../Paginate/Paginate";
-import { toast } from "react-toastify";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 
-const AdsListPage = ({ history }) => {
+const AdsListPage = () => {
+	const history = useHistory();
+
 	const Params = useParams();
 	const pageNumber = Params.pageNumber || 1;
 
@@ -40,7 +41,7 @@ const AdsListPage = ({ history }) => {
 		} else {
 			dispatch(listAllProducts(pageNumber));
 		}
-	}, [dispatch, history, userInfo, pageNumber]);
+	}, [dispatch, history, userInfo, pageNumber, successDelete]);
 
 	useEffect(() => {
 		if (errorDelete) {
@@ -99,7 +100,7 @@ const AdsListPage = ({ history }) => {
 						No
 					</Button>
 				</Modal>
-				{loading || loadingDelete ? (
+				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
 					<h1 className="error">{error}</h1>

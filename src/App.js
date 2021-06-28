@@ -53,14 +53,23 @@ function App() {
 				<Route path="/product/:id/edit" component={AdUpdatePage} />
 				<Route path="/myAds" component={MyAdsList} />
 
-				<Route path="/search/:productName/:city?" component={SearchPage} />
-				<Route path="/explore/:category?/:city?" component={SearchPage} />
+				<Route
+					path="/search/:productName/:city?/:pageNumber?"
+					component={SearchPage}
+				/>
+				<Route
+					path={[
+						"/explore/:category//:pageNumber?",
+						"/explore/:category/:city?/:pageNumber?",
+					]}
+					component={SearchPage}
+				/>
 
 				<Route path="/profile" component={ProfilePage} />
 				{/* Admin */}
 
 				<Route
-					path="/admin/userlist"
+					path="/admin/userlist/:pageNumber?"
 					render={() => (
 						<Suspense fallback={<div className="loader"></div>}>
 							{" "}

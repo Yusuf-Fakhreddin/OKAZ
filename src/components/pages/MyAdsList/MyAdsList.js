@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { deleteProduct } from "../../../actions/productActions";
 import { listMyProducts } from "../../../actions/productActions";
 import Header from "../../Header/Header";
 
-import { Table, Icon } from "react-materialize";
+import { Table, Icon, Button, Modal } from "react-materialize";
+import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 
 const MyAdsList = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
@@ -14,12 +15,12 @@ const MyAdsList = ({ history, match }) => {
 
 	const productList = useSelector((state) => state.myProducts);
 	const { loading, error, products, page, pages } = productList;
-	// const productDelete = useSelector((state) => state.productDelete);
-	// const {
-	// 	loading: loadingDelete,
-	// 	error: errorDelete,
-	// 	success: successDelete,
-	// } = productDelete;
+	const productDelete = useSelector((state) => state.productDelete);
+	const {
+		loading: loadingDelete,
+		error: errorDelete,
+		success: successDelete,
+	} = productDelete;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
@@ -33,17 +34,63 @@ const MyAdsList = ({ history, match }) => {
 			dispatch(listMyProducts());
 		}
 		console.log(error);
-	}, [dispatch, history, userInfo, pageNumber]);
-	const deleteHandler = (id) => {
-		if (window.confirm("Are you sure")) {
-			dispatch(deleteProduct(id));
+	}, [dispatch, history, userInfo, pageNumber, successDelete]);
+
+	useEffect(() => {
+		if (errorDelete) {
+			toastFailure(errorDelete);
+		} else if (successDelete) {
+			toastSuccess("Item Removed Successfuly");
 		}
+	}, [loadingDelete]);
+
+	const [selectedDeletion, setselectedDeletion] = useState(null);
+
+	const deleteHandler = (id) => {
+		setselectedDeletion(id);
+		// if (window.confirm("Are you sure")) {
+		// 	dispatch(deleteProduct(id));
+		// }
 	};
 	return (
 		<>
 			<Header />
 			<div className="container">
 				<h2>My Ads</h2>
+				<Modal
+					actions={[]}
+					bottomSheet={false}
+					fixedFooter={false}
+					header="Are You sure ? "
+					id="modal1"
+					open={false}
+					options={{
+						dismissible: true,
+						endingTop: "10%",
+						inDuration: 250,
+						onCloseEnd: null,
+						onCloseStart: null,
+						onOpenEnd: null,
+						onOpenStart: null,
+						opacity: 0.5,
+						outDuration: 250,
+						preventScrolling: true,
+						startingTop: "4%",
+					}}
+					// root={[object HTMLBodyElement]}
+				>
+					<Button
+						onClick={() => dispatch(deleteProduct(selectedDeletion))}
+						className="itemBtn section"
+						large
+						modal="close"
+					>
+						Yes
+					</Button>
+					<Button flat modal="close" node="button" waves="green">
+						No
+					</Button>
+				</Modal>
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
@@ -74,15 +121,20 @@ const MyAdsList = ({ history, match }) => {
 										<td>{product.city}</td>
 										<td>
 											<NavLink to={`/product/${product._id}/edit`}>
-												<button>
+												<Button>
 													<Icon>edit</Icon>
-												</button>
+												</Button>
 											</NavLink>
 										</td>
 										<td>
-											<button onClick={() => deleteHandler(product._id)}>
+											<Button
+												className="modal-trigger"
+												href="#modal1"
+												node="button"
+												onClick={() => deleteHandler(product._id)}
+											>
 												<Icon>delete</Icon>
-											</button>
+											</Button>
 										</td>
 									</tr>
 								))}

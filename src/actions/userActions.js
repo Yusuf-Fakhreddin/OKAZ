@@ -177,6 +177,10 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 			type: USER_UPDATE_PROFILE_SUCCESS,
 			payload: data,
 		});
+		data.token = userInfo.token;
+		localStorage.setItem("UserInfo", JSON.stringify(data));
+
+		// dispatch(login(user.email, user.password));
 	} catch (error) {
 		dispatch({
 			type: USER_UPDATE_PROFILE_FAIL,
@@ -189,6 +193,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 };
 
 export const listUsers = (pageNumber) => async (dispatch, getState) => {
+	console.log(pageNumber);
 	try {
 		dispatch({
 			type: USER_LIST_REQUEST,

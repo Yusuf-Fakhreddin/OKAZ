@@ -12,16 +12,18 @@ import Paginate from "../../Paginate/Paginate";
 const SearchPage = () => {
 	const dispatch = useDispatch();
 	const Params = useParams();
-
+	const pageNumber = Params.pageNumber || 1;
 	const productList = useSelector((state) => state.productSearch);
 	const { loading, error, products, pages, page } = productList;
 
 	useEffect(() => {
+		console.log(Params);
 		dispatch(
 			searchProducts({
 				productName: Params.productName,
 				city: Params.city,
 				category: Params.category,
+				pageNumber,
 			})
 		);
 		console.log(products);
@@ -37,6 +39,8 @@ const SearchPage = () => {
 					<div className="loader"> </div>
 				) : error ? (
 					<h1 className="error">{error}</h1>
+				) : !products.length ? (
+					<h4>Sorry, no ads matching your search</h4>
 				) : (
 					<>
 						{
@@ -56,8 +60,8 @@ const SearchPage = () => {
 					</>
 				)}
 				<Paginate
-					Link={`/search/${
-						Params.productName ? Params.productName : Params.city
+					Link={`/${Params.productName ? "search" : "explore"}/${
+						Params.productName ? Params.productName : Params.category
 					}${Params.city ? "/" + Params.city : "/"}`}
 					pages={pages}
 					page={page}

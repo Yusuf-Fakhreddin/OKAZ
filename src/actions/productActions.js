@@ -26,11 +26,14 @@ import {
 	PRODUCT_LIST_ALL_REQUEST,
 	PRODUCT_LIST_ALL_SUCCESS,
 	PRODUCT_LIST_ALL_FAIL,
+	RECOMMENDATION_LIST_REQUEST,
+	RECOMMENDATION_LIST_SUCCESS,
+	RECOMMENDATION_LIST_FAIL,
 } from "../constants/productConstants";
 import { logout } from "./userActions";
 
 // getting last 6 items action
-export const listProducts = (cnt) => async (dispatch) => {
+export const listProducts = (cnt) => async (dispatch, getState) => {
 	try {
 		dispatch({ type: PRODUCT_LIST_REQUEST });
 
@@ -84,6 +87,38 @@ export const listAllProducts = (pageNumber) => async (dispatch, getState) => {
 	}
 };
 
+// getting Recommended Products
+export const getRecommended = () => async (dispatch, getState) => {
+	try {
+		dispatch({ type: RECOMMENDATION_LIST_REQUEST });
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+		const { data } = await http.get(
+			`https://okazapp.herokuapp.com/api/recommend`,
+			config
+		);
+		dispatch({
+			type: RECOMMENDATION_LIST_SUCCESS,
+			payload: data,
+		});
+	} catch (error) {
+		dispatch({
+			type: RECOMMENDATION_LIST_FAIL,
+			payload:
+				error.response && error.response.data.message
+					? error.response.data.message
+					: error.message,
+		});
+	}
+};
+
 // searchProducts
 export const searchProducts = (product) => async (dispatch, getState) => {
 	console.log(product);
@@ -99,7 +134,7 @@ export const searchProducts = (product) => async (dispatch, getState) => {
 		};
 
 		const { data } = await http.post(
-			`https://okazapp.herokuapp.com/api/search`,
+			`https://okazapp.herokuapp.com/api/search?pageNumber=${product.pageNumber}`,
 			product,
 			config
 		);

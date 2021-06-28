@@ -20,7 +20,8 @@ const FavoritesPage = () => {
 	const history = useHistory();
 	useEffect(() => {
 		if (!userInfo) history.push("/");
-		dispatch(listMyFavorites());
+		console.log(favorites.length);
+		if (favorites.length === 0) dispatch(listMyFavorites());
 		console.log(favorites);
 	}, [userInfo]);
 

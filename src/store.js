@@ -15,6 +15,7 @@ import {
 	myProductsReducer,
 	productSearchReducer,
 	productListAllReducer,
+	recommendationReducer,
 } from "./reducers/productReducers";
 import {
 	userDeleteReducer,
@@ -30,6 +31,7 @@ const reducer = combineReducers({
 	// part of the state : its reducer
 	productList: productListReducer,
 	productAllList: productListAllReducer,
+	recommendation: recommendationReducer,
 	productDetails: productDetailsReducer,
 	productDelete: productDeleteReducer,
 	productCreate: productCreateReducer,

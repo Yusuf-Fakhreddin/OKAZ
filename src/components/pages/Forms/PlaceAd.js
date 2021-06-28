@@ -61,11 +61,10 @@ function ItemForm({ props, history }) {
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 	});
-	const { register, handleSubmit, errors, setValue, setError, getValues } =
-		useForm({
-			mode: "onBlur",
-			resolver: yupResolver(validationSchema),
-		});
+	const { register, handleSubmit, errors, setValue, getValues } = useForm({
+		mode: "onBlur",
+		resolver: yupResolver(validationSchema),
+	});
 
 	const uploadFileHandler = async (e) => {
 		const file = e.target.files[0];
@@ -174,7 +173,6 @@ function ItemForm({ props, history }) {
 						/>
 
 						<Autocomplete
-							ref={register}
 							name="city"
 							type="text"
 							onChange={complete}
@@ -193,7 +191,6 @@ function ItemForm({ props, history }) {
 						<div className="form-control">
 							<Select
 								onChange={selectCategory}
-								ref={register}
 								name="category"
 								id="Select-9"
 								multiple={false}
@@ -229,7 +226,6 @@ function ItemForm({ props, history }) {
 
 						<div className="form-control">
 							<Select
-								ref={register}
 								onChange={selectCondition}
 								name="condition"
 								id="Select-9"

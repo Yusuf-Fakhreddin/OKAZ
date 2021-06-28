@@ -25,6 +25,9 @@ import {
 	PRODUCT_LIST_ALL_REQUEST,
 	PRODUCT_LIST_ALL_SUCCESS,
 	PRODUCT_LIST_ALL_FAIL,
+	RECOMMENDATION_LIST_REQUEST,
+	RECOMMENDATION_LIST_SUCCESS,
+	RECOMMENDATION_LIST_FAIL,
 } from "../constants/productConstants";
 
 // actions reducer for every phase of the axios request
@@ -54,6 +57,24 @@ export const productListAllReducer = (state = { products: [] }, action) => {
 				page: action.payload.page,
 			};
 		case PRODUCT_LIST_ALL_FAIL:
+			return { loading: false, error: action.payload };
+
+		default:
+			return state;
+	}
+};
+export const recommendationReducer = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case RECOMMENDATION_LIST_REQUEST:
+			return { loading: true, products: [] };
+		case RECOMMENDATION_LIST_SUCCESS:
+			return {
+				loading: false,
+				products: action.payload,
+				// pages: action.payload.pages,
+				// page: action.payload.page,
+			};
+		case RECOMMENDATION_LIST_FAIL:
 			return { loading: false, error: action.payload };
 
 		default:

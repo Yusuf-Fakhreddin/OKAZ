@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, Textarea } from "react-materialize";
+// import { TextInput, Textarea } from "react-materialize";
 
 const FormInput = ({
 	type,
@@ -8,37 +8,40 @@ const FormInput = ({
 	label,
 	id,
 	value,
+	name,
 	...inputProps
 }) => {
 	return (
 		<>
-			<div>
-				{error && (
-					<small className="helper-text red-text">{error.message}</small>
-				)}
+			<div className="input-field">
+				<label className={value && "active"} htmlFor={id}>
+					{label}
+				</label>
+
 				{type === "textarea" ? (
-					<Textarea
-						label={label}
+					<textarea
 						ref={register}
 						id={id}
-						placeholder={value}
+						className="materialize-textarea"
+						name={name}
+						defaultValue={value}
 						l={12}
 						m={12}
 						s={12}
 						xl={12}
 					/>
 				) : (
-					<TextInput
-						label={label}
+					<input
 						type={type}
 						id={id}
+						name={name}
 						ref={register}
-						{...inputProps}
-						placeholder={value}
-						error={error && error.message}
+						defaultValue={value}
 					/>
 				)}
-
+				{error && (
+					<small className="helper-text red-text">{error.message}</small>
+				)}
 				{/* {error && <p>{error.message}</p>} */}
 			</div>
 		</>
