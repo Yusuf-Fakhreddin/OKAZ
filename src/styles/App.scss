@@ -72,8 +72,9 @@ input[type="number"]::-webkit-outer-spin-button {
 	margin: 0;
 }
 
-textarea {
-	height: 350px;
+.Mytextarea {
+	// min-height: 26vh; // adjust this as you see fit
+	height: unset !important; // so the height of the textarea isn't overruled by something else
 }
 
 .loader {

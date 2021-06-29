@@ -3,21 +3,17 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormInput from "./Fields/FormInput";
-import {
-	Icon,
-	Button,
-	Autocomplete,
-	Select,
-	TextInput,
-	MediaBox,
-	ProgressBar,
-} from "react-materialize";
+import { Icon, Button, TextInput, ProgressBar } from "react-materialize";
 
 import cities from "./Fields/cities";
 import Header from "../../Header/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { createProduct } from "../../../actions/productActions";
 import http from "../../../httpService";
+import MyMediaBox from "../../MyMediaBox/MyMediaBox";
+import MySelect from "../Forms/Fields/MySelect";
+import MyAutoComplete from "../Forms/Fields/MyAutoComplete";
+import { categories, conditions } from "./Fields/selectOptions";
 function ItemForm({ props, history }) {
 	const [image, setImage] = useState(null);
 	const [imageError, setImageError] = useState(null);
@@ -123,6 +119,7 @@ function ItemForm({ props, history }) {
 		console.log(e.target.value);
 		setselectedCity(e.target.value);
 	};
+
 	return (
 		<>
 			<Header />
@@ -172,7 +169,7 @@ function ItemForm({ props, history }) {
 							value={values.price}
 						/>
 
-						<Autocomplete
+						{/* <Autocomplete
 							name="city"
 							type="text"
 							onChange={complete}
@@ -187,9 +184,19 @@ function ItemForm({ props, history }) {
 							}}
 							placeholder="Choose a City to search in"
 							title="Specific City ?"
+						/> */}
+						<MyAutoComplete
+							complete={complete}
+							setSelected={setselectedCity}
+							cities={cities}
 						/>
-						<div className="form-control">
-							<Select
+						<div>
+							<MySelect
+								select={selectCategory}
+								name="category"
+								values={categories}
+							/>
+							{/* <Select
 								onChange={selectCategory}
 								name="category"
 								id="Select-9"
@@ -221,11 +228,16 @@ function ItemForm({ props, history }) {
 								<option value="Vehicles">Vehicles</option>
 								<option value="Fashion">Fashion</option>
 								<option value="Pets">Pets</option>
-							</Select>
+							</Select> */}
 						</div>
 
-						<div className="form-control">
-							<Select
+						<div>
+							<MySelect
+								select={selectCondition}
+								name="condition"
+								values={conditions}
+							/>
+							{/* <Select
 								onChange={selectCondition}
 								name="condition"
 								id="Select-9"
@@ -255,7 +267,7 @@ function ItemForm({ props, history }) {
 								<option value="New">New</option>
 								<option value="Used">Used</option>
 								<option value="Does not apply">Does not apply</option>
-							</Select>
+							</Select> */}
 						</div>
 
 						<FormInput
@@ -296,20 +308,9 @@ function ItemForm({ props, history }) {
 							{uploading && <ProgressBar />}
 
 							{mainImg && (
-								<MediaBox
-									className="section"
-									id="MediaBox_7"
-									options={{
-										inDuration: 275,
-										onCloseEnd: null,
-										onCloseStart: null,
-										onOpenEnd: null,
-										onOpenStart: null,
-										outDuration: 200,
-									}}
-								>
-									<img alt="" src={mainImg} width="650" />
-								</MediaBox>
+								<div className="section ">
+									<MyMediaBox image={mainImg} height="650px" width="650px" />
+								</div>
 							)}
 						</div>
 						{loadingCreate && <ProgressBar />}

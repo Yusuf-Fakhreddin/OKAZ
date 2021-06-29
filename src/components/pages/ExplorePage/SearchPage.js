@@ -33,8 +33,18 @@ const SearchPage = () => {
 		<>
 			<Header />
 			<div className="container homePage">
-				<Search />
-				<Explore />
+				<div className="search">
+					<Search
+						className="section"
+						city={Params.city}
+						productName={Params.productName}
+					/>
+					<Explore
+						className="section"
+						category={Params.category}
+						city={Params.city}
+					/>
+				</div>
 				{loading ? (
 					<div className="loader"> </div>
 				) : error ? (

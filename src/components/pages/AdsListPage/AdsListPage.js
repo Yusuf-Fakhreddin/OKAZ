@@ -7,9 +7,10 @@ import {
 } from "../../../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 import Header from "../../Header/Header";
-import { Table, Icon, Button, Modal } from "react-materialize";
+import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
 import Paginate from "../../Paginate/Paginate";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
+import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 
 const AdsListPage = () => {
 	const history = useHistory();
@@ -65,7 +66,6 @@ const AdsListPage = () => {
 			<Header />
 			<div className="container">
 				<h2>Ads</h2>
-
 				<Modal
 					actions={[]}
 					bottomSheet={false}
@@ -100,6 +100,8 @@ const AdsListPage = () => {
 						No
 					</Button>
 				</Modal>
+				{loadingDelete && <ProgressBar />}
+
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
@@ -111,6 +113,7 @@ const AdsListPage = () => {
 						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
+									<th>Image</th>
 									<th>Owner Name</th>
 									<th>Phone Number</th>
 									<th>Price</th>
@@ -122,6 +125,14 @@ const AdsListPage = () => {
 							<tbody>
 								{products.map((product) => (
 									<tr key={product._id}>
+										<td>
+											{" "}
+											<MyMediaBox
+												image={product.image}
+												height="50px"
+												width="50px"
+											/>{" "}
+										</td>
 										<td>
 											<NavLink to={"/item/" + product._id}>
 												{product.productName}

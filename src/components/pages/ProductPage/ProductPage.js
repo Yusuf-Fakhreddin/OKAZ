@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../Header/Header";
-import { Icon, MediaBox, Button, Row, Col } from "react-materialize";
+import { Icon, Button, Row, Col, ProgressBar, Modal } from "react-materialize";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import {
 	deleteProduct,
 	listProductsDetails,
 } from "../../../actions/productActions";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { GA4R } from "ga-4-react";
 import {
 	addToFavorites,
 	listMyFavorites,
 	removeFromFavorites,
 } from "../../../actions/favoritesActions";
-import { toast } from "react-toastify";
+import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 
-const ItemPage = ({ match, history }) => {
+const ItemPage = ({ match }) => {
+	const history = useHistory();
 	const [star, setStar] = useState(false);
 
 	const favoritesList = useSelector((state) => state.favoritesList);
@@ -28,6 +29,13 @@ const ItemPage = ({ match, history }) => {
 	const favoritesRemove = useSelector((state) => state.favoritesRemove);
 	const { success: removeSuccess, error: removeError } = favoritesRemove;
 	const dispatch = useDispatch();
+
+	const productDelete = useSelector((state) => state.productDelete);
+	const {
+		loading: loadingDelete,
+		error: errorDelete,
+		success: successDelete,
+	} = productDelete;
 
 	const toggleFavorites = () => {
 		if (!star) {
@@ -60,13 +68,22 @@ const ItemPage = ({ match, history }) => {
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
-	const deleteHandler = (id) => {
-		if (window.confirm("Are you sure")) {
-			dispatch(deleteProduct(id));
-		}
-		history.push("/");
-	};
+	const [selectedDeletion, setselectedDeletion] = useState(null);
 
+	useEffect(() => {
+		if (errorDelete) {
+			toastFailure(errorDelete);
+		} else if (successDelete) {
+			history.goBack();
+		}
+	}, [loadingDelete]);
+
+	const deleteHandler = (id) => {
+		setselectedDeletion(id);
+		// if (window.confirm("Are you sure")) {
+		// 	dispatch(deleteProduct(id));
+		// }
+	};
 	useEffect(() => {
 		document.title = "Item Details";
 
@@ -92,10 +109,78 @@ const ItemPage = ({ match, history }) => {
 				}
 			}
 	}, [favorites.length]);
+
+	let buttons;
+	if (userInfo)
+		if (userInfo && (userInfo._id === product.owner || userInfo.isAdmin)) {
+			buttons = (
+				<div className="section">
+					<NavLink to={`/product/${product._id}/edit`}>
+						<Button className="itemBtn" large>
+							<Icon>edit_note</Icon>
+						</Button>
+					</NavLink>
+					<Button
+						className="itemBtn modal-trigger"
+						large
+						href="#modal1"
+						node="button"
+						onClick={() => deleteHandler(product._id)}
+					>
+						<Icon>delete_outline</Icon>
+					</Button>
+					<Button className="itemBtn " large onClick={() => toggleFavorites()}>
+						<Icon>{star ? "favorite" : "favorite_border"}</Icon>
+					</Button>
+				</div>
+			);
+		} else {
+			buttons = (
+				<Button className="itemBtn " large onClick={() => toggleFavorites()}>
+					<Icon>{star ? "favorite" : "favorite_border"}</Icon>
+				</Button>
+			);
+		}
+
 	return (
 		<div className="item-page">
 			<Header />
 			<div className="container">
+				<Modal
+					actions={[]}
+					bottomSheet={false}
+					fixedFooter={false}
+					header="Are You sure ? "
+					id="modal1"
+					open={false}
+					options={{
+						dismissible: true,
+						endingTop: "10%",
+						inDuration: 250,
+						onCloseEnd: null,
+						onCloseStart: null,
+						onOpenEnd: null,
+						onOpenStart: null,
+						opacity: 0.5,
+						outDuration: 250,
+						preventScrolling: true,
+						startingTop: "4%",
+					}}
+					// root={[object HTMLBodyElement]}
+				>
+					<Button
+						onClick={() => dispatch(deleteProduct(selectedDeletion))}
+						className="itemBtn section"
+						large
+						modal="close"
+					>
+						Yes
+					</Button>
+					<Button flat modal="close" node="button" waves="green">
+						No
+					</Button>
+				</Modal>
+				{loadingDelete && <ProgressBar />}
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
@@ -104,63 +189,20 @@ const ItemPage = ({ match, history }) => {
 					<>
 						{" "}
 						<div className="section">
-							<NavLink to="/">
-								<Button>
-									<Icon>arrow_back</Icon>
-								</Button>
-							</NavLink>
-							{userInfo &&
-								(userInfo._id === product.owner || userInfo.isAdmin) && (
-									<div className="section">
-										<NavLink to={`/product/${product._id}/edit`}>
-											<Button className="itemBtn" large>
-												<Icon>edit_note</Icon>
-											</Button>
-										</NavLink>
-										<Button
-											className="itemBtn"
-											large
-											onClick={() => deleteHandler(product._id)}
-										>
-											<Icon>delete_outline</Icon>
-										</Button>
-									</div>
-								)}
-							{userInfo && (
-								<div className="section">
-									<Button
-										className="itemBtn "
-										large
-										onClick={() => toggleFavorites()}
-									>
-										<Icon>{star ? "favorite" : "favorite_border"}</Icon>
-									</Button>
-								</div>
-							)}
+							<Button onClick={() => history.goBack()}>
+								<Icon>arrow_back</Icon>
+							</Button>
+							{buttons}
 						</div>
 						<div>
 							<h3>{product.productName}</h3>
 							<Row>
 								<Col m={6}>
-									<MediaBox
-										// className="row"
-										id="MediaBox_7"
-										options={{
-											inDuration: 275,
-											onCloseEnd: null,
-											onCloseStart: null,
-											onOpenEnd: null,
-											onOpenStart: null,
-											outDuration: 200,
-										}}
-									>
-										<img
-											alt=""
-											src={product.image}
-											width="100%"
-											max-height="450px"
-										/>
-									</MediaBox>
+									<MyMediaBox
+										image={product.image}
+										width="100%"
+										height="450px"
+									/>
 								</Col>
 								<Col m={6}>
 									<div>

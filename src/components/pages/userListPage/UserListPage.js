@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { listUsers, deleteUser } from "../../../actions/userActions";
 import Header from "../../Header/Header";
-import { Table, Icon, Button, Modal } from "react-materialize";
+import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
 import Paginate from "../../Paginate/Paginate";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 const UserListPage = () => {
@@ -90,6 +90,8 @@ const UserListPage = () => {
 						No
 					</Button>
 				</Modal>
+				{loadingDelete && <ProgressBar />}
+
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (

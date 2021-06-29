@@ -5,11 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import FormInput from "./Fields/FormInput";
 
 import cities from "./Fields/cities.json";
-
+import MyAutoComplete from "./Fields/MyAutoComplete";
 import { useHistory } from "react-router";
 import { Autocomplete, Button, Icon } from "react-materialize";
 
-function Search({ props }) {
+function Search({ city, productName }) {
 	const history = useHistory();
 
 	const validationSchema = Yup.object({
@@ -43,9 +43,15 @@ function Search({ props }) {
 				name="itemName"
 				label="Item Name"
 				error={errors.itemName}
+				value={productName}
 			/>
-			<Autocomplete
-				ref={register}
+			<MyAutoComplete
+				complete={complete}
+				setSelected={setselectedCity}
+				cities={cities}
+				alreadySelected={city}
+			/>
+			{/* <Autocomplete
 				name="city"
 				type="text"
 				onChange={complete}
@@ -60,7 +66,7 @@ function Search({ props }) {
 				}}
 				placeholder="Choose a City to search in"
 				title="Specific City ?"
-			/>
+			/> */}
 			<Button className="bg-button" node="button" waves="light" type="submit">
 				Search
 				<Icon right>search</Icon>

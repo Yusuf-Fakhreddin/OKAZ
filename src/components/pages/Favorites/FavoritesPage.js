@@ -6,24 +6,37 @@ import {
 	removeFromFavorites,
 } from "../../../actions/favoritesActions";
 import Header from "../../Header/Header";
-import ItemCard from "../../ProductCard/ItemCard";
-import { Row, Col } from "react-materialize";
-
+import { NavLink } from "react-router-dom";
+import { Icon, Button, Table } from "react-materialize";
+import { toastFailure } from "../../Toast/MyToast";
+import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 const FavoritesPage = () => {
 	const favoritesList = useSelector((state) => state.favoritesList);
 	const { favorites, loading, success } = favoritesList;
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
+	const favoritesRemove = useSelector((state) => state.favoritesRemove);
+	const {
+		success: removeSuccess,
+		error: removeError,
+		loading: removeLoading,
+	} = favoritesRemove;
 	const dispatch = useDispatch();
 
 	const history = useHistory();
 	useEffect(() => {
 		if (!userInfo) history.push("/");
 		console.log(favorites.length);
-		if (favorites.length === 0) dispatch(listMyFavorites());
+		if (favorites.length === 0 || removeSuccess) dispatch(listMyFavorites());
 		console.log(favorites);
-	}, [userInfo]);
+	}, [dispatch, userInfo, removeSuccess]);
+
+	useEffect(() => {
+		if (removeError) {
+			toastFailure(removeError);
+		}
+	}, [removeLoading]);
 
 	const removeFromfavoritesHandler = (id) => {
 		dispatch(removeFromFavorites(id));
@@ -38,13 +51,47 @@ const FavoritesPage = () => {
 				) : !favorites ? (
 					<h1>You have no favorites yet</h1>
 				) : (
-					<Row>
-						{favorites.map((product) => (
-							<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
-								<ItemCard key={product.product} product={product} />
-							</Col>
-						))}
-					</Row>
+					<Table hoverable responsive className="responsive-table">
+						<thead>
+							<tr>
+								<th>Image</th>
+								<th>Name</th>
+								<th>Phone Number</th>
+								<th>Price</th>
+								<th>City</th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{favorites.map((product) => (
+								<tr key={product._id}>
+									<td>
+										<MyMediaBox
+											image={product.image}
+											width="50px"
+											height="50px"
+										/>
+									</td>
+									<td>
+										<NavLink to={"item/" + product._id}>
+											{product.productName}
+										</NavLink>
+									</td>
+									<td>{product.ownerPhoneNumber}</td>
+									<td>${product.price}</td>
+									<td>{product.city}</td>
+									<td>
+										<Button
+											onClick={() => removeFromfavoritesHandler(product._id)}
+										>
+											<Icon> favorite </Icon>
+										</Button>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</Table>
 				)}
 			</div>
 		</div>

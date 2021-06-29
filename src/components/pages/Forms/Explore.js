@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import FormInput from "./Fields/FormInput";
 import cities from "./Fields/cities";
+import MyAutoComplete from "./Fields/MyAutoComplete";
 import { useHistory } from "react-router";
-import {
-	Icon,
-	Button,
-	Select,
-	Autocomplete,
-	TextInput,
-} from "react-materialize";
-
-function Explore({ props }) {
+import { Icon, Button, Select } from "react-materialize";
+import MySelect from "./Fields/MySelect";
+import { categories } from "./Fields/selectOptions";
+function Explore({ category, city }) {
 	const history = useHistory();
 	const validationSchema = Yup.object({
 		category: Yup.string().required("required"),
@@ -49,16 +44,21 @@ function Explore({ props }) {
 		console.log(e.target.value);
 		setselectedCity(e.target.value);
 	};
-
 	return (
 		<div className="search-container">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h4>Explore a Category</h4>
 				{categroyError && <p className="red-text">Please select a category</p>}
 				<div>
-					<Select
+					<MySelect
+						select={select}
+						name="category"
+						values={categories}
+						alreadySelected={category}
+					/>
+
+					{/* <Select
 						onChange={select}
-						ref={register}
 						multiple={false}
 						options={{
 							classes: "",
@@ -79,7 +79,6 @@ function Explore({ props }) {
 						}}
 						name="category"
 					>
-						<label htmlFor="">Select a category</label>
 						<option value="" selected disabled>
 							Select a category
 						</option>
@@ -88,10 +87,15 @@ function Explore({ props }) {
 						<option value="Vehicles">Vehicles</option>
 						<option value="Fashion">Fashion</option>
 						<option value="Pets">Pets</option>
-					</Select>
+					</Select> */}
 				</div>
-				<Autocomplete
-					ref={register}
+				<MyAutoComplete
+					complete={complete}
+					setSelected={setselectedCity}
+					cities={cities}
+					alreadySelected={city}
+				/>
+				{/* <Autocomplete
 					name="city"
 					type="text"
 					onChange={complete}
@@ -106,7 +110,7 @@ function Explore({ props }) {
 					}}
 					placeholder="Choose a City to search in"
 					title="Specific City ?"
-				/>
+				/> */}
 				<Button node="button" waves="light" type="submit" onClick={onSubmit}>
 					Explore
 					<Icon right>category</Icon>

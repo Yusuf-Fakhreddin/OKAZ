@@ -6,23 +6,20 @@ import FormInput from "../Forms/Fields/FormInput";
 import cities from "../Forms/Fields/cities";
 import Header from "../../Header/Header";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	Icon,
-	Button,
-	Autocomplete,
-	Select,
-	TextInput,
-	MediaBox,
-	ProgressBar,
-} from "react-materialize";
+import { Icon, Button, TextInput, ProgressBar } from "react-materialize";
 import {
 	listProductsDetails,
 	updateProduct,
 } from "../../../actions/productActions";
 import http from "../../../httpService";
 import { PRODUCT_UPDATE_RESET } from "../../../constants/productConstants";
-
-function AdUpdatePage({ match, history }) {
+import { useHistory } from "react-router-dom";
+import MyMediaBox from "../../MyMediaBox/MyMediaBox";
+import MySelect from "../Forms/Fields/MySelect";
+import MyAutoComplete from "../Forms/Fields/MyAutoComplete";
+import { categories, conditions } from "../Forms/Fields/selectOptions";
+function AdUpdatePage({ match }) {
+	const history = useHistory();
 	const productId = match.params.id;
 
 	const dispatch = useDispatch();
@@ -55,8 +52,9 @@ function AdUpdatePage({ match, history }) {
 		}
 		if (successUpdate) {
 			dispatch({ type: PRODUCT_UPDATE_RESET });
-			if (userInfo.isAdmin) history.push("/admin/adsList");
-			else history.push(`/item/${productId}`);
+			// if (userInfo.isAdmin) history.push("/admin/adsList");
+			// else history.push(`/item/${productId}`);
+			history.goBack();
 		} else {
 			if (!product.productName || product._id !== productId) {
 				dispatch(listProductsDetails(productId));
@@ -150,6 +148,7 @@ function AdUpdatePage({ match, history }) {
 		console.log(e.target.value);
 		setselectedCity(e.target.value);
 	};
+
 	return (
 		<>
 			<Header />
@@ -195,7 +194,13 @@ function AdUpdatePage({ match, history }) {
 							id="price"
 							error={errors.price}
 						/>
-						<Autocomplete
+						<MyAutoComplete
+							complete={complete}
+							setSelected={setselectedCity}
+							cities={cities}
+							alreadySelected={selectedCity}
+						/>
+						{/* <Autocomplete
 							// ref={register}
 							name="city"
 							type="text"
@@ -212,9 +217,16 @@ function AdUpdatePage({ match, history }) {
 							placeholder="Choose a City to search in"
 							title="Specific City ?"
 							value={selectedCity}
-						/>
-						<div className="form-control">
-							<Select
+						/> */}
+						<div>
+							<MySelect
+								select={selectCategory}
+								name="category"
+								alreadySelected={selectedCategory}
+								values={categories}
+							/>
+
+							{/* <Select
 								onChange={selectCategory}
 								// ref={register}
 								name="category"
@@ -265,11 +277,18 @@ function AdUpdatePage({ match, history }) {
 								<option selected={selectedCategory === "Pets"} value="Pets">
 									Pets
 								</option>
-							</Select>
+							</Select> */}
 						</div>
 
-						<div className="form-control">
-							<Select
+						<div>
+							<MySelect
+								select={selectCondition}
+								name="condition"
+								alreadySelected={selectedCondition}
+								values={conditions}
+							/>
+
+							{/* <Select
 								// ref={register}
 								onChange={selectCondition}
 								name="condition"
@@ -308,7 +327,7 @@ function AdUpdatePage({ match, history }) {
 								>
 									Does not apply
 								</option>
-							</Select>
+							</Select> */}
 						</div>
 
 						<FormInput
@@ -344,20 +363,8 @@ function AdUpdatePage({ match, history }) {
 							{uploading && <ProgressBar />}
 
 							{mainImg && (
-								<div className="section">
-									<MediaBox
-										id="MediaBox_7"
-										options={{
-											inDuration: 275,
-											onCloseEnd: null,
-											onCloseStart: null,
-											onOpenEnd: null,
-											onOpenStart: null,
-											outDuration: 200,
-										}}
-									>
-										<img alt="" src={mainImg} width="650" />
-									</MediaBox>
+								<div className="section ">
+									<MyMediaBox image={mainImg} width="650px" height="650px" />
 								</div>
 							)}
 						</div>

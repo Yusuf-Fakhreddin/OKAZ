@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "react-materialize";
+import { Button, ProgressBar } from "react-materialize";
 
 import FormInput from "./Fields/FormInput";
 import Header from "../../Header/Header";
@@ -23,6 +23,7 @@ const ProfilePage = ({ props }) => {
 	const {
 		userInfo: newUserInfo,
 		success,
+		loading: loadingUpdate,
 		error: errorUpdate,
 	} = userUpdateProfile;
 
@@ -78,6 +79,7 @@ const ProfilePage = ({ props }) => {
 			<Header />
 			<div className="section container">
 				<h2>Your Profile infomation</h2>
+				{loadingUpdate && <ProgressBar />}
 				<div>
 					{/* {error && <h4 className="red-text">{error}</h4>}
 					{success && <h1 className="success">Profile Updated</h1>} */}

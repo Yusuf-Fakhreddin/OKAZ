@@ -5,7 +5,7 @@ import { deleteProduct } from "../../../actions/productActions";
 import { listMyProducts } from "../../../actions/productActions";
 import Header from "../../Header/Header";
 
-import { Table, Icon, Button, Modal } from "react-materialize";
+import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 
 const MyAdsList = ({ history, match }) => {
@@ -57,6 +57,7 @@ const MyAdsList = ({ history, match }) => {
 			<Header />
 			<div className="container">
 				<h2>My Ads</h2>
+
 				<Modal
 					actions={[]}
 					bottomSheet={false}
@@ -91,6 +92,8 @@ const MyAdsList = ({ history, match }) => {
 						No
 					</Button>
 				</Modal>
+				{loadingDelete && <ProgressBar />}
+
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
