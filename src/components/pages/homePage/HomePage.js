@@ -27,20 +27,14 @@ const HomePage = () => {
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
-	let Items = [];
-
 	useEffect(() => {
 		document.title = "Okaz";
 
 		if (userInfo) {
 			dispatch(getRecommended());
-			Items = recommendproducts;
 		} else {
 			dispatch(listProducts(6));
-			Items = products;
 		}
-
-		console.log(Items, recommendproducts, products);
 	}, [dispatch, userInfo]);
 
 	return (
@@ -62,11 +56,17 @@ const HomePage = () => {
 					<h1 className="error">{recommendError}</h1>
 				) : (
 					<Row>
-						{recommendproducts.map((product) => (
-							<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
-								<ItemCard product={product} />
-							</Col>
-						))}
+						{userInfo
+							? recommendproducts.map((product) => (
+									<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
+										<ItemCard product={product} />
+									</Col>
+							  ))
+							: products.map((product) => (
+									<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
+										<ItemCard product={product} />
+									</Col>
+							  ))}
 					</Row>
 				)}
 			</div>
