@@ -7,7 +7,7 @@ import FormInput from "./Fields/FormInput";
 import cities from "./Fields/cities.json";
 import MyAutoComplete from "./Fields/MyAutoComplete";
 import { useHistory } from "react-router";
-import { Autocomplete, Button, Icon } from "react-materialize";
+import { Button, Icon } from "react-materialize";
 
 function Search({ city, productName }) {
 	const history = useHistory();
@@ -19,7 +19,7 @@ function Search({ city, productName }) {
 	});
 
 	const { register, handleSubmit, errors, getValues } = useForm({
-		mode: "onChange",
+		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
 
@@ -41,7 +41,7 @@ function Search({ city, productName }) {
 				register={register}
 				type="text"
 				name="itemName"
-				label="Item Name"
+				label="Product Name"
 				error={errors.itemName}
 				value={productName}
 			/>

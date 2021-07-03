@@ -36,9 +36,6 @@ function App() {
 		<Router>
 			<ToastContainer />
 			<Switch>
-				<Route path="/" exact>
-					<HomePage />
-				</Route>
 				<Route path="/register" component={RegisterationPage} />
 
 				<Route path="/login" component={LoginPage} />
@@ -96,6 +93,9 @@ function App() {
 						</Suspense>
 					)}
 				/>
+				<Route path="/">
+					<HomePage />
+				</Route>
 			</Switch>
 		</Router>
 	);

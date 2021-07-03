@@ -51,7 +51,7 @@ const Header = () => {
 							constrainWidth: true,
 							container: null,
 							coverTrigger: false,
-							hover: true,
+							hover: false,
 							inDuration: 150,
 							onCloseEnd: null,
 							onCloseStart: null,
@@ -60,7 +60,7 @@ const Header = () => {
 							outDuration: 250,
 						}}
 						trigger={
-							<a href="#">
+							<a>
 								{userInfo.name} <Icon right>arrow_drop_down</Icon>
 							</a>
 						}

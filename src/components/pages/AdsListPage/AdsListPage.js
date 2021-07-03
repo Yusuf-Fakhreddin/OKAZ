@@ -114,9 +114,10 @@ const AdsListPage = () => {
 							<thead>
 								<tr>
 									<th>Image</th>
+									<th>Product Name</th>
 									<th>Owner Name</th>
 									<th>Phone Number</th>
-									<th>Price</th>
+									<th>Price (EGP)</th>
 									<th>Category</th>
 									<th></th>
 									<th></th>
@@ -131,6 +132,7 @@ const AdsListPage = () => {
 												image={product.image}
 												height="50px"
 												width="50px"
+												caption={product.productName}
 											/>{" "}
 										</td>
 										<td>
@@ -138,8 +140,9 @@ const AdsListPage = () => {
 												{product.productName}
 											</NavLink>
 										</td>
+										<td>{product.ownerName} </td>
 										<td>{product.ownerPhoneNumber}</td>
-										<td>{product.price} EGP</td>
+										<td>{product.price}</td>
 										<td>{product.category}</td>
 
 										<td>

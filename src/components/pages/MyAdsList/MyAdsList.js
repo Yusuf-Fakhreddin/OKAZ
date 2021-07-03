@@ -7,7 +7,7 @@ import Header from "../../Header/Header";
 
 import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
 import { toastFailure, toastSuccess } from "../../Toast/MyToast";
-
+import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 const MyAdsList = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
 
@@ -103,6 +103,7 @@ const MyAdsList = ({ history, match }) => {
 						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
+									<th>Image</th>
 									<th>Name</th>
 									<th>Phone Number</th>
 									<th>Price</th>
@@ -114,6 +115,14 @@ const MyAdsList = ({ history, match }) => {
 							<tbody>
 								{products.map((product) => (
 									<tr key={product._id}>
+										<td>
+											{" "}
+											<MyMediaBox
+												image={product.image}
+												height="50px"
+												width="50px"
+											/>{" "}
+										</td>
 										<td>
 											<NavLink to={"item/" + product._id}>
 												{product.productName}

@@ -25,7 +25,7 @@ function RegisterationPage({ props, history, location }) {
 		document.title = "Register";
 		if (userInfo || LogInInfo) {
 			// history.push(redirect);
-			history.goBack();
+			history.push("/");
 		}
 	}, [history, userInfo, redirect]);
 
@@ -46,6 +46,8 @@ function RegisterationPage({ props, history, location }) {
 	});
 
 	const { register, handleSubmit, errors } = useForm({
+		mode: "onBlur",
+
 		resolver: yupResolver(validationSchema),
 	});
 	const onSubmit = ({ name, email, password, phoneNumber }) => {

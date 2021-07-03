@@ -1,7 +1,14 @@
 import React from "react";
 import { Autocomplete, Icon } from "react-materialize";
 
-const MyAutoComplete = ({ complete, setSelected, cities, alreadySelected }) => {
+const MyAutoComplete = ({
+	complete,
+	setSelected,
+	cities,
+	alreadySelected,
+	placeholder,
+	title,
+}) => {
 	return (
 		<Autocomplete
 			name="city"
@@ -16,8 +23,8 @@ const MyAutoComplete = ({ complete, setSelected, cities, alreadySelected }) => {
 				},
 				data: cities,
 			}}
-			placeholder="Choose a City to search in"
-			title="Specific City ?"
+			placeholder={placeholder ? placeholder : "Choose a City to search in"}
+			title={title ? title : "Specific City ?"}
 			value={alreadySelected}
 		/>
 	);

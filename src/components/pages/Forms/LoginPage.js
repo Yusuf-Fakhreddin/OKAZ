@@ -42,7 +42,7 @@ function LoginPage({ props, history, location }) {
 			<Header />
 			<div className="container section">
 				<div className="section">
-					<h5>You can create a new one</h5>
+					<h5>Create a new account</h5>
 					<NavLink activeClassName="active" to="/register">
 						<Button type="submit">Sign up</Button>
 					</NavLink>

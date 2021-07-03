@@ -21,7 +21,7 @@ const ItemPage = ({ match }) => {
 	const [star, setStar] = useState(false);
 
 	const favoritesList = useSelector((state) => state.favoritesList);
-	const { favorites, success } = favoritesList;
+	const { favorites, success, loading: loadingFavorites } = favoritesList;
 
 	const favoritesAdd = useSelector((state) => state.favoritesAdd);
 	const { success: addSuccess, error: addError } = favoritesAdd;
@@ -46,7 +46,7 @@ const ItemPage = ({ match }) => {
 				console.log(addSuccess);
 				toastFailure(addError);
 			} else {
-				toastSuccess("Item was added to your favorites list");
+				toastSuccess("Ad was added to your favorites list");
 			}
 		} else {
 			dispatch(removeFromFavorites(match.params.id));
@@ -56,7 +56,7 @@ const ItemPage = ({ match }) => {
 			if (removeError) {
 				setStar(!star);
 				toastFailure(removeError);
-			} else toastSuccess("Item was removed from your favorites list");
+			} else toastSuccess("Ad was removed from your favorites list");
 		}
 	};
 
@@ -90,7 +90,7 @@ const ItemPage = ({ match }) => {
 		// firing the listProductsDetails Action
 		dispatch(listProductsDetails(match.params.id));
 		if (userInfo) {
-			if (!favorites) dispatch(listMyFavorites());
+			dispatch(listMyFavorites());
 		}
 
 		console.log(match.params);
@@ -99,7 +99,7 @@ const ItemPage = ({ match }) => {
 	}, [match, dispatch, userInfo]);
 
 	useEffect(() => {
-		console.log(favorites.length);
+		console.log(favorites);
 		if (favorites.length > 0)
 			for (let i = 0; i < favorites.length; i++) {
 				console.log(favorites[i]._id);
@@ -108,7 +108,7 @@ const ItemPage = ({ match }) => {
 					setStar(true);
 				}
 			}
-	}, [favorites.length]);
+	}, [favorites]);
 
 	let buttons;
 	if (userInfo)
@@ -130,14 +130,26 @@ const ItemPage = ({ match }) => {
 						<Icon>delete_outline</Icon>
 					</Button>
 					<Button className="itemBtn " large onClick={() => toggleFavorites()}>
-						<Icon>{star ? "favorite" : "favorite_border"}</Icon>
+						<Icon>
+							{loadingFavorites
+								? "more_horiz"
+								: star
+								? "favorite"
+								: "favorite_border"}
+						</Icon>
 					</Button>
 				</div>
 			);
 		} else {
 			buttons = (
 				<Button className="itemBtn " large onClick={() => toggleFavorites()}>
-					<Icon>{star ? "favorite" : "favorite_border"}</Icon>
+					<Icon>
+						{loadingFavorites
+							? "more_horiz"
+							: star
+							? "favorite"
+							: "favorite_border"}
+					</Icon>
 				</Button>
 			);
 		}
@@ -201,7 +213,8 @@ const ItemPage = ({ match }) => {
 									<MyMediaBox
 										image={product.image}
 										width="100%"
-										height="450px"
+										height="100%"
+										caption={product.productName}
 									/>
 								</Col>
 								<Col m={6}>

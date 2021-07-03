@@ -8,7 +8,7 @@ import {
 import Header from "../../Header/Header";
 import { NavLink } from "react-router-dom";
 import { Icon, Button, Table } from "react-materialize";
-import { toastFailure } from "../../Toast/MyToast";
+import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 const FavoritesPage = () => {
 	const favoritesList = useSelector((state) => state.favoritesList);
@@ -35,6 +35,8 @@ const FavoritesPage = () => {
 	useEffect(() => {
 		if (removeError) {
 			toastFailure(removeError);
+		} else if (removeSuccess) {
+			toastSuccess("ad was removed from your favorites list");
 		}
 	}, [removeLoading]);
 

@@ -189,6 +189,8 @@ function ItemForm({ props, history }) {
 							complete={complete}
 							setSelected={setselectedCity}
 							cities={cities}
+							placeholder="Where is the product located ?"
+							title="Location"
 						/>
 						<div>
 							<MySelect

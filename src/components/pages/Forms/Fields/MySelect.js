@@ -25,7 +25,6 @@ const MySelect = ({ select, name, alreadySelected, values }) => {
 				},
 			}}
 			name={name}
-			value={alreadySelected}
 		>
 			<option value="" selected={!alreadySelected} disabled>
 				Select a {name}

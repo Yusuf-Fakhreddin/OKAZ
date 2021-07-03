@@ -29,7 +29,7 @@ const HomePage = () => {
 
 	useEffect(() => {
 		document.title = "Okaz";
-
+		console.log(userInfo);
 		if (userInfo) {
 			dispatch(getRecommended());
 		} else {
@@ -56,13 +56,14 @@ const HomePage = () => {
 					<h1 className="error">{recommendError}</h1>
 				) : (
 					<Row>
-						{userInfo
+						{userInfo && recommendproducts
 							? recommendproducts.map((product) => (
 									<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
 										<ItemCard product={product} />
 									</Col>
 							  ))
-							: products.map((product) => (
+							: products &&
+							  products.map((product) => (
 									<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
 										<ItemCard product={product} />
 									</Col>

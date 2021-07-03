@@ -199,6 +199,8 @@ function AdUpdatePage({ match }) {
 							setSelected={setselectedCity}
 							cities={cities}
 							alreadySelected={selectedCity}
+							placeholder="Where is the product located ?"
+							title="Location"
 						/>
 						{/* <Autocomplete
 							// ref={register}
