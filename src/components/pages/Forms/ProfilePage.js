@@ -61,6 +61,7 @@ const ProfilePage = ({ props }) => {
 			// } else {
 			setValue("fullname", userInfo.name);
 			setValue("email", userInfo.email);
+			setValue("phoneNumber", userInfo.phoneNumber);
 			// }
 		}
 	}, [history, dispatch, userInfo, user]);
@@ -72,7 +73,13 @@ const ProfilePage = ({ props }) => {
 		password,
 		phoneNumber,
 	}) => {
-		console.log({ name: fullname, confirmPassword, email, password });
+		console.log({
+			name: fullname,
+			confirmPassword,
+			email,
+			password,
+			phoneNumber,
+		});
 		dispatch(
 			updateUserProfile({
 				id: user._id,
@@ -128,7 +135,7 @@ const ProfilePage = ({ props }) => {
 							label="Phone Number"
 							id="phoneNumber"
 							error={errors.phoneNumber}
-							value={values.ownerPhoneNumber}
+							value={values.phoneNumber}
 						/>
 						<FormInput
 							register={register}
