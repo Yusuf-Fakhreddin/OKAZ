@@ -9,6 +9,7 @@ const FormInput = ({
 	id,
 	value,
 	name,
+	active,
 	...inputProps
 }) => {
 	let rows;
@@ -21,7 +22,7 @@ const FormInput = ({
 	return (
 		<>
 			<div className="input-field">
-				<label className={value && "active"} htmlFor={id}>
+				<label className={(value || active) && "active"} htmlFor={id}>
 					{label}
 				</label>
 

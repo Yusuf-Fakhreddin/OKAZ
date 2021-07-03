@@ -30,12 +30,15 @@ function UserEditPage({ props }) {
 
 	useEffect(() => {
 		console.log(user);
+		document.title = "Edit User";
+
 		if (successUpdate) {
 			dispatch({ type: USER_UPDATE_RESET });
 			history.push("/admin/userlist");
 		} else {
 			if (!user.name || user._id !== userId) {
 				dispatch(getUserDetails(userId));
+				console.log("getting details");
 			} else {
 				setValue("fullname", user.name);
 				setValue("email", user.email);
@@ -50,6 +53,12 @@ function UserEditPage({ props }) {
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 		email: Yup.string().email("Invalid email format").required("Required"),
+		phoneNumber: Yup.string()
+			.required("Required")
+			.matches(
+				/^(01)[0-9]{9}$/,
+				"Please enter a proper 11 digits number starts with 01 "
+			),
 	});
 
 	const { register, handleSubmit, errors, setValue, getValues } = useForm({
@@ -79,7 +88,7 @@ function UserEditPage({ props }) {
 			<div className="container">
 				{(loadingUpdate || loading) && <div className="loader"></div>}
 				{errorUpdate && <p className="red-text">{errorUpdate}</p>}
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
 					{error && <h4 className="error">{error}</h4>}
 					<FormInput
 						register={register}
@@ -89,6 +98,7 @@ function UserEditPage({ props }) {
 						id="fullname"
 						error={errors.fullname}
 						value={values.fullname}
+						active
 					/>
 
 					<FormInput
@@ -99,17 +109,18 @@ function UserEditPage({ props }) {
 						id="email"
 						error={errors.email}
 						value={values.email}
+						active
 					/>
 
 					<FormInput
 						register={register}
-						type="number"
+						type="text"
 						name="phoneNumber"
 						label="Phone Number"
-						onWheel={(e) => e.currentTarget.blur()}
 						id="phoneNumber"
 						error={errors.phoneNumber}
 						value={values.phoneNumber}
+						active
 					/>
 
 					<Checkbox

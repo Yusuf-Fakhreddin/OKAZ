@@ -58,7 +58,7 @@ const FavoritesPage = () => {
 								<th>Image</th>
 								<th>Name</th>
 								<th>Phone Number</th>
-								<th>Price</th>
+								<th>Price (EGP)</th>
 								<th>City</th>
 								<th></th>
 								<th></th>
@@ -81,7 +81,7 @@ const FavoritesPage = () => {
 											</NavLink>
 										</td>
 										<td>{product.ownerPhoneNumber}</td>
-										<td>${product.price}</td>
+										<td>{product.price}</td>
 										<td>{product.city}</td>
 										<td>
 											<Button
