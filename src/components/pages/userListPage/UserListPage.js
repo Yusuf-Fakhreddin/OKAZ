@@ -28,11 +28,9 @@ const UserListPage = () => {
 	useEffect(() => {
 		document.title = "All Users";
 
-		if (!userInfo || !userInfo.isAdmin) {
-			history.push("/login");
-		} else {
-			dispatch(listUsers(pageNumber));
-		}
+		if (!userInfo) history.push("/login");
+		else if (!userInfo.isAdmin) history.push("/");
+		else dispatch(listUsers(pageNumber));
 	}, [dispatch, history, userInfo, pageNumber, successDelete]);
 
 	const [selectedDeletion, setselectedDeletion] = useState(null);

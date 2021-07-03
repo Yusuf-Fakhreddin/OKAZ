@@ -33,6 +33,12 @@ const ProfilePage = ({ props }) => {
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 		email: Yup.string().email("Invalid email format").required("Required"),
 		password: Yup.string().required("Required"),
+		phoneNumber: Yup.string()
+			.required("Required")
+			.matches(
+				/^(01)[0-9]{9}$/,
+				"Please enter a proper 11 digits number starts with 01 "
+			),
 		confirmPassword: Yup.string()
 			.oneOf([Yup.ref("password"), ""], "Passwords must match")
 			.required("Required"),
@@ -59,10 +65,22 @@ const ProfilePage = ({ props }) => {
 		}
 	}, [history, dispatch, userInfo, user]);
 
-	const onSubmit = ({ fullname, confirmPassword, email, password }) => {
+	const onSubmit = ({
+		fullname,
+		confirmPassword,
+		email,
+		password,
+		phoneNumber,
+	}) => {
 		console.log({ name: fullname, confirmPassword, email, password });
 		dispatch(
-			updateUserProfile({ id: user._id, name: fullname, email, password })
+			updateUserProfile({
+				id: user._id,
+				name: fullname,
+				phoneNumber,
+				email,
+				password,
+			})
 		);
 		if (errorUpdate) toastFailure(errorUpdate);
 		else toastSuccess("Profile Updated Successfuly");
@@ -102,6 +120,15 @@ const ProfilePage = ({ props }) => {
 							id="email"
 							error={errors.email}
 							value={values.email}
+						/>
+						<FormInput
+							register={register}
+							type="text"
+							name="phoneNumber"
+							label="Phone Number"
+							id="phoneNumber"
+							error={errors.phoneNumber}
+							value={values.ownerPhoneNumber}
 						/>
 						<FormInput
 							register={register}

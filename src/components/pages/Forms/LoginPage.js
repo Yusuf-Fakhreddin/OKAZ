@@ -53,7 +53,7 @@ function LoginPage({ props, history, location }) {
 					className="section"
 					onSubmit={handleSubmit(onSubmit)}
 				>
-					{error && <h3 className="error">{error}</h3>}
+					{error && <p className="red-text">{error}</p>}
 					{loading && <div className="loader"></div>}
 					<h3>Already have an account ?</h3>
 					<FormInput

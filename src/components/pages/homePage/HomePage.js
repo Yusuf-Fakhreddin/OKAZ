@@ -52,7 +52,7 @@ const HomePage = () => {
 					<div className="loader"></div>
 				) : error ? (
 					<h1 className="error">{error}</h1>
-				) : recommendError ? (
+				) : recommendError && !products ? (
 					<h1 className="error">{recommendError}</h1>
 				) : (
 					<Row>
@@ -62,7 +62,8 @@ const HomePage = () => {
 										<ItemCard product={product} />
 									</Col>
 							  ))
-							: products &&
+							: !userInfo &&
+							  products &&
 							  products.map((product) => (
 									<Col key={product._id} sm={3} md={4} lg={4} xl={4}>
 										<ItemCard product={product} />

@@ -34,11 +34,12 @@ function RegisterationPage({ props, history, location }) {
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
 		email: Yup.string().email("Invalid email format").required("Required"),
-		phoneNumber: Yup.number().test(
-			"len",
-			"Please enter a valid phone number of 11 digits",
-			(val) => val.toString().length === 11
-		),
+		phoneNumber: Yup.string()
+			.required("Required")
+			.matches(
+				/^(01)[0-9]{9}$/,
+				"Please enter a proper 11 digits number starts with 01 "
+			),
 		password: Yup.string().required("Required"),
 		confirmPassword: Yup.string()
 			.oneOf([Yup.ref("password"), ""], "Passwords must match")
@@ -95,10 +96,9 @@ function RegisterationPage({ props, history, location }) {
 
 					<FormInput
 						register={register}
-						type="number"
+						type="text"
 						name="phoneNumber"
 						label="Phone Number"
-						onWheel={(e) => e.currentTarget.blur()}
 						id="phoneNumber"
 						error={errors.phoneNumber}
 					/>

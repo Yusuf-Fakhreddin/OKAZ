@@ -53,6 +53,12 @@ function ItemForm({ props, history }) {
 		description: Yup.string(),
 		category: Yup.string(),
 		price: Yup.string().required("Required"),
+		ownerPhoneNumber: Yup.string()
+			.required("Required")
+			.matches(
+				/^(01)[0-9]{9}$/,
+				"Please enter a proper 11 digits number starts with 01 "
+			),
 		ownerName: Yup.string()
 			.required("Required")
 			.matches(/^[^\s]+( [^\s]+)+$/, "Please enter a proper fullname"),
@@ -141,13 +147,12 @@ function ItemForm({ props, history }) {
 						/>
 						<FormInput
 							register={register}
-							type="number"
+							type="text"
 							name="ownerPhoneNumber"
 							label="Owner Number"
 							id="ownerPhoneNumber"
-							onWheel={(event) => event.currentTarget.blur()}
 							value={values.ownerPhoneNumber}
-							// error={errors.fullname}
+							error={errors.ownerPhoneNumber}
 						/>
 						<FormInput
 							register={register}

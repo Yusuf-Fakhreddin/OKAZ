@@ -99,15 +99,15 @@ const ItemPage = ({ match }) => {
 	}, [match, dispatch, userInfo]);
 
 	useEffect(() => {
-		console.log(favorites);
-		if (favorites.length > 0)
-			for (let i = 0; i < favorites.length; i++) {
-				console.log(favorites[i]._id);
-				if (favorites[i]._id === match.params.id) {
-					console.log("exists");
-					setStar(true);
+		if (favorites)
+			if (favorites.length > 0)
+				for (let i = 0; i < favorites.length; i++) {
+					console.log(favorites[i]._id);
+					if (favorites[i]._id === match.params.id) {
+						console.log("exists");
+						setStar(true);
+					}
 				}
-			}
 	}, [favorites]);
 
 	let buttons;
@@ -209,7 +209,7 @@ const ItemPage = ({ match }) => {
 						<div>
 							<h3>{product.productName}</h3>
 							<Row>
-								<Col m={6}>
+								<Col m={6} className="product">
 									<MyMediaBox
 										image={product.image}
 										width="100%"

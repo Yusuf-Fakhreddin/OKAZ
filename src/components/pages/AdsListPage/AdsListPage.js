@@ -37,11 +37,9 @@ const AdsListPage = () => {
 		console.log(products);
 		dispatch({ type: PRODUCT_CREATE_RESET });
 
-		if (!userInfo || !userInfo.isAdmin) {
-			history.push("/login");
-		} else {
-			dispatch(listAllProducts(pageNumber));
-		}
+		if (!userInfo) history.push("/login");
+		else if (!userInfo.isAdmin) history.push("/");
+		else dispatch(listAllProducts(pageNumber));
 	}, [dispatch, history, userInfo, pageNumber, successDelete]);
 
 	useEffect(() => {

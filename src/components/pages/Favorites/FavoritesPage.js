@@ -27,7 +27,6 @@ const FavoritesPage = () => {
 	const history = useHistory();
 	useEffect(() => {
 		if (!userInfo) history.push("/");
-		console.log(favorites.length);
 		if (favorites.length === 0 || removeSuccess) dispatch(listMyFavorites());
 		console.log(favorites);
 	}, [dispatch, userInfo, removeSuccess]);
@@ -50,7 +49,7 @@ const FavoritesPage = () => {
 				<h2>Your Favorites</h2>
 				{loading ? (
 					<div className="loader"></div>
-				) : !favorites ? (
+				) : !success ? (
 					<h1>You have no favorites yet</h1>
 				) : (
 					<Table hoverable responsive className="responsive-table">
@@ -66,32 +65,33 @@ const FavoritesPage = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{favorites.map((product) => (
-								<tr key={product._id}>
-									<td>
-										<MyMediaBox
-											image={product.image}
-											width="50px"
-											height="50px"
-										/>
-									</td>
-									<td>
-										<NavLink to={"item/" + product._id}>
-											{product.productName}
-										</NavLink>
-									</td>
-									<td>{product.ownerPhoneNumber}</td>
-									<td>${product.price}</td>
-									<td>{product.city}</td>
-									<td>
-										<Button
-											onClick={() => removeFromfavoritesHandler(product._id)}
-										>
-											<Icon> favorite </Icon>
-										</Button>
-									</td>
-								</tr>
-							))}
+							{success &&
+								favorites.map((product) => (
+									<tr key={product._id}>
+										<td>
+											<MyMediaBox
+												image={product.image}
+												width="50px"
+												height="50px"
+											/>
+										</td>
+										<td>
+											<NavLink to={"item/" + product._id}>
+												{product.productName}
+											</NavLink>
+										</td>
+										<td>{product.ownerPhoneNumber}</td>
+										<td>${product.price}</td>
+										<td>{product.city}</td>
+										<td>
+											<Button
+												onClick={() => removeFromfavoritesHandler(product._id)}
+											>
+												<Icon> favorite </Icon>
+											</Button>
+										</td>
+									</tr>
+								))}
 						</tbody>
 					</Table>
 				)}
