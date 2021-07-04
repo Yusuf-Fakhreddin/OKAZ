@@ -8,25 +8,29 @@ const MyAutoComplete = ({
 	alreadySelected,
 	placeholder,
 	title,
+	error,
 }) => {
 	return (
-		<Autocomplete
-			name="city"
-			type="text"
-			onChange={complete}
-			icon={<Icon>place</Icon>}
-			id="city"
-			options={{
-				onAutocomplete: function (value) {
-					console.log(value);
-					setSelected(value);
-				},
-				data: cities,
-			}}
-			placeholder={placeholder ? placeholder : "Choose a City to search in"}
-			title={title ? title : "Specific City ?"}
-			value={alreadySelected}
-		/>
+		<React.Fragment>
+			<Autocomplete
+				name="city"
+				type="text"
+				onChange={complete}
+				icon={<Icon>place</Icon>}
+				id="city"
+				options={{
+					onAutocomplete: function (value) {
+						console.log(value);
+						setSelected(value);
+					},
+					data: cities,
+				}}
+				placeholder={placeholder ? placeholder : "Choose a City to search in"}
+				title={title ? title : "Specific City ?"}
+				value={alreadySelected}
+			/>
+			{error && <p className="helper-text red-text">{error}</p>}
+		</React.Fragment>
 	);
 };
 

@@ -48,13 +48,13 @@ function Explore({ category, city }) {
 		<div className="search-container">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<h4>Explore a Category</h4>
-				{categroyError && <p className="red-text">Please select a category</p>}
 				<div>
 					<MySelect
 						select={select}
 						name="category"
 						values={categories}
 						alreadySelected={category}
+						error={categroyError && "invalid"}
 					/>
 
 					{/* <Select

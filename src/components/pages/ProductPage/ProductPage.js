@@ -209,11 +209,11 @@ const ItemPage = ({ match }) => {
 						<div>
 							<h3>{product.productName}</h3>
 							<Row>
-								<Col m={6} className="product">
+								<Col m={6}>
 									<MyMediaBox
 										image={product.image}
 										width="100%"
-										height="100%"
+										height="auto"
 										caption={product.productName}
 									/>
 								</Col>
@@ -242,10 +242,12 @@ const ItemPage = ({ match }) => {
 										{product.updatedAt && (
 											<h6>Last Updated: {product.updatedAt.split("T")[0]}</h6>
 										)}
-										<p className="grey-text text-darken-3 lighten-3">
-											<strong>Description</strong> <br></br>
-											{product.description}
-										</p>
+										{product.description && (
+											<p className="grey-text text-darken-3 lighten-3">
+												<strong>Description</strong> <br></br>
+												{product.description}
+											</p>
+										)}
 									</div>
 								</Col>
 							</Row>

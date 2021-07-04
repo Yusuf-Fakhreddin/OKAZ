@@ -99,14 +99,14 @@ const MyAdsList = ({ history, match }) => {
 				) : error ? (
 					<h1 className="error">{error}</h1>
 				) : (
-					<div className="container">
+					<div>
 						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>
 									<th>Image</th>
 									<th>Name</th>
 									<th>Phone Number</th>
-									<th>Price</th>
+									<th>Price (EGP)</th>
 									<th>City</th>
 									<th></th>
 									<th></th>
@@ -129,7 +129,7 @@ const MyAdsList = ({ history, match }) => {
 											</NavLink>
 										</td>
 										<td>{product.ownerPhoneNumber}</td>
-										<td>${product.price}</td>
+										<td>{product.price}</td>
 										<td>{product.city}</td>
 										<td>
 											<NavLink to={`/product/${product._id}/edit`}>

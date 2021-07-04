@@ -18,6 +18,7 @@ import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 import MySelect from "../Forms/Fields/MySelect";
 import MyAutoComplete from "../Forms/Fields/MyAutoComplete";
 import { categories, conditions } from "../Forms/Fields/selectOptions";
+import { logout } from "../../../actions/userActions";
 function AdUpdatePage({ match }) {
 	const history = useHistory();
 	const productId = match.params.id;
@@ -47,9 +48,11 @@ function AdUpdatePage({ match }) {
 		document.title = "Update AD";
 		console.log(product);
 		if (!userInfo) {
-			if (!(userInfo._id === product.owner || userInfo.isAdmin))
-				history.push("/login");
+			history.push("/login");
+		} else if (!(userInfo._id === product.owner || userInfo.isAdmin)) {
+			dispatch(logout());
 		}
+
 		if (successUpdate) {
 			dispatch({ type: PRODUCT_UPDATE_RESET });
 			// if (userInfo.isAdmin) history.push("/admin/adsList");
@@ -129,30 +132,39 @@ function AdUpdatePage({ match }) {
 	const [selectedCategory, setselectedCategory] = useState("");
 	const [selectedCondition, setselectedCondition] = useState("");
 	const [selectedCity, setselectedCity] = useState("");
+
+	const [selectedCategoryError, setselectedCategoryError] = useState("");
+	const [selectedConditionError, setselectedConditionError] = useState("");
+	const [selectedCityError, setselectedCityError] = useState("");
 	const values = getValues();
 
 	const onSubmit = async (data, errors) => {
-		if (!image) {
-			setImageError("Image is Required");
+		values.category = selectedCategory;
+		values.condition = selectedCondition;
+		values.city = selectedCity;
+		if (!selectedCondition || !selectedCategory || !selectedCity || !image) {
+			if (!selectedCondition) setselectedConditionError("invalid");
+			if (!selectedCity) setselectedCityError("Location is required");
+			if (!selectedCategory) setselectedCategoryError("invalid");
+			if (!image) setImageError("Image is Required");
 			return;
 		}
-		values.city = selectedCity;
-		values.condition = selectedCondition;
-		values.category = selectedCategory;
-
 		console.log({ productId, ...values, image });
 		dispatch(updateProduct({ productId, ...values, image }));
 	};
 	const selectCategory = (e) => {
 		setselectedCategory(e.target.value);
+		setselectedCategoryError("");
 	};
 
 	const selectCondition = (e) => {
 		setselectedCondition(e.target.value);
+		setselectedConditionError("");
 	};
 	const complete = (e) => {
 		console.log(e.target.value);
 		setselectedCity(e.target.value);
+		setselectedCityError("");
 	};
 
 	return (
@@ -160,6 +172,10 @@ function AdUpdatePage({ match }) {
 			<Header />
 			<div className=" section container">
 				<div>
+					<h2>Update Ad</h2>
+					<p className="label grey-text">
+						Fields with * before labels are required
+					</p>
 					{loading && <div className="loader"></div>}
 					{errorUpdate && <p className="red-text">{errorUpdate}</p>}
 					{error && <p className="red-text">{error}</p>}
@@ -168,36 +184,41 @@ function AdUpdatePage({ match }) {
 							register={register}
 							type="text"
 							name="ownerName"
-							label="Owner Name"
+							label="*Owner Name"
 							id="ownerName"
 							error={errors.ownerName}
 							value={values.ownerName}
+							active
 						/>
 						<FormInput
 							register={register}
 							type="text"
 							name="ownerPhoneNumber"
-							label="Owner Number"
+							label="*Owner Number"
 							id="ownerPhoneNumber"
 							value={values.ownerPhoneNumber}
 							error={errors.ownerPhoneNumber}
+							active
 						/>
 						<FormInput
 							register={register}
 							type="text"
 							name="productName"
-							label="Product Name"
+							label="*Product Name"
 							id="productName"
 							error={errors.productName}
 							value={values.productName}
+							active
 						/>
 						<FormInput
 							register={register}
 							type="number"
 							name="price"
-							label="Price (EGP)"
+							label="*Price (EGP)"
 							id="price"
 							error={errors.price}
+							value={values.price}
+							active
 						/>
 						<MyAutoComplete
 							complete={complete}
@@ -205,7 +226,8 @@ function AdUpdatePage({ match }) {
 							cities={cities}
 							alreadySelected={selectedCity}
 							placeholder="Where is the product located ?"
-							title="Location"
+							title="*Location"
+							error={selectedCityError}
 						/>
 						{/* <Autocomplete
 							// ref={register}
@@ -231,6 +253,7 @@ function AdUpdatePage({ match }) {
 								name="category"
 								alreadySelected={selectedCategory}
 								values={categories}
+								error={selectedCategoryError}
 							/>
 
 							{/* <Select
@@ -293,6 +316,7 @@ function AdUpdatePage({ match }) {
 								name="condition"
 								alreadySelected={selectedCondition}
 								values={conditions}
+								error={selectedConditionError}
 							/>
 
 							{/* <Select

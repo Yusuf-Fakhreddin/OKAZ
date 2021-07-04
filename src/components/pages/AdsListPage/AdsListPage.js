@@ -103,7 +103,7 @@ const AdsListPage = () => {
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
-					<h1 className="error">{error}</h1>
+					<p className="red-text">{error}</p>
 				) : errorDelete ? (
 					<h1 className="error">{errorDelete}</h1>
 				) : (

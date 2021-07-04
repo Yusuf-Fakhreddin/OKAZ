@@ -100,30 +100,41 @@ function ItemForm({ props, history }) {
 	const [selectedCategory, setselectedCategory] = useState("");
 	const [selectedCondition, setselectedCondition] = useState("");
 	const [selectedCity, setselectedCity] = useState("");
+
+	const [selectedCategoryError, setselectedCategoryError] = useState("");
+	const [selectedConditionError, setselectedConditionError] = useState("");
+	const [selectedCityError, setselectedCityError] = useState("");
 	const values = getValues();
 
 	const onSubmit = async (data, errors) => {
 		values.category = selectedCategory;
 		values.condition = selectedCondition;
 		values.city = selectedCity;
-		if (!image) {
-			setImageError("Image is Required");
+		if (!selectedCondition || !selectedCategory || !selectedCity || !image) {
+			if (!selectedCondition) setselectedConditionError("invalid");
+			if (!selectedCity) setselectedCityError("Location is required");
+			if (!selectedCategory) setselectedCategoryError("invalid");
+			if (!image) setImageError("Image is Required");
 			return;
 		}
+
 		console.log({ ...values, image });
 		dispatch(createProduct({ ...values, image }));
 		// console.log({ productId, ...data, image });
 	};
 	const selectCategory = (e) => {
 		setselectedCategory(e.target.value);
+		setselectedCategoryError("");
 	};
 
 	const selectCondition = (e) => {
 		setselectedCondition(e.target.value);
+		setselectedConditionError("");
 	};
 	const complete = (e) => {
 		console.log(e.target.value);
 		setselectedCity(e.target.value);
+		setselectedCityError("");
 	};
 
 	return (
@@ -131,7 +142,11 @@ function ItemForm({ props, history }) {
 			<Header />
 			<div className="form container section">
 				<div>
-					<h2>Your Ad</h2>
+					<h2>Your Ad </h2>
+					<p className="label grey-text">
+						Fields with * before labels are required
+					</p>
+
 					{loading && <div className="loader"></div>}
 					{errorCreate && <p className="red-text">{errorCreate}</p>}
 					{error && <p className="red-text">{error}</p>}
@@ -140,25 +155,27 @@ function ItemForm({ props, history }) {
 							register={register}
 							type="text"
 							name="ownerName"
-							label="Owner Name"
+							label="*Owner Name"
 							id="ownerName"
 							error={errors.ownerName}
 							value={values.ownerName}
+							active
 						/>
 						<FormInput
 							register={register}
 							type="text"
 							name="ownerPhoneNumber"
-							label="Owner Number"
+							label="*Owner Phone Number"
 							id="ownerPhoneNumber"
 							value={values.ownerPhoneNumber}
 							error={errors.ownerPhoneNumber}
+							active
 						/>
 						<FormInput
 							register={register}
 							type="text"
 							name="productName"
-							label="Product Name"
+							label="*Product Name"
 							id="productName"
 							error={errors.productName}
 							value={values.productName}
@@ -168,7 +185,7 @@ function ItemForm({ props, history }) {
 							type="number"
 							name="price"
 							onWheel={(event) => event.currentTarget.blur()}
-							label="Price (EGP)"
+							label="*Price (EGP)"
 							id="price"
 							error={errors.price}
 							value={values.price}
@@ -195,13 +212,54 @@ function ItemForm({ props, history }) {
 							setSelected={setselectedCity}
 							cities={cities}
 							placeholder="Where is the product located ?"
-							title="Location"
+							title="*Location"
+							error={selectedCityError}
 						/>
+						<div>
+							<MySelect
+								select={selectCondition}
+								name="condition"
+								values={conditions}
+								error={selectedConditionError}
+							/>
+							{/* <Select
+								onChange={selectCondition}
+								name="condition"
+								id="Select-9"
+								multiple={false}
+								options={{
+									classes: "",
+									dropdownOptions: {
+										alignment: "left",
+										autoTrigger: true,
+										closeOnClick: true,
+										constrainWidth: true,
+										coverTrigger: true,
+										hover: false,
+										inDuration: 150,
+										onCloseEnd: null,
+										onCloseStart: null,
+										onOpenEnd: null,
+										onOpenStart: null,
+										outDuration: 250,
+									},
+								}}
+								value=""
+							>
+								<option disabled value="">
+									New or Used ?
+								</option>
+								<option value="New">New</option>
+								<option value="Used">Used</option>
+								<option value="Does not apply">Does not apply</option>
+							</Select> */}
+						</div>
 						<div>
 							<MySelect
 								select={selectCategory}
 								name="category"
 								values={categories}
+								error={selectedCategoryError}
 							/>
 							{/* <Select
 								onChange={selectCategory}
@@ -238,45 +296,6 @@ function ItemForm({ props, history }) {
 							</Select> */}
 						</div>
 
-						<div>
-							<MySelect
-								select={selectCondition}
-								name="condition"
-								values={conditions}
-							/>
-							{/* <Select
-								onChange={selectCondition}
-								name="condition"
-								id="Select-9"
-								multiple={false}
-								options={{
-									classes: "",
-									dropdownOptions: {
-										alignment: "left",
-										autoTrigger: true,
-										closeOnClick: true,
-										constrainWidth: true,
-										coverTrigger: true,
-										hover: false,
-										inDuration: 150,
-										onCloseEnd: null,
-										onCloseStart: null,
-										onOpenEnd: null,
-										onOpenStart: null,
-										outDuration: 250,
-									},
-								}}
-								value=""
-							>
-								<option disabled value="">
-									New or Used ?
-								</option>
-								<option value="New">New</option>
-								<option value="Used">Used</option>
-								<option value="Does not apply">Does not apply</option>
-							</Select> */}
-						</div>
-
 						<FormInput
 							register={register}
 							type="textarea"
@@ -288,7 +307,7 @@ function ItemForm({ props, history }) {
 						<div className="image-upload">
 							{!mainImg && (
 								<h5 className="center-align">
-									There is no Ad without a picture <br /> please add one
+									There is no ad without a picture <br /> please add one
 								</h5>
 							)}
 							{mainImg && <h5>Change Picture ?</h5>}
@@ -309,7 +328,7 @@ function ItemForm({ props, history }) {
 							/>
 
 							{imageError && !mainImg && (
-								<div className="error">*{imageError}</div>
+								<p className="red-text">*{imageError}</p>
 							)}
 
 							{uploading && <ProgressBar />}

@@ -4,12 +4,17 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails, updateUser } from "../../../actions/userActions";
+import {
+	getUserDetails,
+	updateUser,
+	updateUserProfile,
+} from "../../../actions/userActions";
 import { Checkbox, Button } from "react-materialize";
 
 import FormInput from "../Forms/Fields/FormInput";
 import Header from "../../Header/Header";
 import { USER_UPDATE_RESET } from "../../../constants/userConstants";
+import { userInfo } from "os";
 
 function UserEditPage({ props }) {
 	let { id } = useParams();
@@ -20,7 +25,8 @@ function UserEditPage({ props }) {
 
 	const userDetails = useSelector((state) => state.userDetails);
 	const { loading, error, user } = userDetails;
-
+	const userLogin = useSelector((state) => state.userLogin);
+	let { userInfo } = userLogin;
 	const userUpdate = useSelector((state) => state.userUpdate);
 	const {
 		loading: loadingUpdate,
@@ -44,6 +50,7 @@ function UserEditPage({ props }) {
 				setValue("email", user.email);
 				// setValue("isAdmin", user.isAdmin);
 				setValue("phoneNumber", user.phoneNumber);
+				setAdmin(user.isAdmin);
 			}
 		}
 	}, [dispatch, userId, user]);
@@ -66,11 +73,19 @@ function UserEditPage({ props }) {
 		resolver: yupResolver(validationSchema),
 	});
 
-	const [isAdmin, setAdmin] = useState(user.isAdmin);
+	const [isAdmin, setAdmin] = useState(false);
 
 	const onSubmit = ({ fullname, email, phoneNumber }) => {
 		console.log({ fullname, email, isAdmin, phoneNumber });
 		dispatch(updateUser({ _id: userId, name: fullname, email, isAdmin }));
+		if (userId === userInfo._id) {
+			updateUserProfile({
+				id: user._id,
+				name: fullname,
+				phoneNumber,
+				email,
+			});
+		}
 	};
 	const values = getValues();
 

@@ -91,15 +91,15 @@ input[type="number"]::-webkit-outer-spin-button {
 	animation: spin 1s linear infinite;
 }
 
-#MediaBox_7 {
-	max-width: 450px;
-	max-height: auto;
-	img {
-		height: 100%;
-		width: 100%;
-		object-fit: contain;
-	}
-}
+// #MediaBox_7 {
+// 	max-width: 450px;
+// 	max-height: auto;
+// 	img {
+// 		height: 100%;
+// 		width: 100%;
+// 		object-fit: contain;
+// 	}
+// }
 
 @keyframes spin {
 	0% {

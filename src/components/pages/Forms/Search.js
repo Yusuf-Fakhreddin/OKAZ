@@ -41,7 +41,7 @@ function Search({ city, productName }) {
 				register={register}
 				type="text"
 				name="itemName"
-				label="Product Name"
+				label="*Product Name"
 				error={errors.itemName}
 				value={productName}
 			/>

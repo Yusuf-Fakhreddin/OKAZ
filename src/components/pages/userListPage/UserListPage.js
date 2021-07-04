@@ -97,7 +97,7 @@ const UserListPage = () => {
 				) : errorDelete ? (
 					<p className="red-text">{errorDelete}</p>
 				) : (
-					<div className="container">
+					<div>
 						<Table hoverable responsive className="responsive-table">
 							<thead>
 								<tr>

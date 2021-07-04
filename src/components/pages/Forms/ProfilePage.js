@@ -118,6 +118,7 @@ const ProfilePage = ({ props }) => {
 							id="fullname"
 							error={errors.fullname}
 							value={values.fullname}
+							active
 						/>
 						<FormInput
 							register={register}
@@ -127,6 +128,7 @@ const ProfilePage = ({ props }) => {
 							id="email"
 							error={errors.email}
 							value={values.email}
+							active
 						/>
 						<FormInput
 							register={register}
@@ -136,6 +138,7 @@ const ProfilePage = ({ props }) => {
 							id="phoneNumber"
 							error={errors.phoneNumber}
 							value={values.phoneNumber}
+							active
 						/>
 						<FormInput
 							register={register}
