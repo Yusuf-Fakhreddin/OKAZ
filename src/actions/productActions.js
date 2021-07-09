@@ -1,5 +1,6 @@
 // import axios from "axios";
 import http from "../httpService";
+import { BEGIN, COMMIT, REVERT } from "redux-optimist";
 
 import {
 	PRODUCT_LIST_REQUEST,
@@ -31,6 +32,7 @@ import {
 	RECOMMENDATION_LIST_FAIL,
 } from "../constants/productConstants";
 import { logout } from "./userActions";
+import { toastFailure, toastSuccess } from "../components/Toast/MyToast";
 
 // getting last 6 items action
 export const listProducts = (cnt) => async (dispatch, getState) => {
@@ -209,11 +211,16 @@ export const listProductsDetails = (id) => async (dispatch) => {
 		});
 	}
 };
+let nextTransactionID = 0;
 
 export const deleteProduct = (id) => async (dispatch, getState) => {
+	let transactionID = nextTransactionID++;
+
 	try {
 		dispatch({
 			type: PRODUCT_DELETE_REQUEST,
+			payload: id,
+			optimist: { type: BEGIN, id: transactionID },
 		});
 
 		const {
@@ -233,7 +240,9 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 
 		dispatch({
 			type: PRODUCT_DELETE_SUCCESS,
+			optimist: { type: COMMIT, id: transactionID },
 		});
+		toastSuccess("ad removed successfully");
 	} catch (error) {
 		const message =
 			error.response && error.response.data.message
@@ -245,7 +254,9 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 		dispatch({
 			type: PRODUCT_DELETE_FAIL,
 			payload: message,
+			optimist: { type: REVERT, id: transactionID },
 		});
+		toastFailure(message);
 	}
 };
 

@@ -1,3 +1,4 @@
+import { toastFailure, toastSuccess } from "../components/Toast/MyToast";
 import { FAVORITES_LIST_RESET } from "../constants/favoritesConstants";
 import {
 	USER_LOGIN_FAIL,
@@ -26,6 +27,7 @@ import {
 	USER_UPDATE_FAIL,
 } from "../constants/userConstants";
 import http from "../httpService";
+import { BEGIN, COMMIT, REVERT } from "redux-optimist";
 
 export const login = (email, password) => async (dispatch) => {
 	try {
@@ -228,11 +230,16 @@ export const listUsers = (pageNumber) => async (dispatch, getState) => {
 		});
 	}
 };
+let nextTransactionID = 0;
 
 export const deleteUser = (id) => async (dispatch, getState) => {
+	let transactionID = nextTransactionID++;
+
 	try {
 		dispatch({
 			type: USER_DELETE_REQUEST,
+			payload: id,
+			optimist: { type: BEGIN, id: transactionID },
 		});
 
 		// destructring the user info from redux state to get the token
@@ -250,15 +257,20 @@ export const deleteUser = (id) => async (dispatch, getState) => {
 
 		dispatch({
 			type: USER_DELETE_SUCCESS,
+			optimist: { type: COMMIT, id: transactionID },
 		});
+		toastSuccess("User deleted successfully");
 	} catch (error) {
+		const message =
+			error.response && error.response.data.message
+				? error.response.data.message
+				: error.message;
 		dispatch({
 			type: USER_DELETE_FAIL,
-			payload:
-				error.response && error.response.data.message
-					? error.response.data.message
-					: error.message,
+			payload: message,
+			optimist: { type: REVERT, id: transactionID },
 		});
+		toastFailure(message);
 	}
 };
 export const updateUser = (user) => async (dispatch, getState) => {

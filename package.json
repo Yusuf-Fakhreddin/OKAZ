@@ -21,6 +21,7 @@
 		"react-toastify": "^7.0.4",
 		"redux": "^4.0.5",
 		"redux-devtools-extension": "^2.13.9",
+		"redux-optimist": "^1.0.0",
 		"redux-thunk": "^2.3.0",
 		"sass": "^1.32.4",
 		"web-vitals": "^0.2.4",

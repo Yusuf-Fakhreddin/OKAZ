@@ -6,21 +6,16 @@ import { listMyProducts } from "../../../actions/productActions";
 import Header from "../../Header/Header";
 
 import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
-import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 const MyAdsList = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
 
 	const dispatch = useDispatch();
 
+	const myAdsTotal = useSelector((state) => state.myAdsTotal);
+	const { products } = myAdsTotal;
 	const productList = useSelector((state) => state.myProducts);
-	const { loading, error, products, page, pages } = productList;
-	const productDelete = useSelector((state) => state.productDelete);
-	const {
-		loading: loadingDelete,
-		error: errorDelete,
-		success: successDelete,
-	} = productDelete;
+	const { loading, error } = productList;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
@@ -30,19 +25,11 @@ const MyAdsList = ({ history, match }) => {
 		console.log(products);
 		if (!userInfo) {
 			history.push("/login");
-		} else {
+		} else if (!products) {
 			dispatch(listMyProducts());
 		}
 		console.log(error);
-	}, [dispatch, history, userInfo, pageNumber, successDelete]);
-
-	useEffect(() => {
-		if (errorDelete) {
-			toastFailure(errorDelete);
-		} else if (successDelete) {
-			toastSuccess("Item Removed Successfuly");
-		}
-	}, [loadingDelete]);
+	}, [dispatch, history, userInfo, pageNumber]);
 
 	const [selectedDeletion, setselectedDeletion] = useState(null);
 
@@ -92,7 +79,6 @@ const MyAdsList = ({ history, match }) => {
 						No
 					</Button>
 				</Modal>
-				{loadingDelete && <ProgressBar />}
 
 				{loading ? (
 					<div className="loader"></div>

@@ -1,5 +1,6 @@
 // import axios from "axios";
 import http from "../httpService";
+import { BEGIN, COMMIT, REVERT } from "redux-optimist";
 
 import {
 	FAVORITES_ADD_FAIL,
@@ -13,6 +14,7 @@ import {
 	FAVORITES_REMOVE_SUCCESS,
 } from "../constants/favoritesConstants";
 import { logout } from "./userActions";
+import { toastFailure, toastSuccess } from "../components/Toast/MyToast";
 
 export const listMyFavorites = () => async (dispatch, getState) => {
 	try {
@@ -88,14 +90,17 @@ export const addToFavorites = (productId) => async (dispatch, getState) => {
 		});
 	}
 };
-
+let nextTransactionID = 0;
 export const removeFromFavorites =
 	(productId) => async (dispatch, getState) => {
 		console.log(productId);
+		let transactionID = nextTransactionID++;
 
 		try {
 			dispatch({
 				type: FAVORITES_REMOVE_REQUEST,
+				payload: productId,
+				optimist: { type: BEGIN, id: transactionID },
 			});
 
 			const {
@@ -115,7 +120,9 @@ export const removeFromFavorites =
 
 			dispatch({
 				type: FAVORITES_REMOVE_SUCCESS,
+				optimist: { type: COMMIT, id: transactionID },
 			});
+			toastSuccess("The ad was removed from your favorites list");
 		} catch (error) {
 			const message =
 				error.response && error.response.data.message
@@ -127,6 +134,8 @@ export const removeFromFavorites =
 			dispatch({
 				type: FAVORITES_REMOVE_FAIL,
 				payload: message,
+				optimist: { type: REVERT, id: transactionID },
 			});
+			toastFailure(message);
 		}
 	};

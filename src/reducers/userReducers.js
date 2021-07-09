@@ -26,6 +26,23 @@ import {
 	USER_UPDATE_FAIL,
 } from "../constants/userConstants";
 
+// <---- Displaying reducers ---->
+
+export const allUsers = (state = { users: [] }, action) => {
+	switch (action.type) {
+		case USER_LIST_SUCCESS:
+			return { users: action.payload.users };
+		case USER_DELETE_REQUEST:
+			return {
+				users: state.users.filter((f) => f._id !== action.payload),
+			};
+		default:
+			return state;
+	}
+};
+
+// <---- status reducers ---->
+
 export const userLoginReducer = (state = {}, action) => {
 	switch (action.type) {
 		case USER_LOGIN_REQUEST:

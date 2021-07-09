@@ -7,9 +7,8 @@ import {
 } from "../../../actions/productActions";
 import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 import Header from "../../Header/Header";
-import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
+import { Table, Icon, Button, Modal } from "react-materialize";
 import Paginate from "../../Paginate/Paginate";
-import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 
 const AdsListPage = () => {
@@ -20,14 +19,11 @@ const AdsListPage = () => {
 
 	const dispatch = useDispatch();
 
+	const allAdsTotal = useSelector((state) => state.allAdsTotal);
+	const { products } = allAdsTotal;
+
 	const productList = useSelector((state) => state.productAllList);
-	const { loading, error, products, pages, page } = productList;
-	const productDelete = useSelector((state) => state.productDelete);
-	const {
-		loading: loadingDelete,
-		error: errorDelete,
-		success: successDelete,
-	} = productDelete;
+	const { loading, error, pages, page } = productList;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
@@ -40,15 +36,7 @@ const AdsListPage = () => {
 		if (!userInfo) history.push("/login");
 		else if (!userInfo.isAdmin) history.push("/");
 		else dispatch(listAllProducts(pageNumber));
-	}, [dispatch, history, userInfo, pageNumber, successDelete]);
-
-	useEffect(() => {
-		if (errorDelete) {
-			toastFailure(errorDelete);
-		} else if (successDelete) {
-			toastSuccess("Item Removed Successfuly");
-		}
-	}, [loadingDelete]);
+	}, [dispatch, history, userInfo, pageNumber]);
 
 	const [selectedDeletion, setselectedDeletion] = useState(null);
 
@@ -98,14 +86,11 @@ const AdsListPage = () => {
 						No
 					</Button>
 				</Modal>
-				{loadingDelete && <ProgressBar />}
 
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
 					<p className="red-text">{error}</p>
-				) : errorDelete ? (
-					<h1 className="error">{errorDelete}</h1>
 				) : (
 					<div>
 						<Table hoverable responsive className="responsive-table">

@@ -3,27 +3,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory, useParams } from "react-router-dom";
 import { listUsers, deleteUser } from "../../../actions/userActions";
 import Header from "../../Header/Header";
-import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
+import { Table, Icon, Button, Modal } from "react-materialize";
 import Paginate from "../../Paginate/Paginate";
-import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 const UserListPage = () => {
 	const history = useHistory();
 	const Params = useParams();
 	const pageNumber = Params.pageNumber || 1;
 	const dispatch = useDispatch();
 
+	const allUsersTotal = useSelector((state) => state.allUsersTotal);
+	const { users } = allUsersTotal;
+
 	const userList = useSelector((state) => state.userList);
-	const { loading, error, users, pages, page } = userList;
+	const { loading, error, pages, page } = userList;
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
-
-	const userDelete = useSelector((state) => state.userDelete);
-	const {
-		success: successDelete,
-		loading: loadingDelete,
-		error: errorDelete,
-	} = userDelete;
 
 	useEffect(() => {
 		document.title = "All Users";
@@ -31,16 +26,9 @@ const UserListPage = () => {
 		if (!userInfo) history.push("/login");
 		else if (!userInfo.isAdmin) history.push("/");
 		else dispatch(listUsers(pageNumber));
-	}, [dispatch, history, userInfo, pageNumber, successDelete]);
+	}, [dispatch, history, userInfo, pageNumber]);
 
 	const [selectedDeletion, setselectedDeletion] = useState(null);
-	useEffect(() => {
-		if (errorDelete) {
-			toastFailure(errorDelete);
-		} else if (successDelete) {
-			toastSuccess("User Removed Successfuly");
-		}
-	}, [loadingDelete]);
 
 	const deleteHandler = (id) => {
 		setselectedDeletion(id);
@@ -88,14 +76,11 @@ const UserListPage = () => {
 						No
 					</Button>
 				</Modal>
-				{loadingDelete && <ProgressBar />}
 
 				{loading ? (
 					<div className="loader"></div>
 				) : error ? (
 					<p className="red-text">{error}</p>
-				) : errorDelete ? (
-					<p className="red-text">{errorDelete}</p>
 				) : (
 					<div>
 						<Table hoverable responsive className="responsive-table">

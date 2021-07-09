@@ -12,6 +12,19 @@ import {
 	FAVORITES_LIST_RESET,
 } from "../constants/favoritesConstants";
 
+export const favorites = (state = { favorites: [] }, action) => {
+	switch (action.type) {
+		case FAVORITES_LIST_SUCCESS:
+			return { favorites: action.payload };
+		case FAVORITES_REMOVE_REQUEST:
+			return {
+				favorites: state.favorites.filter((f) => f._id !== action.payload),
+			};
+		default:
+			return state;
+	}
+};
+
 export const favoritesListReducer = (state = { favorites: [] }, action) => {
 	switch (action.type) {
 		case FAVORITES_LIST_REQUEST:

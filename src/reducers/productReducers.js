@@ -30,6 +30,34 @@ import {
 	RECOMMENDATION_LIST_FAIL,
 } from "../constants/productConstants";
 
+// displaying reducers
+export const myAds = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case MY_PRODUCT_LIST_SUCCESS:
+			return { favorites: action.payload };
+		case PRODUCT_DELETE_REQUEST:
+			return {
+				products: state.products.filter((f) => f._id !== action.payload),
+			};
+		default:
+			return state;
+	}
+};
+export const allAds = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case PRODUCT_LIST_ALL_SUCCESS:
+			return { products: action.payload.products };
+		case PRODUCT_DELETE_REQUEST:
+			return {
+				products: state.products.filter((f) => f._id !== action.payload),
+			};
+		default:
+			return state;
+	}
+};
+
+// Status reducers
+
 // actions reducer for every phase of the axios request
 export const productListReducer = (state = { products: [] }, action) => {
 	switch (action.type) {

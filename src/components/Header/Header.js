@@ -22,9 +22,9 @@ const Header = () => {
 				centerChildren
 				alignLinks="right"
 				brand={
-					<a className="brand-logo logo" href="/">
+					<NavLink className="brand-logo logo" to="/">
 						<img src={Logo} alt="Okaz" />
-					</a>
+					</NavLink>
 				}
 				id="mobile-nav"
 				menuIcon={<Icon>menu</Icon>}
@@ -65,25 +65,25 @@ const Header = () => {
 							</a>
 						}
 					>
-						<NavItem href="/profile">Profile</NavItem>
-						<NavItem href="/myAds">My Ads</NavItem>
-						<NavItem href="/favorites">My Favorites</NavItem>
+						<NavLink to="/profile">Profile</NavLink>
+						<NavLink to="/myAds">My Ads</NavLink>
+						<NavLink to="/favorites">My Favorites</NavLink>
 						{userInfo && userInfo.isAdmin && (
 							<>
 								<Divider />
 
-								<NavItem href="/admin/userList">All Users</NavItem>
-								<NavItem href="/admin/adsList">All Ads</NavItem>
+								<NavLink to="/admin/userList">All Users</NavLink>
+								<NavLink to="/admin/adsList">All Ads</NavLink>
 							</>
 						)}
 					</Dropdown>
 				) : (
 					<>
-						<NavItem href="/login">Login</NavItem>
+						<NavLink href="/login">Login</NavLink>
 					</>
 				)}
 
-				<NavItem href="/placeAd">Place Ad</NavItem>
+				<NavLink to="/placeAd">Place Ad</NavLink>
 				{userInfo && <NavItem onClick={logoutHandler}>Logout</NavItem>}
 			</Navbar>
 		</>

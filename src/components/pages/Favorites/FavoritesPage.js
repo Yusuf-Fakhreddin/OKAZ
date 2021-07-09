@@ -12,32 +12,21 @@ import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 const FavoritesPage = () => {
 	const favoritesList = useSelector((state) => state.favoritesList);
-	const { favorites, loading, success } = favoritesList;
+	const { loading, success } = favoritesList;
+
+	const favTotal = useSelector((state) => state.favoritesTotal);
+	const { favorites } = favTotal;
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
-	const favoritesRemove = useSelector((state) => state.favoritesRemove);
-	const {
-		success: removeSuccess,
-		error: removeError,
-		loading: removeLoading,
-	} = favoritesRemove;
 	const dispatch = useDispatch();
 
 	const history = useHistory();
 	useEffect(() => {
 		if (!userInfo) history.push("/");
-		if (favorites.length === 0 || removeSuccess) dispatch(listMyFavorites());
+		if (favorites.length === 0 && !success) dispatch(listMyFavorites());
 		console.log(favorites);
-	}, [dispatch, userInfo, removeSuccess]);
-
-	useEffect(() => {
-		if (removeError) {
-			toastFailure(removeError);
-		} else if (removeSuccess) {
-			toastSuccess("ad was removed from your favorites list");
-		}
-	}, [removeLoading]);
+	}, [dispatch, userInfo]);
 
 	const removeFromfavoritesHandler = (id) => {
 		dispatch(removeFromFavorites(id));
@@ -49,7 +38,7 @@ const FavoritesPage = () => {
 				<h2>Your Favorites</h2>
 				{loading ? (
 					<div className="loader"></div>
-				) : !success ? (
+				) : success && favorites.length === 0 ? (
 					<h1>You have no favorites yet</h1>
 				) : (
 					<Table hoverable responsive className="responsive-table">
