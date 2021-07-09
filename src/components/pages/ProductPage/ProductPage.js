@@ -44,9 +44,6 @@ const ItemPage = ({ match }) => {
 			if (addError) {
 				setStar(false);
 				console.log(addSuccess);
-				toastFailure(addError);
-			} else {
-				toastSuccess("Ad was added to your favorites list");
 			}
 		} else {
 			dispatch(removeFromFavorites(match.params.id));
@@ -55,8 +52,7 @@ const ItemPage = ({ match }) => {
 			console.log("dispatched remove");
 			if (removeError) {
 				setStar(!star);
-				toastFailure(removeError);
-			} else toastSuccess("Ad was removed from your favorites list");
+			}
 		}
 	};
 
@@ -71,12 +67,8 @@ const ItemPage = ({ match }) => {
 	const [selectedDeletion, setselectedDeletion] = useState(null);
 
 	useEffect(() => {
-		if (errorDelete) {
-			toastFailure(errorDelete);
-		} else if (successDelete) {
-			history.goBack();
-		}
-	}, [loadingDelete]);
+		if (successDelete) history.goBack();
+	}, [successDelete]);
 
 	const deleteHandler = (id) => {
 		setselectedDeletion(id);
@@ -89,7 +81,7 @@ const ItemPage = ({ match }) => {
 
 		// firing the listProductsDetails Action
 		dispatch(listProductsDetails(match.params.id));
-		if (userInfo) {
+		if (userInfo && !success) {
 			dispatch(listMyFavorites());
 		}
 

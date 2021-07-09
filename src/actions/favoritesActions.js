@@ -76,6 +76,7 @@ export const addToFavorites = (productId) => async (dispatch, getState) => {
 			type: FAVORITES_ADD_SUCCESS,
 			payload: data,
 		});
+		toastSuccess("Ad was added to your favorites");
 	} catch (error) {
 		const message =
 			error.response && error.response.data.message
@@ -88,6 +89,7 @@ export const addToFavorites = (productId) => async (dispatch, getState) => {
 			type: FAVORITES_ADD_FAIL,
 			payload: message,
 		});
+		toastFailure(message);
 	}
 };
 let nextTransactionID = 0;
