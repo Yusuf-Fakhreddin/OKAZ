@@ -27,7 +27,7 @@ const MyAutoComplete = ({
 				}}
 				placeholder={placeholder ? placeholder : "Choose a City to search in"}
 				title={title ? title : "Specific City ?"}
-				value={alreadySelected}
+				defaultValue={alreadySelected}
 			/>
 			{error && <p className="helper-text red-text">{error}</p>}
 		</React.Fragment>

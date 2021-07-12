@@ -28,6 +28,7 @@ import {
 } from "../constants/userConstants";
 import http from "../httpService";
 import { BEGIN, COMMIT, REVERT } from "redux-optimist";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 export const login = (email, password) => async (dispatch) => {
 	try {
@@ -69,6 +70,7 @@ export const logout = () => (dispatch) => {
 	dispatch({ type: USER_LIST_RESET });
 	dispatch({ type: USER_LIST_RESET });
 	dispatch({ type: FAVORITES_LIST_RESET });
+	dispatch({ type: PRODUCT_CREATE_RESET });
 };
 
 export const registerUser =
@@ -179,8 +181,15 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 			type: USER_UPDATE_PROFILE_SUCCESS,
 			payload: data,
 		});
-		data.token = userInfo.token;
-		localStorage.setItem("UserInfo", JSON.stringify(data));
+
+		if (data._id === userInfo._id) {
+			dispatch({
+				type: USER_LOGIN_SUCCESS,
+				payload: data,
+			});
+			data.token = userInfo.token;
+			localStorage.setItem("UserInfo", JSON.stringify(data));
+		}
 
 		// dispatch(login(user.email, user.password));
 	} catch (error) {
@@ -300,7 +309,14 @@ export const updateUser = (user) => async (dispatch, getState) => {
 		dispatch({
 			type: USER_UPDATE_SUCCESS,
 		});
-		dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
+		if (userInfo._id === data._id) {
+			data.token = userInfo.token;
+			dispatch({
+				type: USER_LOGIN_SUCCESS,
+				payload: data,
+			});
+			localStorage.setItem("UserInfo", JSON.stringify(data));
+		}
 	} catch (error) {
 		dispatch({
 			type: USER_UPDATE_FAIL,

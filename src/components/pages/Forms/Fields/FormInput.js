@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import { TextInput, Textarea } from "react-materialize";
 
 const FormInput = ({
@@ -17,15 +17,11 @@ const FormInput = ({
 		const textArea = document.querySelector("textarea");
 		const textRowCount = textArea ? textArea.value.split("\n").length : 0;
 		rows = textRowCount + 1;
-		console.log(rows);
 	}
+
 	return (
 		<>
 			<div className="input-field">
-				<label className={(value || active) && "active"} htmlFor={id}>
-					{label}
-				</label>
-
 				{type === "textarea" ? (
 					<textarea
 						spellCheck="false"
@@ -39,6 +35,7 @@ const FormInput = ({
 						s={12}
 						xl={12}
 						rows={rows}
+						{...inputProps}
 					/>
 				) : (
 					<input
@@ -48,8 +45,13 @@ const FormInput = ({
 						name={name}
 						ref={register}
 						defaultValue={value}
+						{...inputProps}
 					/>
 				)}
+				<label className="active" htmlFor={id}>
+					{label}
+				</label>
+
 				{error && (
 					<small className="helper-text red-text">{error.message}</small>
 				)}

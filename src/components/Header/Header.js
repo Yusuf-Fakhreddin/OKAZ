@@ -79,7 +79,7 @@ const Header = () => {
 					</Dropdown>
 				) : (
 					<>
-						<NavLink href="/login">Login</NavLink>
+						<NavLink to="/login">Login</NavLink>
 					</>
 				)}
 

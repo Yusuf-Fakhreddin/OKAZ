@@ -34,7 +34,7 @@ import {
 export const myAds = (state = { products: [] }, action) => {
 	switch (action.type) {
 		case MY_PRODUCT_LIST_SUCCESS:
-			return { favorites: action.payload };
+			return { products: action.payload };
 		case PRODUCT_DELETE_REQUEST:
 			return {
 				products: state.products.filter((f) => f._id !== action.payload),

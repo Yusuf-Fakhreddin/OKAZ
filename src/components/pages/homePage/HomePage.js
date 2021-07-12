@@ -47,7 +47,11 @@ const HomePage = () => {
 
 					<Explore className="section" />
 				</div>
-				<h2>{userInfo ? "Recommended for you" : "Latest Ads"}</h2>
+				<h2>
+					{userInfo && recommendproducts.length !== 6
+						? "Recommended for you"
+						: "Latest Ads"}
+				</h2>
 				{loading || recommendLoading ? (
 					<div className="loader"></div>
 				) : error ? (

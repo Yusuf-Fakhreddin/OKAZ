@@ -39,8 +39,8 @@ function UserEditPage({ props }) {
 		document.title = "Edit User";
 
 		if (successUpdate) {
-			dispatch({ type: USER_UPDATE_RESET });
 			history.push("/admin/userlist");
+			dispatch({ type: USER_UPDATE_RESET });
 		} else {
 			if (!user.name || user._id !== userId) {
 				dispatch(getUserDetails(userId));
@@ -53,7 +53,7 @@ function UserEditPage({ props }) {
 				setAdmin(user.isAdmin);
 			}
 		}
-	}, [dispatch, userId, user]);
+	}, [dispatch, userId, user, successUpdate]);
 
 	const validationSchema = Yup.object({
 		fullname: Yup.string()

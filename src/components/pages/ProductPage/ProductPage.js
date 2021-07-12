@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../Header/Header";
 import { Icon, Button, Row, Col, ProgressBar, Modal } from "react-materialize";
-import { toastFailure, toastSuccess } from "../../Toast/MyToast";
 import {
 	deleteProduct,
 	listProductsDetails,
@@ -43,13 +42,11 @@ const ItemPage = ({ match }) => {
 			setStar(true);
 			if (addError) {
 				setStar(false);
-				console.log(addSuccess);
 			}
 		} else {
 			dispatch(removeFromFavorites(match.params.id));
 			setStar(false);
 
-			console.log("dispatched remove");
 			if (removeError) {
 				setStar(!star);
 			}
@@ -67,8 +64,8 @@ const ItemPage = ({ match }) => {
 	const [selectedDeletion, setselectedDeletion] = useState(null);
 
 	useEffect(() => {
-		if (successDelete) history.goBack();
-	}, [successDelete]);
+		if (loadingDelete) history.push("/");
+	}, [loadingDelete]);
 
 	const deleteHandler = (id) => {
 		setselectedDeletion(id);
@@ -84,19 +81,13 @@ const ItemPage = ({ match }) => {
 		if (userInfo && !success) {
 			dispatch(listMyFavorites());
 		}
-
-		console.log(match.params);
-		console.log(product);
-		console.log(userInfo);
 	}, [match, dispatch, userInfo]);
 
 	useEffect(() => {
 		if (favorites)
 			if (favorites.length > 0)
 				for (let i = 0; i < favorites.length; i++) {
-					console.log(favorites[i]._id);
 					if (favorites[i]._id === match.params.id) {
-						console.log("exists");
 						setStar(true);
 					}
 				}
@@ -193,7 +184,7 @@ const ItemPage = ({ match }) => {
 					<>
 						{" "}
 						<div className="section">
-							<Button onClick={() => history.goBack()}>
+							<Button onClick={() => history.push("/")}>
 								<Icon>arrow_back</Icon>
 							</Button>
 							{buttons}

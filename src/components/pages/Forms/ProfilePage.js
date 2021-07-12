@@ -90,14 +90,16 @@ const ProfilePage = ({ props }) => {
 			})
 		);
 		if (errorUpdate) toastFailure(errorUpdate);
-		else toastSuccess("Profile Updated Successfuly");
+		else {
+			toastSuccess("Profile Updated Successfuly");
+			history.push("/");
+		}
 	};
 	const values = getValues();
 
 	useEffect(() => {
-		console.log(errors);
-		console.log(values);
-	}, [values, errors]);
+		window.M.updateTextFields();
+	}, []);
 
 	return (
 		<>

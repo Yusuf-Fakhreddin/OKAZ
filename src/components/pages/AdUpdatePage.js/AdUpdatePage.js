@@ -72,6 +72,7 @@ function AdUpdatePage({ match }) {
 				setValue("description", product.description);
 				setValue("ownerPhoneNumber", product.ownerPhoneNumber);
 				setselectedCity(product.city);
+				console.log(selectedCity, selectedCondition, selectedCategory);
 			}
 		}
 	}, [history, userInfo, productId, product, successUpdate, dispatch]);
@@ -137,20 +138,38 @@ function AdUpdatePage({ match }) {
 	const [selectedConditionError, setselectedConditionError] = useState("");
 	const [selectedCityError, setselectedCityError] = useState("");
 	const values = getValues();
-
-	const onSubmit = async (data, errors) => {
-		values.category = selectedCategory;
-		values.condition = selectedCondition;
-		values.city = selectedCity;
-		if (!selectedCondition || !selectedCategory || !selectedCity || !image) {
-			if (!selectedCondition) setselectedConditionError("invalid");
+	useEffect(() => {
+		window.M.updateTextFields();
+	}, []);
+	const onSubmit = async (values) => {
+		// values.category = selectedCategory;
+		// values.condition = selectedCondition;
+		// values.city = selectedCity;
+		if (!selectCondition || !selectedCategory || !selectedCity || !image) {
+			if (!selectCondition) setselectedConditionError("invalid");
 			if (!selectedCity) setselectedCityError("Location is required");
 			if (!selectedCategory) setselectedCategoryError("invalid");
 			if (!image) setImageError("Image is Required");
 			return;
 		}
-		console.log({ productId, ...values, image });
-		dispatch(updateProduct({ productId, ...values, image }));
+		console.log({
+			productId,
+			...values,
+			category: selectedCategory,
+			city: selectedCity,
+			condition: selectedCondition,
+			image,
+		});
+		dispatch(
+			updateProduct({
+				productId,
+				...values,
+				category: selectedCategory,
+				city: selectedCity,
+				condition: selectedCondition,
+				image,
+			})
+		);
 	};
 	const selectCategory = (e) => {
 		setselectedCategory(e.target.value);
@@ -222,7 +241,7 @@ function AdUpdatePage({ match }) {
 						/>
 						<MyAutoComplete
 							complete={complete}
-							setSelected={setselectedCity}
+							setSelected={selectedCity}
 							cities={cities}
 							alreadySelected={selectedCity}
 							placeholder="Where is the product located ?"
@@ -361,6 +380,15 @@ function AdUpdatePage({ match }) {
 							</Select> */}
 						</div>
 
+						{/* <FormInput
+							register={register}
+							type="textarea"
+							name="description"
+							label="Description"
+							id="description"
+							error={errors.description}
+							value={values.description}
+						/> */}
 						<FormInput
 							register={register}
 							type="textarea"

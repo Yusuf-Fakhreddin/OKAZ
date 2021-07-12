@@ -24,7 +24,8 @@ const FavoritesPage = () => {
 	const history = useHistory();
 	useEffect(() => {
 		if (!userInfo) history.push("/");
-		if (favorites.length === 0 && !success) dispatch(listMyFavorites());
+		// if (favorites.length === 0 && !success)
+		dispatch(listMyFavorites());
 		console.log(favorites);
 	}, [dispatch, userInfo]);
 

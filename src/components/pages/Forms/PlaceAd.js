@@ -14,6 +14,8 @@ import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 import MySelect from "../Forms/Fields/MySelect";
 import MyAutoComplete from "../Forms/Fields/MyAutoComplete";
 import { categories, conditions } from "./Fields/selectOptions";
+import { getUserDetails } from "../../../actions/userActions";
+import { PRODUCT_CREATE_RESET } from "../../../constants/productConstants";
 function ItemForm({ props, history }) {
 	const [image, setImage] = useState(null);
 	const [imageError, setImageError] = useState(null);
@@ -34,18 +36,28 @@ function ItemForm({ props, history }) {
 		product: createdProduct,
 	} = productCreate;
 
+	const userDetails = useSelector((state) => state.userDetails);
+	const { user } = userDetails;
+
 	useEffect(() => {
 		document.title = "Place Ad";
+		// dispatch(getUserDetails(userInfo._id));
+		console.log(userInfo);
 		if (!userInfo) {
 			history.push("/login");
-		} else {
-			setValue("ownerPhoneNumber", userInfo.phoneNumber);
+		}
+		// else if (!user.name) {
+		// 	dispatch(getUserDetails(userInfo._id));
+		// }
+		else {
 			setValue("ownerName", userInfo.name);
+			setValue("ownerPhoneNumber", userInfo.phoneNumber);
 		}
 		if (successCreate) {
+			dispatch({ type: PRODUCT_CREATE_RESET });
 			history.push(`/item/${createdProduct._id}`);
 		}
-	}, [history, userInfo, successCreate]);
+	}, [dispatch, history, userInfo, successCreate]);
 
 	const validationSchema = Yup.object({
 		productName: Yup.string().required("Required"),
@@ -105,8 +117,10 @@ function ItemForm({ props, history }) {
 	const [selectedConditionError, setselectedConditionError] = useState("");
 	const [selectedCityError, setselectedCityError] = useState("");
 	const values = getValues();
-
-	const onSubmit = async (data, errors) => {
+	useEffect(() => {
+		window.M.updateTextFields();
+	}, []);
+	const onSubmit = async (values) => {
 		values.category = selectedCategory;
 		values.condition = selectedCondition;
 		values.city = selectedCity;
@@ -140,7 +154,7 @@ function ItemForm({ props, history }) {
 	return (
 		<>
 			<Header />
-			<div className="form container section">
+			<div className=" container section">
 				<div>
 					<h2>Your Ad </h2>
 					<p className="label grey-text">
@@ -150,48 +164,49 @@ function ItemForm({ props, history }) {
 					{loading && <div className="loader"></div>}
 					{errorCreate && <p className="red-text">{errorCreate}</p>}
 					{error && <p className="red-text">{error}</p>}
-					<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-						<FormInput
-							register={register}
-							type="text"
-							name="ownerName"
-							label="*Owner Name"
-							id="ownerName"
-							error={errors.ownerName}
-							value={values.ownerName}
-							active
-						/>
-						<FormInput
-							register={register}
-							type="text"
-							name="ownerPhoneNumber"
-							label="*Owner Phone Number"
-							id="ownerPhoneNumber"
-							value={values.ownerPhoneNumber}
-							error={errors.ownerPhoneNumber}
-							active
-						/>
-						<FormInput
-							register={register}
-							type="text"
-							name="productName"
-							label="*Product Name"
-							id="productName"
-							error={errors.productName}
-							value={values.productName}
-						/>
-						<FormInput
-							register={register}
-							type="number"
-							name="price"
-							onWheel={(event) => event.currentTarget.blur()}
-							label="*Price (EGP)"
-							id="price"
-							error={errors.price}
-							value={values.price}
-						/>
+					<div>
+						<form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+							<FormInput
+								register={register}
+								type="text"
+								name="ownerName"
+								label="*Owner Name"
+								id="ownerName"
+								error={errors.ownerName}
+								value={values.ownerName}
+								active
+							/>
+							<FormInput
+								register={register}
+								type="text"
+								name="ownerPhoneNumber"
+								label="*Owner Number"
+								id="ownerPhoneNumber"
+								value={values.ownerPhoneNumber}
+								error={errors.ownerPhoneNumber}
+								active
+							/>
+							<FormInput
+								register={register}
+								type="text"
+								name="productName"
+								label="*Product Name"
+								id="productName"
+								error={errors.productName}
+								value={values.productName}
+							/>
+							<FormInput
+								register={register}
+								type="number"
+								name="price"
+								onWheel={(event) => event.currentTarget.blur()}
+								label="*Price (EGP)"
+								id="price"
+								error={errors.price}
+								value={values.price}
+							/>
 
-						{/* <Autocomplete
+							{/* <Autocomplete
 							name="city"
 							type="text"
 							onChange={complete}
@@ -207,22 +222,22 @@ function ItemForm({ props, history }) {
 							placeholder="Choose a City to search in"
 							title="Specific City ?"
 						/> */}
-						<MyAutoComplete
-							complete={complete}
-							setSelected={setselectedCity}
-							cities={cities}
-							placeholder="Where is the product located ?"
-							title="*Location"
-							error={selectedCityError}
-						/>
-						<div>
-							<MySelect
-								select={selectCondition}
-								name="condition"
-								values={conditions}
-								error={selectedConditionError}
+							<MyAutoComplete
+								complete={complete}
+								setSelected={setselectedCity}
+								cities={cities}
+								placeholder="Where is the product located ?"
+								title="*Location"
+								error={selectedCityError}
 							/>
-							{/* <Select
+							<div>
+								<MySelect
+									select={selectCondition}
+									name="condition"
+									values={conditions}
+									error={selectedConditionError}
+								/>
+								{/* <Select
 								onChange={selectCondition}
 								name="condition"
 								id="Select-9"
@@ -253,15 +268,15 @@ function ItemForm({ props, history }) {
 								<option value="Used">Used</option>
 								<option value="Does not apply">Does not apply</option>
 							</Select> */}
-						</div>
-						<div>
-							<MySelect
-								select={selectCategory}
-								name="category"
-								values={categories}
-								error={selectedCategoryError}
-							/>
-							{/* <Select
+							</div>
+							<div>
+								<MySelect
+									select={selectCategory}
+									name="category"
+									values={categories}
+									error={selectedCategoryError}
+								/>
+								{/* <Select
 								onChange={selectCategory}
 								name="category"
 								id="Select-9"
@@ -294,57 +309,58 @@ function ItemForm({ props, history }) {
 								<option value="Fashion">Fashion</option>
 								<option value="Pets">Pets</option>
 							</Select> */}
-						</div>
+							</div>
 
-						<FormInput
-							register={register}
-							type="textarea"
-							name="description"
-							label="Description"
-							id="description"
-							error={errors.description}
-						/>
-						<div className="image-upload">
-							{!mainImg && (
-								<h5 className="center-align">
-									There is no ad without a picture <br /> please add one
-								</h5>
-							)}
-							{mainImg && <h5>Change Picture ?</h5>}
-							{/* <input
+							<FormInput
+								register={register}
+								type="textarea"
+								name="description"
+								label="Description"
+								id="description"
+								error={errors.description}
+							/>
+							<div className="image-upload">
+								{!mainImg && (
+									<h5 className="center-align">
+										There is no ad without a picture <br /> please add one
+									</h5>
+								)}
+								{mainImg && <h5>Change Picture ?</h5>}
+								{/* <input
 									type="file"
 									accept="image/*"
 									name="itemPicture"
 									onChange={uploadFileHandler}
 								/>
 								<span>+</span> */}
-							<TextInput
-								id="TextInput-4"
-								label={<Icon>add</Icon>}
-								type="file"
-								accept="image/*"
-								name="itemPicture"
-								onChange={uploadFileHandler}
-							/>
+								<TextInput
+									id="TextInput-4"
+									label={<Icon>add</Icon>}
+									type="file"
+									accept="image/*"
+									name="itemPicture"
+									onChange={uploadFileHandler}
+								/>
 
-							{imageError && !mainImg && (
-								<p className="red-text">*{imageError}</p>
-							)}
+								{imageError && !mainImg && (
+									<p className="red-text">*{imageError}</p>
+								)}
 
-							{uploading && <ProgressBar />}
+								{uploading && <ProgressBar />}
 
-							{mainImg && (
-								<div className="section ">
-									<MyMediaBox image={mainImg} height="650px" width="650px" />
-								</div>
-							)}
-						</div>
-						{loadingCreate && <ProgressBar />}
+								{mainImg && (
+									<div className="section ">
+										<MyMediaBox image={mainImg} height="650px" width="650px" />
+									</div>
+								)}
+							</div>
+							{loadingCreate && <ProgressBar />}
 
-						<Button large type="submit">
-							Place Ad
-						</Button>
-					</form>
+							<Button large type="submit">
+								Place Ad
+							</Button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</>

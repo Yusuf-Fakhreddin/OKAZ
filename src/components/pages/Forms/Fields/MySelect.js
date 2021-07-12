@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Select } from "react-materialize";
 const MySelect = ({ select, name, alreadySelected, values, error }) => {
-	console.log(values);
-
 	return (
 		<div className="input-field">
 			<Select

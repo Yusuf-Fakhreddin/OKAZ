@@ -5,7 +5,7 @@ import { deleteProduct } from "../../../actions/productActions";
 import { listMyProducts } from "../../../actions/productActions";
 import Header from "../../Header/Header";
 
-import { Table, Icon, Button, Modal, ProgressBar } from "react-materialize";
+import { Table, Icon, Button, Modal } from "react-materialize";
 import MyMediaBox from "../../MyMediaBox/MyMediaBox";
 const MyAdsList = ({ history, match }) => {
 	const pageNumber = match.params.pageNumber || 1;
@@ -25,7 +25,7 @@ const MyAdsList = ({ history, match }) => {
 		console.log(products);
 		if (!userInfo) {
 			history.push("/login");
-		} else if (!products) {
+		} else {
 			dispatch(listMyProducts());
 		}
 		console.log(error);
@@ -99,43 +99,44 @@ const MyAdsList = ({ history, match }) => {
 								</tr>
 							</thead>
 							<tbody>
-								{products.map((product) => (
-									<tr key={product._id}>
-										<td>
-											{" "}
-											<MyMediaBox
-												image={product.image}
-												height="50px"
-												width="50px"
-											/>{" "}
-										</td>
-										<td>
-											<NavLink to={"item/" + product._id}>
-												{product.productName}
-											</NavLink>
-										</td>
-										<td>{product.ownerPhoneNumber}</td>
-										<td>{product.price}</td>
-										<td>{product.city}</td>
-										<td>
-											<NavLink to={`/product/${product._id}/edit`}>
-												<Button>
-													<Icon>edit</Icon>
+								{products &&
+									products.map((product) => (
+										<tr key={product._id}>
+											<td>
+												{" "}
+												<MyMediaBox
+													image={product.image}
+													height="50px"
+													width="50px"
+												/>{" "}
+											</td>
+											<td>
+												<NavLink to={"item/" + product._id}>
+													{product.productName}
+												</NavLink>
+											</td>
+											<td>{product.ownerPhoneNumber}</td>
+											<td>{product.price}</td>
+											<td>{product.city}</td>
+											<td>
+												<NavLink to={`/product/${product._id}/edit`}>
+													<Button>
+														<Icon>edit</Icon>
+													</Button>
+												</NavLink>
+											</td>
+											<td>
+												<Button
+													className="modal-trigger"
+													href="#modal1"
+													node="button"
+													onClick={() => deleteHandler(product._id)}
+												>
+													<Icon>delete</Icon>
 												</Button>
-											</NavLink>
-										</td>
-										<td>
-											<Button
-												className="modal-trigger"
-												href="#modal1"
-												node="button"
-												onClick={() => deleteHandler(product._id)}
-											>
-												<Icon>delete</Icon>
-											</Button>
-										</td>
-									</tr>
-								))}
+											</td>
+										</tr>
+									))}
 							</tbody>
 						</Table>
 					</div>
