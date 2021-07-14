@@ -10,6 +10,7 @@ const FormInput = ({
 	value,
 	name,
 	active,
+	wheel,
 	...inputProps
 }) => {
 	let rows;
@@ -43,7 +44,6 @@ const FormInput = ({
 						type={type}
 						id={id}
 						name={name}
-						onWheel={(event) => event.currentTarget.blur()}
 						ref={register}
 						defaultValue={value}
 						{...inputProps}
