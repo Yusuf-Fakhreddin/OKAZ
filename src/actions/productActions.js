@@ -242,7 +242,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
 			type: PRODUCT_DELETE_SUCCESS,
 			optimist: { type: COMMIT, id: transactionID },
 		});
-		toastSuccess("ad removed successfully");
+		toastSuccess("Ad removed successfully");
 	} catch (error) {
 		const message =
 			error.response && error.response.data.message

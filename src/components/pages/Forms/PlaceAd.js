@@ -199,7 +199,6 @@ function ItemForm({ props, history }) {
 								register={register}
 								type="number"
 								name="price"
-								onWheel={(event) => event.currentTarget.blur()}
 								label="*Price (EGP)"
 								id="price"
 								error={errors.price}

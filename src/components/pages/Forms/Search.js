@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,7 +22,9 @@ function Search({ city, productName }) {
 		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
-
+	useEffect(() => {
+		setselectedCity(city);
+	}, [city]);
 	const onSubmit = ({ itemName, city }) => {
 		city = selectedCity;
 		history.push(`/search/${itemName}/${city && city}`);

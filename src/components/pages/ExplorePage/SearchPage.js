@@ -50,14 +50,19 @@ const SearchPage = () => {
 				) : error ? (
 					<h1 className="error">{error}</h1>
 				) : !products.length ? (
-					<h4>Sorry, no ads matching your search</h4>
+					<h4>
+						Sorry, no ads matching your search of{" "}
+						{Params.productName && Params.productName}{" "}
+						{Params.category && Params.category}{" "}
+						{Params.city && "in " + Params.city}{" "}
+					</h4>
 				) : (
 					<>
 						{
 							<h4>
 								{Params.productName && Params.productName}{" "}
+								{Params.category && Params.category}{" "}
 								{Params.city && "in " + Params.city}{" "}
-								{Params.category && "category: " + Params.category}{" "}
 							</h4>
 						}
 						<Row>

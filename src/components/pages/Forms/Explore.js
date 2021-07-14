@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,11 +20,16 @@ function Explore({ category, city }) {
 		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
+	useEffect(() => {
+		console.log(category);
+		category && setselectedCategory(category);
 
+		city && setselectedCity(city);
+	}, [category]);
 	const [selectedCategory, setselectedCategory] = useState("");
 	const [selectedCity, setselectedCity] = useState("");
 	const [categroyError, setcategroyError] = useState(false);
-	const onSubmit = ({ category, city }) => {
+	const onSubmit = async ({ city, category }) => {
 		console.log(errors);
 		category = selectedCategory;
 		city = selectedCity;
