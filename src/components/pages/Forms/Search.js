@@ -22,9 +22,11 @@ function Search({ city, productName }) {
 		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
+
 	useEffect(() => {
-		setselectedCity(city);
+		city && setselectedCity(city);
 	}, [city]);
+
 	const onSubmit = ({ itemName, city }) => {
 		city = selectedCity;
 		history.push(`/search/${itemName}/${city && city}`);

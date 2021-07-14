@@ -44,7 +44,7 @@ function ItemForm({ props, history }) {
 		// dispatch(getUserDetails(userInfo._id));
 		console.log(userInfo);
 		if (!userInfo) {
-			history.push("/login");
+			history.replace("/login");
 		}
 		// else if (!user.name) {
 		// 	dispatch(getUserDetails(userInfo._id));
