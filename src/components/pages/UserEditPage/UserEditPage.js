@@ -14,7 +14,6 @@ import { Checkbox, Button } from "react-materialize";
 import FormInput from "../Forms/Fields/FormInput";
 import Header from "../../Header/Header";
 import { USER_UPDATE_RESET } from "../../../constants/userConstants";
-import { userInfo } from "os";
 
 function UserEditPage({ props }) {
 	let { id } = useParams();
@@ -35,6 +34,8 @@ function UserEditPage({ props }) {
 	} = userUpdate;
 
 	useEffect(() => {
+		// dispatch(getUserDetails(userId));
+
 		console.log(user);
 		document.title = "Edit User";
 
@@ -46,6 +47,7 @@ function UserEditPage({ props }) {
 				dispatch(getUserDetails(userId));
 				console.log("getting details");
 			} else {
+				console.log(user.isAdmin);
 				setValue("fullname", user.name);
 				setValue("email", user.email);
 				// setValue("isAdmin", user.isAdmin);
@@ -53,7 +55,11 @@ function UserEditPage({ props }) {
 				setAdmin(user.isAdmin);
 			}
 		}
-	}, [dispatch, userId, user, successUpdate]);
+	}, [dispatch, userId, successUpdate, user]);
+
+	useEffect(() => {
+		dispatch(getUserDetails(userId));
+	}, []);
 
 	const validationSchema = Yup.object({
 		fullname: Yup.string()

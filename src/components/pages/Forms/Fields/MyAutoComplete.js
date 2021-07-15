@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Autocomplete, Icon } from "react-materialize";
 
-const MyAutoComplete = ({
+function MyAutoComplete({
 	complete,
 	setSelected,
 	cities,
@@ -9,7 +9,10 @@ const MyAutoComplete = ({
 	placeholder,
 	title,
 	error,
-}) => {
+}) {
+	useEffect(() => {
+		console.log(alreadySelected);
+	}, [alreadySelected]);
 	return (
 		<React.Fragment>
 			<Autocomplete
@@ -32,6 +35,6 @@ const MyAutoComplete = ({
 			{error && <p className="helper-text red-text">{error}</p>}
 		</React.Fragment>
 	);
-};
+}
 
 export default MyAutoComplete;

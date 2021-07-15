@@ -5,9 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import cities from "./Fields/cities";
 import MyAutoComplete from "./Fields/MyAutoComplete";
 import { useHistory } from "react-router";
-import { Icon, Button, Select } from "react-materialize";
+import { Icon, Button } from "react-materialize";
 import MySelect from "./Fields/MySelect";
 import { categories } from "./Fields/selectOptions";
+
 function Explore({ category, city }) {
 	const history = useHistory();
 	const validationSchema = Yup.object({
@@ -20,15 +21,17 @@ function Explore({ category, city }) {
 		mode: "onBlur",
 		resolver: yupResolver(validationSchema),
 	});
+	const [selectedCategory, setselectedCategory] = useState("");
+	const [selectedCity, setselectedCity] = useState("");
+	const [categroyError, setcategroyError] = useState(false);
+
 	useEffect(() => {
 		console.log(category);
 		category && setselectedCategory(category);
 
 		city && setselectedCity(city);
-	}, [category]);
-	const [selectedCategory, setselectedCategory] = useState("");
-	const [selectedCity, setselectedCity] = useState("");
-	const [categroyError, setcategroyError] = useState(false);
+	}, []);
+
 	const onSubmit = async ({ city, category }) => {
 		console.log(errors);
 		category = selectedCategory;

@@ -25,7 +25,8 @@ function Search({ city, productName }) {
 
 	useEffect(() => {
 		city && setselectedCity(city);
-	}, [city]);
+		// console.log(selectedCity);
+	}, []);
 
 	const onSubmit = ({ itemName, city }) => {
 		city = selectedCity;
@@ -53,7 +54,7 @@ function Search({ city, productName }) {
 				complete={complete}
 				setSelected={setselectedCity}
 				cities={cities}
-				alreadySelected={city}
+				alreadySelected={selectedCity}
 			/>
 			{/* <Autocomplete
 				name="city"

@@ -20,7 +20,7 @@ function LoginPage({ props, history, location }) {
 	useEffect(() => {
 		document.title = "Login";
 		if (userInfo) {
-			history.goBack();
+			history.push("/");
 		}
 	}, [history, userInfo]);
 
