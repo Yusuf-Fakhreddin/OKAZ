@@ -4,19 +4,19 @@
 The platform allows sellers to directly upload information about the product they want to sell. Similar to an actual advertisement, this information includes a picture and textual description of the product. Buyers can contact the seller without any third-party intervention, bargain the price and buy.
 
 ### Features
- • User registration.
- • Advertisement post selecting a category, city and condition of the product. 
- • Image uploading for the advertisement.
- • Provide your product owner phone number for contact.
- • Edit any information about your advertisement.
- • Delete your advertisement.
- • Update your profile info.
- • Add Products to your favorites list.
- • Recommended products based on your favorite categories.
- • Admin functionalities for managing the application.
- • Location based search.
- • Explore a category for all products.
- • Search by a product name.
+ * User registration.
+ * Advertisement post selecting a category, city and condition of the product. 
+ * Image uploading for the advertisement.
+ * Provide your product owner phone number for contact.
+ * Edit any information about your advertisement.
+ * Delete your advertisement.
+ * Update your profile info.
+ * Add Products to your favorites list.
+ * Recommended products based on your favorite categories.
+ * Admin functionalities for managing the application.
+ * Location based search.
+ * Explore a category for all products.
+ * Search by a product name.
 
 ## [User Demo](https://user-images.githubusercontent.com/48655310/126881650-e6912448-b2b2-4893-bce1-8152a537504b.mp4 "User")
 ## [Admin Demo](https://user-images.githubusercontent.com/48655310/126881665-f1699dbd-8102-4dd5-9e97-fe6aa88570db.mp4 "Admin")
