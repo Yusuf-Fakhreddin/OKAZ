@@ -18,8 +18,11 @@ The platform allows sellers to directly upload information about the product the
  * Explore a category for all products.
  * Search by a product name.
 
-## [User Demo](https://user-images.githubusercontent.com/48655310/126881650-e6912448-b2b2-4893-bce1-8152a537504b.mp4 "User")
-## [Admin Demo](https://user-images.githubusercontent.com/48655310/126881665-f1699dbd-8102-4dd5-9e97-fe6aa88570db.mp4 "Admin")
+## User Experience Demo
+https://user-images.githubusercontent.com/48655310/147893686-160a72b6-d926-43cd-9615-e402aa9bffbf.mp4
+
+## Admin Experience Demo
+https://user-images.githubusercontent.com/48655310/126881665-f1699dbd-8102-4dd5-9e97-fe6aa88570db.mp4 
 
 ## Screenshots samples
 ![okaz1](https://user-images.githubusercontent.com/48655310/126881670-1125128d-9c91-4d36-a447-aa0e8a80329c.png)
